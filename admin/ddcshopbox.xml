@@ -52,6 +52,8 @@
 			<folder>models</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
+			<filename>ddcshopbox.php</filename>
+			<filename>index.html</filename>
 			<filename>router.php</filename>
 		</files> 
 	<scriptfile>install.php</scriptfile>

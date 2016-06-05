@@ -11,8 +11,8 @@
 		<field name="required_account" type="radio"
 			default="0"
 			class="btn-group"
-			label="COM_DDCBOOKIT_REQUIRED_ACCOUNT"
-			description="COM_DDCBOOKIT_REQUIRED_ACCOUNT_DESC">
+			label="COM_DDC_REQUIRED_ACCOUNT"
+			description="COM_DDC_REQUIRED_ACCOUNT_DESC">
 
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -20,8 +20,8 @@
 		<field name="url_terms"
 		    type="url"
 			default=""
-			label="COM_DDCBOOKIT_URL_TERMS"
-			description="COM_DDCBOOKIT_URL_TERMS_DESC"
+			label="COM_DDC_URL_TERMS"
+			description="COM_DDC_URL_TERMS_DESC"
 		/>
     </fieldset>
 	<fieldset name="permissions"
@@ -30,7 +30,7 @@
 	>
 
 		<field name="rules" type="rules"
-			component="com_ddcbookit"
+			component="com_ddcshopbox"
 			filter="rules"
 			validate="rules"
 			label="JCONFIG_PERMISSIONS_LABEL"

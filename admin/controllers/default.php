@@ -13,7 +13,7 @@ class DdcshopboxControllersDefault extends JControllerBase
   	// Get the document object.
   	$document     = JFactory::getDocument();
   	
-  	$viewName     = $app->input->getWord('view', 'dashboard');
+  	$viewName     = $app->input->getWord('view', 'vendors');
   	$viewFormat   = $document->getType();
   	$layoutName   = $app->input->getWord('layout', 'default');
   	
