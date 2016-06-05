@@ -1,0 +1,6 @@
+.mypostcode{position:absolute;top:200px;padding:10px; font-size:30px;font-family:Arial;color:#ccc;font-weight:300;}
+.mypostcodebtn{position:absolute;top:200px;z-index:2000;padding:12px 40px 12px 40px;
+	background:green;color:#fcfcfc;font-size:30px;border:none;border-radius:20px;font-weight:bold;}
+.header-homepage{background:url(http://www.ineedtext.com/FoodBlog/wp-content/uploads/2012/09/Whole-Foods-054.jpg);background-size: 100%;}
+.header-foot{background:#ededed;padding:40px 0px 40px 0px;}
+.body-main{margin-top:20px;}

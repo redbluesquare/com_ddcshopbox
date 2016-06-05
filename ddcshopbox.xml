@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="component" version="3.0" method="upgrade">
+	<name>COM_DDCSHOPBOX</name>
+	<creationDate>21/05/2016</creationDate>
+	<author>Darryl Usher</author>
+	<authorEmail>info@digidevcloud.co.uk</authorEmail>
+	<authorUrl>http://www.digidevcloud.co.uk</authorUrl>
+	<copyright>(C)2012 - 2016 DigiDevCloud. All rights reserved.</copyright>
+	<license>This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see http://www.gnu.org/licenses.</license>
+	<version>0.0.1</version>
+	<description>COM_DDCSHOPBOX_DESCRIPTION</description>
+	<install>
+                <sql>
+                        <file driver="mysql" charset="utf8">sql/install/mysql/install.sql</file>
+                        <file driver="mysql">sql/install/mysql/install.sql</file>
+                        <file driver="mysql" charset="utf8">sql/install/mysql/required_info.sql</file>
+                        <file driver="mysql">sql/install/mysql/required_info.sql</file>
+                        <file driver="mysqli" charset="utf8">sql/install/mysql/install.sql</file>
+                        <file driver="mysqli">sql/install/mysql/install.sql</file>
+                </sql>
+        </install>
+        <!-- SQL query files to execute on uninstallation -->
+        <uninstall>
+                <sql>
+                        <file driver="mysql" charset="utf8">sql/install/mysql/uninstall.sql</file>
+                        <file driver="mysql">sql/install/mysql/uninstall.sql</file>
+                        <file driver="mysqli" charset="utf8">sql/install/mysql/uninstall.sql</file>
+                        <file driver="mysqli">sql/install/mysql/uninstall.sql</file>
+                </sql>
+        </uninstall>       
+        <!-- SQL files to run on update -->
+        <update>
+                <schemas>
+                        <schemapath type="mysql">sql/updates/mysql</schemapath>
+                        <schemapath type="mysqli">sql/updates/mysql</schemapath>
+                </schemas>
+        </update>
+		<files folder="site">
+			<folder>assets</folder>
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>languages</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<filename>router.php</filename>
+		</files> 
+	<scriptfile>install.php</scriptfile>
+	<languages folder="site">
+		<language tag="en-GB">languages/en-GB/en-GB.com_ddcshopbox.ini</language>
+	</languages>
+	<administration>
+		<menu link="option=com_ddcshopbox">COM_DDCSHOPBOX</menu>
+		<files folder="admin">
+			<folder>assets</folder>
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>languages</folder>
+			<folder>models</folder>
+			<folder>sql</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<filename>access.xml</filename>
+            <filename>config.xml</filename>
+			<filename>ddcshopbox.php</filename>
+			<filename>index.html</filename>
+		</files>  
+		<languages folder="admin">
+			<language tag="en-GB">languages/en-GB/en-GB.com_ddcshopbox.ini</language>
+			<language tag="en-GB">languages/en-GB/en-GB.com_ddcshopbox.sys.ini</language>
+		</languages>
+	</administration>
+</extension>
