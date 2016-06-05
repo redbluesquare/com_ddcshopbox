@@ -53,7 +53,6 @@
 			<folder>tables</folder>
 			<folder>views</folder>
 			<filename>router.php</filename>
-			
 		</files> 
 	<scriptfile>install.php</scriptfile>
 	<languages folder="site">
