@@ -7,6 +7,7 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
     //Define class level variables
   	var $_user_id     = null;
   	var $_product_id  = null;
+  	var $_vendor_id  = null;
   	var $_cat_id	  = null;
   	var $_published   = 1;
 
@@ -18,6 +19,7 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
     //If no User ID is set to current logged in user
     $this->_user_id = $app->input->get('profile_id', JFactory::getUser()->id);
     $this->_product_id = $app->input->get('product_id', null);
+    $this->_vendor_id = $app->input->get('vendor_id', null);
 
     parent::__construct();       
   }
@@ -28,8 +30,10 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
     $db = JFactory::getDBO();
     $query = $db->getQuery(TRUE);
 
-    $query->select('p.ddc_product_id');
+    $query->select('p.*');
+    $query->select('i.*');
     $query->from('#__ddc_products as p');
+    $query->leftJoin('#__ddc_images as i on (p.ddc_product_id = i.link_id) AND (i.linked_table = "ddc_products")');
     $query->group("p.ddc_product_id");
 
 
@@ -38,7 +42,10 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
 
   protected function _buildWhere(&$query)
   {
-    
+  	if($this->_vendor_id!=null)
+  	{
+  		$query->where('p.vendor_id = "'. (int)$this->_vendor_id .'"');
+  	}
         
     return $query;
   }

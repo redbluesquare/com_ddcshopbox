@@ -1,56 +1,81 @@
-<?php // no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' ); 
- 
-class DdcshopboxtModelsProfile extends DdcshopboxModelsDefault
+<?php
+defined( '_JEXEC' ) or die( 'Restricted access' );
+
+class DdcshopboxModelsProfile extends JModelForm
 {
- 
-    //Define class level variables
-  	var $_user_id     = null;
-  	var $_cat_id	  = null;
-  	var $_published   = 1;
+	var $form    		  = null;
+	var $_user_id 		  = null;
 
-  function __construct()
-  {
+	function __construct()
+	{
 
-    $app = JFactory::getApplication();
+		parent::__construct();
+	}
+	
+	public function getData()
+	{
+		if ($this->data === null)
+		{
+			$this->data = new stdClass;
+			$app = JFactory::getApplication();
+			$params = JComponentHelper::getParams('com_ddcshopbox');
+	
+			// Override the base user data with any data in the session.
+			$temp = (array) $app->getUserState('com_ddcshopbox.profile.data', array());
+			foreach ($temp as $k => $v)
+			{
+				$this->data->$k = $v;
+			}
+	
+		}
+		return $this->data;
+	}
+	
+	/**
+	 * Method to get the package form.
+	 *
+	 * The base form is loaded from XML and then an event is fired
+	 * for users plugins to extend the form with extra fields.
+	 *
+	 * @param   array    $data      An optional array of data for the form to interogate.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  JForm  A JForm object on success, false on failure
+	 *
+	 * @since   1.6
+	 */
+	public function getForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_ddcshopbox.profile', 'profile', array('control' => 'jform', 'load_data' => $loadData));
+		if (empty($form))
+		{
+			return false;
+		}
+	
+		return $form;
+	}
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_ddcshopbox.profile.data', array());
+		if (empty($data))
+		{
+			$jinput = JFactory::getApplication()->input;
+			$task = $jinput->get('task', "", 'STR' );
+			if($task != 'profile.add')
+			{
+				$profileModel = new DdcshopboxModelsProfiles();
+				$data = $profileModel->getItem();
+				return $data;
+			}
+		}
+	}
 
-    //If no User ID is set to current logged in user
-    $this->_user_id = $app->input->get('profile_id', JFactory::getUser()->id);
-
-    parent::__construct();       
-  }
- 
-function getItem()
-  {
-
-    $profile = JFactory::getUser($this->_user_id);
-    $userDetails = JUserHelper::getProfile($this->_user_id);
-    $profile->details =  isset($userDetails->profile) ? $userDetails->profile : array();
-
-    $profile->isMine = JFactory::getUser()->id == $profile->id ? TRUE : FALSE;
-
-    return $profile;
-  }
-
-  protected function _buildQuery()
-  {
-    $db = JFactory::getDBO();
-    $query = $db->getQuery(TRUE);
-
-    $query->select('u.id, u.username, u.email, u.registerDate');
-    $query->from('#__users as u');
-
-    $query->select('cd.name, cd.address, cd.telephone, cd.suburb, cd.postcode, cd.id as contact_id');
-    $query->leftjoin('#__contact_details as cd on cd.user_id = u.id');
-
-    return $query;
-  }
-
-  protected function _buildWhere($query)
-  {
-    $query->group("u.id");
-        
-    return $query;
-  }
+	public function getInput()
+	{
+		parent::__construct();
+	}
 
 }
+	

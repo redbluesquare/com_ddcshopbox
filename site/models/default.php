@@ -243,9 +243,6 @@ class DdcshopboxModelsDefault extends JModelBase
   		->where('cd.user_id = "'.$user_id.'"');
   		$this->db->setQuery($query);
   		$item = $this->db->loadObject();
-  	}
-  	if($item->postcode!=null)
-  	{
   		$pc = $item->postcode;
   	}
   	
@@ -254,12 +251,17 @@ class DdcshopboxModelsDefault extends JModelBase
   	{
   		$pc1 = explode(' ', $pc);
   		$pc1 = trim($pc1[0]);
+  		//set session with fist half of postcode
+  		$this->session->set('mypostcode', $pc1);
+  		return true;
+  	}
+  	else 
+  	{
+  		return false;
   	}
   	
-  	//set session with fist half of postcode
-  	$this->session->set('postcode', $pc1);
   	
-  	return true;
+  	
   }
   
 }

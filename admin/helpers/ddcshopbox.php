@@ -43,6 +43,8 @@ class DdcshopboxHelpersDdcshopbox
 		'index.php?option=com_ddcshopbox&view=dashboard', $submenu == 'dashboard');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_VENDORS'),
 		'index.php?option=com_ddcshopbox&view=vendors', $submenu == 'vendors');
+		JHtmlSidebar::addEntry(JText::_('COM_DDC_USER_VENDORS'),
+				'index.php?option=com_ddcshopbox&view=uservendors', $submenu == 'uservendors');
 		// set some global property
 		$document = JFactory::getDocument();
 

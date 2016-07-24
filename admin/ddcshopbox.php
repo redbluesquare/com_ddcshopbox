@@ -6,10 +6,10 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 jimport( 'joomla.session.session' );
 
 //load tables
-JTable::addIncludePath(JPATH_COMPONENT.'/tables');
+JTable::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/tables');
 
 //load classes
-JLoader::registerPrefix('Ddcshopbox', JPATH_COMPONENT);
+JLoader::registerPrefix('Ddcshopbox', JPATH_COMPONENT_ADMINISTRATOR);
 
 //Load plugins
 //JPluginHelper::importPlugin('ddcshopbox');

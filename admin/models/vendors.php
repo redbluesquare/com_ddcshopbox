@@ -26,9 +26,11 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     $db = JFactory::getDBO();
     $query = $db->getQuery(TRUE);
 
-    $query->select('p.ddc_vendor_id');
-    $query->from('#__ddc_vendors as p');
-    $query->group("p.ddc_vendor_id");
+    $query->select('v.*');
+    $query->select('u.name as owner_name');
+    $query->from('#__ddc_vendors as v');
+    $query->leftJoin('#__users as u on v.owner = u.id');
+    $query->group("v.ddc_vendor_id");
 
 
     return $query;
@@ -36,7 +38,10 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
 
   protected function _buildWhere(&$query)
   {
-    
+    if($this->_vendor_id!=null)
+    {
+    	$query->where('v.ddc_vendor_id = "'. (int)$this->_vendor_id .'"');
+    }
         
     return $query;
   }

@@ -6,32 +6,63 @@ jimport('joomla.application.component.controlleradmin');
 class DdcshopboxControllersDefault extends JControllerBase
 {
   protected $postcode;
-	
+
+  function __construct()
+  {
+  	parent::__construct();
+  }
+  
   public function execute()
   {
   	// Get the application
   	$app = JFactory::getApplication();
-  	$session = JFactory::getSession(); 	
-  	$user = JFactory::getUser()->id;
-  	
-  	if($user!=null)
-  	{
-  		//set the postcode into the session
-  		$model = new DdcshopboxModelsDefault();
-  		$this->postcode = $model->setPostcode($user);
-  	}
-  	if($session->get('postcode')!=null)
-  	{
-  		//echo $session->get('postcode');
-  	}
-  	  	
   	// Get the document object.
   	$document = JFactory::getDocument();
-  	if($this->postcode==true){$viewName = $app->input->getWord('view', 'products');}
-  	else{$viewName = $app->input->getWord('view', 'profiles');}
-  	$viewFormat = $document->getType();
-  	$layoutName = $app->input->getWord('layout', 'default');
-  	
+  	$session = JFactory::getSession();
+  	$user = JFactory::getUser()->id;
+  	$model = new DdcshopboxModelsDefault();
+  	if($session->get('mypostcode',null)==null):
+	  	if($user!=null)
+	  	{
+	  		//set the postcode into the session
+	  		$this->postcode = $model->setPostcode($user);
+	  	}
+	  	else
+	  	{
+	  		$postcode = $app->input->get('mypostcode', "", 'string');
+	  		if($postcode!=null)
+	  		{
+	  			$this->postcode = $model->setPostcode("",$postcode);
+	  		}
+	  	}
+	  	
+	  	if(($session->get('mypostcode',null)!=null) And ($app->input->get('checkpostcode',null)==true))
+	  	{
+	  		$app->input->set('view', 'vendors');
+	  		$app->input->set('layout', 'default');
+	  	}
+	endif;
+	if($app->input->get('postcodevalue',null,'string')=='clear')
+	{
+		$session->clear('mypostcode');
+		$app->redirect(JRoute::_('index.php?option=com_ddcshopbox'));
+	}
+  	if($session->get('mypostcode',null)!=null)
+  	{
+  		if($app->input->getWord('view', 'vendors')=='products'):
+  			$app->input->set('view',null);
+  		endif;
+  		$viewName = $app->input->getWord('view', 'vendors');
+  		$viewFormat = $document->getType();
+  		$layoutName = $app->input->getWord('layout', 'default');
+  	}
+	else
+	{
+		$viewName = $app->input->getWord('view', 'products');
+		$viewFormat = $document->getType();
+		$layoutName = $app->input->getWord('layout', 'default');
+	}
+	
   	$app->input->set('view', $viewName);
   	
   	// Register the layout paths for the view

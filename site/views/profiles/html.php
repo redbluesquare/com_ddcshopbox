@@ -19,11 +19,13 @@ class DdcshopboxViewsProfilesHtml extends JViewHtml
     
     	//retrieve task list from model
     	$profilesModel = new DdcshopboxModelsProfiles();
+    	$profileModel = new DdcshopboxModelsProfile();
     	switch($layout) {
     		case "default":
     			default:
-    			$this->profile = $profilesModel->listItems();
-
+    			$this->profile = $profilesModel->getItem();
+    			$this->form = $profileModel->getForm();
+    			$this->_profileAddressView = DdcshopboxHelpersView::load('profiles','_addressform','phtml');
     		break;
     	}
  
