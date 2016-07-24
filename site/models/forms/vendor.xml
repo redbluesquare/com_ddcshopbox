@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="main_top">
+		<field
+			name="ddc_vendor_id"
+			type="text"
+			label="COM_DDC_ID_LABEL"
+			description="COM_DDC_ID_DESC"
+			readonly="true"
+		/>
+		<field
+			name="title"
+			type="text"
+			label="COM_DDC_TITLE_LABEL"
+			description="COM_DDCDDC_TITLE_DESC"
+			class="span9"
+		/>
+		<field
+			name="alias"
+			type="text"
+			label="COM_DDC_ALIAS_LABEL"
+			description="COM_DDCDDC_ALIAS_DESC"
+			class="span9"
+		/>
+	</fieldset>
+	<fieldset name="main_right">
+	    <field
+			name="vendor_currency"
+			type="sql"
+			default="0"
+			label="COM_DDC_CURRENCY_LABEL"
+			description="COM_DDC_CURRENCY_DESC"
+			query="SELECT ddc_currency_id AS value, currency_code_3 as vendor_currency FROM #__ddc_currencies"
+		/>
+	    <field
+			name="owner"
+			type="sql"
+			default="0"
+			label="COM_DDC_OWNER_LABEL"
+			description="COM_DDC_OWNER_DESC"
+			query="SELECT id AS value, name as owner FROM #__users"
+		/>
+		<field
+			name="address1"
+			type="text"
+			label="COM_DDC_ADDRESS1_LABEL"
+			description="COM_DDC_ADDRESS1_DESC"
+		/>
+		<field
+			name="address2"
+			type="text"
+			label="COM_DDC_ADDRESS2_LABEL"
+			description="COM_DDC_ADDRESS2_DESC"
+		/>
+		<field
+			name="town"
+			type="text"
+			label="COM_DDC_TOWN_LABEL"
+			description="COM_DDC_TOWN_DESC"
+		/>
+		<field
+			name="city"
+			type="text"
+			label="COM_DDC_CITY_LABEL"
+			description="COM_DDC_CITY_DESC"
+		/>
+		<field
+			name="county"
+			type="text"
+			label="COM_DDC_COUNTY_LABEL"
+			description="COM_DDC_COUNTY_DESC"
+		/>
+		<field
+			name="post_code"
+			type="text"
+			label="COM_DDC_POST_CODE_LABEL"
+			description="COM_DDC_POST_CODE_DESC"
+		/>
+		<field
+			name="country"
+			type="sql"
+			default="0"
+			label="COM_DDC_COUNTRY_LABEL"
+			description="COM_DDC_COUNTRY_DESC"
+			query="SELECT ddc_country_id AS value, country_name as country FROM #__ddc_countries"
+		/>
+		<field
+			name="images"
+			type="media"
+			label="COM_DDCBOOKIT_IMAGE_THUMB_LABEL"
+			description="COM_DDCBOOKIT_IMAGE_THUMB_DESC"
+		/>
+		<field name="state" 
+		    type="list" 
+		    label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="2"
+		>
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<field
+			name="table"
+			type="text"
+			label="COM_DDC_TABLE_LABEL"
+			description="COM_DDC_TABLE_DESC"
+			hidden="true"
+			class="hidden"
+			default="vendors"
+		/>
+	</fieldset>
+	<fieldset name="main">
+		<field
+			name="description"
+			type="editor"
+			label="COM_DDC_VENDOR_DESCRIPTION_LABEL"
+			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
+			filter="raw"
+			row="5"
+		/>
+	</fieldset>
+	<fieldset name="apartment_right">
+		
+		
+		<field
+			name="hits"
+			type="text"
+			label="COM_DDCBOOKIT_APARTMENT_RESIDENCE_TABLE_LABEL"
+			description="COM_DDCBOOKIT_APARTMENT_RESIDENCE_TABLE_DESC"
+			hidden="true"
+			class="hidden"
+			default="0"
+		/>
+	</fieldset>
+</form>

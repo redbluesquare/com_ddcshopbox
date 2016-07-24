@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="main_top">
+		<field
+			name="ddc_user_vendor_id"
+			type="text"
+			label="COM_DDC_ID_LABEL"
+			description="COM_DDC_ID_DESC"
+			readonly="true"
+		/>
+	    <field
+			name="vendor_id"
+			type="sql"
+			default="0"
+			label="COM_DDC_VENDOR_LABEL"
+			description="COM_DDC_VENDOR_DESC"
+			query="SELECT ddc_vendor_id AS value, title as vendor_id FROM #__ddc_vendors"
+		/>
+	    <field
+			name="user_id"
+			type="sql"
+			default="0"
+			label="COM_DDC_OWNER_LABEL"
+			description="COM_DDC_OWNER_DESC"
+			query="SELECT id AS value, name as user_id FROM #__users"
+		/>
+	</fieldset>
+	<fieldset name="main_right">
+		<field name="state" 
+		    type="list" 
+		    label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="2"
+		>
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<field
+			name="table"
+			type="text"
+			label="COM_DDC_TABLE_LABEL"
+			description="COM_DDC_TABLE_DESC"
+			hidden="true"
+			class="hidden"
+			default="uservendors"
+		/>
+	</fieldset>
+</form>

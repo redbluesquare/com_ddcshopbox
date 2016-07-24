@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="product_information">
+		<field
+			name="ddc_product_id"
+			type="text"
+			label="COM_DDC_ID_LABEL"
+			description="COM_DDC_ID_DESC"
+			readonly="true"
+		/>
+		<field
+			name="product_parent_id"
+			type="text"
+			label="COM_DDC_PARENT_ID_LABEL"
+			description="COM_DDC_PRODUCT_ID_DESC"
+			readonly="true"
+		/>
+		<field
+			name="product_name"
+			type="text"
+			label="COM_DDC_PRODUCT_NAME_LABEL"
+			description="COM_DDCDDC_PRODUCT_NAME_DESC"
+			class="span9"
+		/>
+		<field
+			name="product_alias"
+			type="text"
+			label="COM_DDC_PRODUCT_ALIAS_LABEL"
+			description="COM_DDCDDC_PRODUCT_ALIAS_DESC"
+			class="span9"
+		/>
+		<field
+			name="product_sku"
+			type="text"
+			label="COM_DDC_PRODUCT_SKU_LABEL"
+			description="COM_DDC_PRODUCT_SKU_DESC"
+			class="span9"
+		/>
+		<field
+			name="product_gtin"
+			type="text"
+			label="COM_DDC_PRODUCT_GTIN_LABEL"
+			description="COM_DDC_PRODUCT_GTIN_DESC"
+			class="span9"
+		/>
+		<field
+			name="product_mpn"
+			type="text"
+			label="COM_DDC_PRODUCT_MPN_LABEL"
+			description="COM_DDC_PRODUCT_MPN_DESC"
+			class="span9"
+		/>
+		<field
+			name="product_url"
+			type="text"
+			label="COM_DDC_PRODUCT_URL_LABEL"
+			description="COM_DDC_PRODUCT_URL_DESC"
+			class="span9"
+		/>
+	</fieldset>
+	<fieldset name="product_dimensions">
+		<field
+			name="product_length"
+			type="text"
+			label="COM_DDC_PRODUCT_LENGTH_LABEL"
+			description="COM_DDC_PRODUCT_LENGTH_DESC"
+		/>
+		<field
+			name="product_width"
+			type="text"
+			label="COM_DDC_PRODUCT_WIDTH_LABEL"
+			description="COM_DDC_PRODUCT_WIDTH_DESC"
+		/>
+		<field
+			name="product_height"
+			type="text"
+			label="COM_DDC_PRODUCT_HEIGHT_LABEL"
+			description="COM_DDC_PRODUCT_HEIGHT_DESC"
+		/>
+		<field
+			name="product_lwh_uom"
+			type="text"
+			label="COM_DDC_PRODUCT_LWH_UOM_LABEL"
+			description="COM_DDC_PRODUCT_LWH_UOM_DESC"
+		/>
+		<field
+			name="product_weight"
+			type="text"
+			label="COM_DDC_PRODUCT_WEIGHT_LABEL"
+			description="COM_DDC_PRODUCT_WEIGHT_DESC"
+		/>
+		<field
+			name="product_weight_uom"
+			type="text"
+			label="COM_DDC_PRODUCT_WEIGHT_UOM_LABEL"
+			description="COM_DDC_PRODUCT_WEIGHT_UOM_DESC"
+		/>
+		<field name="product_base_uom" 
+		    type="list" 
+		    label="COM_DDC_PRODUCT_BASE_UOM_LABEL"
+			description="COM_DDC_PRODUCT_BASE_UOM_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="21"
+		>
+			<option value="1">
+				COM_DDC_EACH</option>
+			<option value="2">
+				COM_DDC_SET</option>
+			<option value="3">
+				COM_DDC_PACK</option>
+			<option value="4">
+				COM_DDC_PAIR</option>
+		</field>
+	</fieldset>
+	<fieldset name="product_description">
+		<field
+			name="product_description_small"
+			type="textarea"
+			label="COM_DDC_PRODUCT_SMALL_DESCRIPTION_LABEL"
+			description="COM_DDC_PRODUCT_SMALL_DESCRIPTION_DESC"
+			filter="raw"
+			row="5"
+			cols="30"
+		/>
+		<field
+			name="product_description"
+			type="editor"
+			label="COM_DDC_PRODUCT_DESCRIPTION_LABEL"
+			description="COM_DDC_PRODUCT_DESCRIPTION_DESC"
+			filter="safehtml"
+		/>
+		<field
+			name="metarobot"
+			type="textarea"
+			label="COM_DDC_METAROBOT_LABEL"
+			description="COM_DDC_METAROBOT_DESC"
+			filter="raw"
+			row="5"
+			cols="30"
+		/>
+		<field
+			name="metaauthor"
+			type="textarea"
+			label="COM_DDC_METAAUTHOR_LABEL"
+			description="COM_DDC_METAAUTHOR_DESC"
+			filter="raw"
+			row="5"
+			cols="30"
+		/>
+	</fieldset>
+	<fieldset name="main">
+		<field
+			name="country"
+			type="sql"
+			default="0"
+			label="COM_DDC_COUNTRY_LABEL"
+			description="COM_DDC_COUNTRY_DESC"
+			query="SELECT ddc_country_id AS value, country_name as country FROM #__ddc_countries"
+		/>
+		<field
+			name="vendor_currency"
+			type="sql"
+			default="0"
+			label="COM_DDC_CURRENCY_LABEL"
+			description="COM_DDC_CURRENCY_DESC"
+			query="SELECT ddc_currency_id AS value, currency_code_3 as vendor_currency FROM #__ddc_currencies"
+		/>
+	    <field
+			name="owner"
+			type="sql"
+			default="0"
+			label="COM_DDC_OWNER_LABEL"
+			description="COM_DDC_OWNER_DESC"
+			query="SELECT id AS value, name as owner FROM #__users"
+		/>
+		<field
+			name="images"
+			type="media"
+			label="COM_DDCBOOKIT_IMAGE_THUMB_LABEL"
+			description="COM_DDCBOOKIT_IMAGE_THUMB_DESC"
+		/>
+		<field name="state" 
+		    type="list" 
+		    label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="2"
+		>
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<field
+			name="table"
+			type="text"
+			label="COM_DDC_TABLE_LABEL"
+			description="COM_DDC_TABLE_DESC"
+			hidden="true"
+			class="hidden"
+			default="vendors"
+		/>
+	</fieldset>
+	<fieldset name="main">
+		<field
+			name="description"
+			type="editor"
+			label="COM_DDC_VENDOR_DESCRIPTION_LABEL"
+			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
+			filter="raw"
+			row="5"
+		/>
+	</fieldset>
+	<fieldset name="apartment_right">
+		
+		
+		<field
+			name="hits"
+			type="text"
+			label="COM_DDCBOOKIT_APARTMENT_RESIDENCE_TABLE_LABEL"
+			description="COM_DDCBOOKIT_APARTMENT_RESIDENCE_TABLE_DESC"
+			hidden="true"
+			class="hidden"
+			default="0"
+		/>
+	</fieldset>
+</form>
