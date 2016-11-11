@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset name="product_information">
+	<fieldset name="product_information_left">
 		<field
 			name="ddc_product_id"
 			type="text"
@@ -9,31 +9,39 @@
 			readonly="true"
 		/>
 		<field
-			name="product_parent_id"
-			type="text"
-			label="COM_DDC_PARENT_ID_LABEL"
-			description="COM_DDC_PRODUCT_ID_DESC"
-			readonly="true"
-		/>
-		<field
 			name="product_name"
 			type="text"
 			label="COM_DDC_PRODUCT_NAME_LABEL"
 			description="COM_DDCDDC_PRODUCT_NAME_DESC"
-			class="span9"
-		/>
-		<field
-			name="product_alias"
-			type="text"
-			label="COM_DDC_PRODUCT_ALIAS_LABEL"
-			description="COM_DDCDDC_PRODUCT_ALIAS_DESC"
-			class="span9"
 		/>
 		<field
 			name="product_sku"
 			type="text"
 			label="COM_DDC_PRODUCT_SKU_LABEL"
 			description="COM_DDC_PRODUCT_SKU_DESC"
+		/>
+		<field
+			name="product_url"
+			type="text"
+			label="COM_DDC_PRODUCT_URL_LABEL"
+			description="COM_DDC_PRODUCT_URL_DESC"
+		/>
+	</fieldset>
+	<fieldset name="product_information_right">
+		<field
+			name="product_parent_id"
+			type="sql"
+			label="COM_DDC_PARENT_ID_LABEL"
+			description="COM_DDC_PRODUCT_ID_DESC"
+			query="SELECT ddc_product_id AS value, product_name as product_parent_id FROM #__ddc_products"
+		>
+			<option value="0">-</option>
+		</field>
+		<field
+			name="product_alias"
+			type="text"
+			label="COM_DDC_PRODUCT_ALIAS_LABEL"
+			description="COM_DDCDDC_PRODUCT_ALIAS_DESC"
 			class="span9"
 		/>
 		<field
@@ -48,34 +56,51 @@
 			type="text"
 			label="COM_DDC_PRODUCT_MPN_LABEL"
 			description="COM_DDC_PRODUCT_MPN_DESC"
-			class="span9"
+			class="col-xs-9"
 		/>
-		<field
-			name="product_url"
+		
+	</fieldset>
+	<fieldset name="product_price_left">
+	    <field
+			name="product_price"
 			type="text"
-			label="COM_DDC_PRODUCT_URL_LABEL"
-			description="COM_DDC_PRODUCT_URL_DESC"
-			class="span9"
+			label="COM_DDC_PRODUCT_PRICE_LABEL"
+			description="COM_DDC_PRODUCT_PRICE_DESC"
+			default="0"
+		/>
+	    <field
+			name="ddc_product_price_id"
+			type="hidden"
 		/>
 	</fieldset>
-	<fieldset name="product_dimensions">
+	<fieldset name="product_price_right">
+	    <field
+			name="product_currency"
+			type="sql"
+			query="SELECT ddc_currency_id AS value, CONCAT(currency_name,', ',currency_symbol) as product_currency FROM #__ddc_currencies"
+		/>
+	</fieldset>
+	<fieldset name="product_dimensions_left">
 		<field
 			name="product_length"
 			type="text"
 			label="COM_DDC_PRODUCT_LENGTH_LABEL"
 			description="COM_DDC_PRODUCT_LENGTH_DESC"
+			default="0"
 		/>
 		<field
 			name="product_width"
 			type="text"
 			label="COM_DDC_PRODUCT_WIDTH_LABEL"
 			description="COM_DDC_PRODUCT_WIDTH_DESC"
+			default="0"
 		/>
 		<field
 			name="product_height"
 			type="text"
 			label="COM_DDC_PRODUCT_HEIGHT_LABEL"
 			description="COM_DDC_PRODUCT_HEIGHT_DESC"
+			default="0"
 		/>
 		<field
 			name="product_lwh_uom"
@@ -88,6 +113,7 @@
 			type="text"
 			label="COM_DDC_PRODUCT_WEIGHT_LABEL"
 			description="COM_DDC_PRODUCT_WEIGHT_DESC"
+			default="0"
 		/>
 		<field
 			name="product_weight_uom"
@@ -114,22 +140,30 @@
 				COM_DDC_PAIR</option>
 		</field>
 	</fieldset>
-	<fieldset name="product_description">
+	<fieldset name="product_dimensions_right">
 		<field
-			name="product_description_small"
-			type="textarea"
-			label="COM_DDC_PRODUCT_SMALL_DESCRIPTION_LABEL"
-			description="COM_DDC_PRODUCT_SMALL_DESCRIPTION_DESC"
-			filter="raw"
-			row="5"
-			cols="30"
+			name="min_order_level"
+			type="text"
+			label="COM_DDC_MIN_ORDER_LEVEL_LABEL"
+			description="COM_DDC_MIN_ORDER_LEVEL_DESC"
 		/>
 		<field
-			name="product_description"
-			type="editor"
-			label="COM_DDC_PRODUCT_DESCRIPTION_LABEL"
-			description="COM_DDC_PRODUCT_DESCRIPTION_DESC"
-			filter="safehtml"
+			name="max_order_level"
+			type="text"
+			label="COM_DDC_MAX_ORDER_LEVEL_LABEL"
+			description="COM_DDC_MAX_ORDER_LEVEL_DESC"
+		/>
+		<field
+			name="step_order_level"
+			type="text"
+			label="COM_DDC_STEP_ORDER_LEVEL_LABEL"
+			description="COM_DDC_STEP_ORDER_LEVEL_DESC"
+		/>
+		<field
+			name="product_box"
+			type="text"
+			label="COM_DDC_PRODUCT_BOX_LABEL"
+			description="COM_DDC_PRODUCT_BOX_DESC"
 		/>
 		<field
 			name="metarobot"
@@ -149,54 +183,6 @@
 			row="5"
 			cols="30"
 		/>
-	</fieldset>
-	<fieldset name="main">
-		<field
-			name="country"
-			type="sql"
-			default="0"
-			label="COM_DDC_COUNTRY_LABEL"
-			description="COM_DDC_COUNTRY_DESC"
-			query="SELECT ddc_country_id AS value, country_name as country FROM #__ddc_countries"
-		/>
-		<field
-			name="vendor_currency"
-			type="sql"
-			default="0"
-			label="COM_DDC_CURRENCY_LABEL"
-			description="COM_DDC_CURRENCY_DESC"
-			query="SELECT ddc_currency_id AS value, currency_code_3 as vendor_currency FROM #__ddc_currencies"
-		/>
-	    <field
-			name="owner"
-			type="sql"
-			default="0"
-			label="COM_DDC_OWNER_LABEL"
-			description="COM_DDC_OWNER_DESC"
-			query="SELECT id AS value, name as owner FROM #__users"
-		/>
-		<field
-			name="images"
-			type="media"
-			label="COM_DDCBOOKIT_IMAGE_THUMB_LABEL"
-			description="COM_DDCBOOKIT_IMAGE_THUMB_DESC"
-		/>
-		<field name="state" 
-		    type="list" 
-		    label="JSTATUS"
-			description="JFIELD_PUBLISHED_DESC" 
-			class="chzn-color-state"
-			filter="intval" 
-			size="1" 
-			default="2"
-		>
-			<option value="1">
-				JPUBLISHED</option>
-			<option value="0">
-				JUNPUBLISHED</option>
-			<option value="-2">
-				JTRASHED</option>
-		</field>
 		<field
 			name="table"
 			type="text"
@@ -204,30 +190,26 @@
 			description="COM_DDC_TABLE_DESC"
 			hidden="true"
 			class="hidden"
-			default="vendors"
+			default="products"
 		/>
 	</fieldset>
-	<fieldset name="main">
+	<fieldset name="product_description">
 		<field
-			name="description"
-			type="editor"
-			label="COM_DDC_VENDOR_DESCRIPTION_LABEL"
-			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
+			name="product_description_small"
+			type="textarea"
+			label="COM_DDC_PRODUCT_SMALL_DESCRIPTION_LABEL"
+			description="COM_DDC_PRODUCT_SMALL_DESCRIPTION_DESC"
 			filter="raw"
 			row="5"
+			cols="30"
+			max-size="100"
 		/>
-	</fieldset>
-	<fieldset name="apartment_right">
-		
-		
 		<field
-			name="hits"
-			type="text"
-			label="COM_DDCBOOKIT_APARTMENT_RESIDENCE_TABLE_LABEL"
-			description="COM_DDCBOOKIT_APARTMENT_RESIDENCE_TABLE_DESC"
-			hidden="true"
-			class="hidden"
-			default="0"
+			name="product_description"
+			type="editor"
+			label="COM_DDC_PRODUCT_DESCRIPTION_LABEL"
+			description="COM_DDC_PRODUCT_DESCRIPTION_DESC"
+			filter="safehtml"
 		/>
 	</fieldset>
 </form>

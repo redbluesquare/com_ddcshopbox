@@ -46,10 +46,10 @@ class DdcshopboxModelsDefault extends JModelBase
   		return false;
   	}
   
-  	$row->modified = $date;
-  	if ( !$row->created )
+  	$row->modified_on = $date;
+  	if ( !$row->created_on )
   	{
-  		$row->created = $date;
+  		$row->created_on = $date;
   	}
   
   	// Make sure the record is valid

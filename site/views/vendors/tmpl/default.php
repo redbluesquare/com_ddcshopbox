@@ -1,6 +1,6 @@
 <?php
 defined( '_JEXEC' ) or die( 'Restricted access' );
-
+$user = JFactory::getUser()->id;
 if(count($this->items)>0):
 ?>
 <table cellpadding="0" cellspacing="0" width="100%" class="table table-striped">
@@ -12,14 +12,26 @@ if(count($this->items)>0):
 		} ?>
 	</tbody>
 </table>
-<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&postcodevalue=clear'); ?>">clear</a>
+<?php 
+if($user==0):
+?>
+	<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&postcodevalue=clear'); ?>">clear</a>
+<?php 
+endif;
+?>
 <?php 
 else:
 ?>
 
-<div class="span12">
+<div class="col-xs-12">
 	<p><?php echo JText::_('COM_DDC_NO_STORES_IN_AREA'); ?></p>
-	<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&postcodevalue=clear'); ?>">clear</a>
+	<?php 
+	if($user==0):
+	?>
+		<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&postcodevalue=clear'); ?>">clear</a>
+	<?php 
+	endif;
+	?>
 </div>
 
 <?php

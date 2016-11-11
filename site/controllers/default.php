@@ -1,7 +1,5 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); 
 
-// import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
 
 class DdcshopboxControllersDefault extends JControllerBase
 {
@@ -35,12 +33,10 @@ class DdcshopboxControllersDefault extends JControllerBase
 	  			$this->postcode = $model->setPostcode("",$postcode);
 	  		}
 	  	}
+	  	$viewName = $app->input->getWord('view', 'home');
+	  	$viewFormat = $document->getType();
+	  	$layoutName = $app->input->getWord('layout', 'default');
 	  	
-	  	if(($session->get('mypostcode',null)!=null) And ($app->input->get('checkpostcode',null)==true))
-	  	{
-	  		$app->input->set('view', 'vendors');
-	  		$app->input->set('layout', 'default');
-	  	}
 	endif;
 	if($app->input->get('postcodevalue',null,'string')=='clear')
 	{
@@ -49,16 +45,7 @@ class DdcshopboxControllersDefault extends JControllerBase
 	}
   	if($session->get('mypostcode',null)!=null)
   	{
-  		if($app->input->getWord('view', 'vendors')=='products'):
-  			$app->input->set('view',null);
-  		endif;
-  		$viewName = $app->input->getWord('view', 'vendors');
-  		$viewFormat = $document->getType();
-  		$layoutName = $app->input->getWord('layout', 'default');
-  	}
-	else
-	{
-		$viewName = $app->input->getWord('view', 'products');
+		$viewName = $app->input->getWord('view', 'vendors');
 		$viewFormat = $document->getType();
 		$layoutName = $app->input->getWord('layout', 'default');
 	}

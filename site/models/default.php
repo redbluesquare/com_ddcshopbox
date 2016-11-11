@@ -39,17 +39,17 @@ class DdcshopboxModelsDefault extends JModelBase
   	$row = JTable::getInstance($data['table'],'Table');
   
   	$date = date("Y-m-d H:i:s");
-  
+  	
   	// Bind the form fields to the table
   	if (!$row->bind($data))
   	{
   		return false;
   	}
   
-  	$row->modified = $date;
-  	if ( !$row->created )
+  	$row->modified_on = $date;
+  	if ( !$row->created_on )
   	{
-  		$row->created = $date;
+  		$row->created_on = $date;
   	}
   
   	// Make sure the record is valid
@@ -93,12 +93,12 @@ class DdcshopboxModelsDefault extends JModelBase
    * Build a query, where clause and return an object
    *
    */
-  public function getItem()
+  public function getItem($id=null)
   {
   	$db = JFactory::getDBO();
   
   	$query = $this->_buildQuery();
-  	$this->_buildWhere($query);
+  	$this->_buildWhere($query,$id);
   	$db->setQuery($query);
   
   	$item = $db->loadObject();
@@ -262,6 +262,106 @@ class DdcshopboxModelsDefault extends JModelBase
   	
   	
   	
+  }
+  
+  public function getShopCart_contents()
+  {
+  	$result = null;
+  	$prodModel = new DdcshopboxModelsProducts();
+  	$cartdata = $this->session->get('shoppingcart',array());
+  	foreach($cartdata as $cart_item)
+  	{
+  		$product = $prodModel->getItem($cart_item['ddc_product_id']);
+  		$result .='<tr>';
+  		$result .='<td>'.$cart_item['product_quantity'].' x </td>';
+  		$result .='<td>'.$product->product_name.'</td>';
+  		$result .='<td>'.$product->currency_symbol." ".number_format(($cart_item['product_quantity']*$product->product_price),2).'</td>';
+  		$result .='</tr>';
+  	}
+  	
+  	return $result;
+  }
+  
+  public function ddcnumber($number)
+  {
+  	if(($number==null) || ($number==0))
+  	{
+  		$number = "-";
+  	}
+  	return $number;
+  }
+  
+  public function getpartjsonfield($string,$part)
+  {
+  	$prod_params = json_decode($string, true);
+	$item = $prod_params[$part];  	
+  	return $item;
+  }
+  
+  // Function for resizing jpg, gif, or png image files
+  public function profile_img_resize($target, $newcopy, $w, $h, $ext) {
+  	list($w_orig, $h_orig) = getimagesize($target);
+  	$scale_ratio = $w_orig / $h_orig;
+  	if (($w / $h) > $scale_ratio) {
+  		$w = $h * $scale_ratio;
+  	} else {
+  		$h = $w / $scale_ratio;
+  	}
+  	$img = "";
+  	$ext = strtolower($ext);
+  	if ($ext == "gif"){
+  		$img = imagecreatefromgif($target);
+  	} else if($ext =="png"){
+  		$img = imagecreatefrompng($target);
+  	} else {
+  		$img = imagecreatefromjpeg($target);
+  	}
+  	$tci = imagecreatetruecolor($w, $h);
+  	// imagecopyresampled(dst_img, src_img, dst_x, dst_y, src_x, src_y, dst_w, dst_h, src_w, src_h)
+  	imagecopyresampled($tci, $img, 0, 0, 0, 0, $w, $h, $w_orig, $h_orig);
+  	imagejpeg($tci, $newcopy, 80);
+  }
+  
+  public function uploadPhoto($dest,$id,$linkedtable)
+  {
+  	$user = JFactory::getUser()->id;
+  	if($user!=0)
+  	{
+  		$date = date("Y-m-d H:i:s");
+  		//If you wish to delete all linked images
+//   		$db = JFactory::getDbo();
+//   		$query = $db->getQuery(TRUE);
+//   		// delete all custom keys for user 1001.
+//   		$conditions = array(
+//   				$db->quoteName('linked_id') . ' = '.(int)$id,
+//   				$db->quoteName('linked_table') . ' = ' . $db->quote($linkedtable)
+//   		);
+  
+//   		$query->delete($db->quoteName('#__ddc_images'));
+//   		$query->where($conditions);
+  
+//   		$db->setQuery($query);
+//   		$db->execute();
+  
+  		$db = JFactory::getDbo();
+  		$query = $db->getQuery(TRUE);
+  		// Insert columns.
+  		$columns = array('link_id', 'linked_table', 'image_link', 'state', 'modified_on', 'created_on');
+  
+  		// Insert values.
+  		$values = array($id, $db->quote($linkedtable), $db->quote($dest), 1, $db->quote($date), $db->quote($date));
+  
+  		// Prepare the insert query.
+  		$query
+  		->insert($db->quoteName('#__ddc_images'))
+  		->columns($db->quoteName($columns))
+  		->values(implode(',', $values));
+  		$db->setQuery($query);
+  		$result = $db->execute();
+  
+  		return true;
+  	}
+  	return false;
   }
   
 }

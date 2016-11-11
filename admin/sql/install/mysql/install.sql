@@ -91,6 +91,176 @@ CREATE TABLE IF NOT EXISTS `dev_ddc_images` (
   KEY `link_id` (`link_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+--
+-- Table structure for table `#__ddc_orders`
+--
+
+CREATE TABLE IF NOT EXISTS `#__ddc_orders` (
+  `ddc_order_id` INT(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(1) UNSIGNED NOT NULL DEFAULT '0',
+  `ddc_vendor_id` int(1) UNSIGNED NOT NULL DEFAULT '0',
+  `order_number` varchar(64),
+  `customer_number` varchar(32),
+  `order_pass` varchar(34),
+  `order_create_invoice_pass` varchar(32),
+  `order_total` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `order_salesPrice` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `order_billTaxAmount` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `order_billTax` varchar(400),
+  `order_billDiscountAmount` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `order_discountAmount` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `order_subtotal` decimal(15,5),
+  `order_tax` decimal(10,5),
+  `order_shipment` decimal(10,5),
+  `order_shipment_tax` decimal(10,5),
+  `order_payment` decimal(10,2),
+  `order_payment_tax` decimal(10,5),
+  `coupon_discount` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `coupon_code` char(32),
+  `order_discount` decimal(12,2) NOT NULL DEFAULT '0.00',
+  `order_currency` smallint(1),
+  `order_status` char(1),
+  `user_currency_id` smallint(1),
+  `user_currency_rate` DECIMAL(10,5) NOT NULL DEFAULT '1.00000',
+  `ddc_paymentmethod_id` int(1) UNSIGNED,
+  `ddc_shipmentmethod_id` int(1) UNSIGNED,
+  `delivery_date` varchar(200),
+  `order_language` varchar(7),
+  `ip_address` char(15) NOT NULL DEFAULT '',
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_order_id`),
+  KEY `user_id` (`user_id`),
+  KEY `ddc_vendor_id` (`virtuemart_vendor_id`),
+  KEY `order_number` (`order_number`),
+  KEY `ddc_paymentmethod_id` (`ddc_paymentmethod_id`),
+  KEY `ddc_shipmentmethod_id` (`ddc_shipmentmethod_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Used to store all orders' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__ddc_order_histories`
+--
+
+CREATE TABLE IF NOT EXISTS `#__ddc_order_histories` (
+  `ddc_order_history_id` INT(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ddc_order_id` int(1) UNSIGNED NOT NULL DEFAULT '0',
+  `order_status_code` char(1) NOT NULL DEFAULT '0',
+  `customer_notified` tinyint(1) NOT NULL DEFAULT '0',
+  `comments` varchar(21000),
+  `published` tinyint(1) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_order_history_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores all actions and changes that occur to an order' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__ddc_order_items`
+--
+
+CREATE TABLE IF NOT EXISTS `#__ddc_order_items` (
+  `ddc_order_item_id` INT(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ddc_order_id` int(1),
+  `ddc_vendor_id` int(1) NOT NULL DEFAULT '1',
+  `ddc_product_id` int(1),
+  `order_item_sku` varchar(255) NOT NULL DEFAULT '',
+  `order_item_name` varchar(4096) NOT NULL DEFAULT '',
+  `product_quantity` int(1),
+  `product_item_price` decimal(15,5),
+  `product_priceWithoutTax` decimal(15,5),
+  `product_tax` decimal(15,5),
+  `product_basePriceWithTax` decimal(15,5),
+  `product_discountedPriceWithoutTax` decimal(15,5),
+  `product_final_price` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `product_subtotal_discount` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `product_subtotal_with_tax` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `order_item_currency` INT(1),
+  `order_status` char(1),
+  `product_attribute` mediumtext,
+  `delivery_date` varchar(200),
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_order_item_id`),
+  KEY `ddc_product_id` (`ddc_product_id`),
+  KEY `ddc_order_id` (`ddc_order_id`),
+  KEY `ddc_vendor_id` (`ddc_vendor_id`),
+  KEY `order_status` (`order_status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores all items (products) which are part of an order' AUTO_INCREMENT=1 ;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__ddc_order_calc_rules`
+--
+
+CREATE TABLE IF NOT EXISTS `#__ddc_order_calc_rules` (
+  `ddc_order_calc_rule_id` INT(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ddc_calc_id` int(1),
+  `ddc_order_id` int(1),
+  `ddc_vendor_id` int(1) NOT NULL DEFAULT '1',
+  `ddc_order_item_id` int(1),
+  `calc_rule_name`  varchar(64) NOT NULL DEFAULT '' COMMENT 'Name of the rule',
+  `calc_kind` varchar(16) NOT NULL DEFAULT '' COMMENT 'Discount/Tax/Margin/Commission',
+  `calc_mathop` varchar(16) NOT NULL DEFAULT '' COMMENT 'Discount/Tax/Margin/Commission',
+  `calc_amount` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `calc_result` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `calc_value` decimal(15,5) NOT NULL DEFAULT '0.00000',
+  `calc_currency` int(1),
+  `calc_params` varchar(18000) NOT NULL DEFAULT '',
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_order_calc_rule_id`),
+  KEY `ddc_calc_id` (`ddc_calc_id`),
+  KEY `ddc_order_id` (`ddc_order_id`),
+  KEY `ddc_vendor_id` (`ddc_vendor_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Stores all calculation rules which are part of an order' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `#__ddc_orderstates`
+--
+
+CREATE TABLE IF NOT EXISTS `#__ddc_orderstates` (
+  `ddc_orderstate_id` tinyint(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ddc_vendor_id` int(1) NOT NULL DEFAULT '1',
+  `order_status_code` char(1) NOT NULL DEFAULT '',
+  `order_status_name` varchar(64),
+  `order_status_description` varchar(20000),
+  `order_stock_handle` char(1) NOT NULL DEFAULT 'A',
+  `ordering` int(1) NOT NULL DEFAULT '0',
+  `published` tinyint(1) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_orderstate_id`),
+  KEY `ordering` (`ordering`),
+  KEY `ddc_vendor_id` (`ddc_vendor_id`),
+  KEY `published` (`published`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='All available order statuses' AUTO_INCREMENT=1 ;
+
+
 CREATE TABLE IF NOT EXISTS `#__ddc_products` (
   `ddc_product_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `vendor_id` int(11) UNSIGNED NOT NULL,

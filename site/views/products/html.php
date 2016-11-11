@@ -16,14 +16,23 @@ class DdcshopboxViewsProductsHtml extends JViewHtml
   	{
     	$app = JFactory::getApplication();
     	$layout = $this->getLayout();
-    
+    	
     	//retrieve task list from model
-    	$productsModel = new DdcshopboxModelsProducts();
+    	$productModel = new DdcshopboxModelsProduct();
+    	$productimagesModel = new DdcshopboxModelsProductimages();
+    	$vendorModel = new DdcshopboxModelsVendors();
+    	
     	switch($layout) {
     		case "default":
     			default:
-    			$this->model->listItems();
+    			$this->product = $this->model->getItem();
 
+    		break;
+    		case "edit":
+    			$this->form = $productModel->getForm();
+    			$this->vendor = $vendorModel->getItem();
+    			$this->product = $this->model->getItem();
+    			$this->productimages = $productimagesModel->listItems();
     		break;
     	}
  

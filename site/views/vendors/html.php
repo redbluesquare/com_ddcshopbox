@@ -25,21 +25,26 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     	switch($layout) {
     		case "default":
     			default:
+    			$pathway = $app->getPathway();
+    			$pathway->addItem('Vendor-List', '');
     			$this->items = $this->model->listItems();
     			$this->_vendorsListView = DdcshopboxHelpersView::load('vendors','_item','phtml');
     		break;
     		case "vendor":
+    			$pathway = $app->getPathway();
+    			$pathway->addItem('Vendor', '');
     			$this->item = $this->model->getItem();
     			$this->products = $productsModel->listItems();
     			
     			$this->gmap($this->item->post_code,'com_ddcshopbox');
     		break;
     		case "edit":
+    			$pathway = $app->getPathway();
+    			$pathway->addItem('Edit-Vendor', '');
     			$this->item = $this->model->getItem();
     			$this->products = $productsModel->listItems();
     			$this->form = $vendorModel->getForm();
     			 
-    			$this->gmap($this->item->post_code,'com_ddcshopbox');
     			break;
     	}
  

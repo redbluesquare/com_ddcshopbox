@@ -24,6 +24,91 @@
 			description="COM_DDC_URL_TERMS_DESC"
 		/>
     </fieldset>
+    <fieldset name="paymentMethod"
+		label="COM_DDC_PAYMENT_METHOD"
+		description="COM_DDC_PAYMENT_METHOD_DESC">
+		<field name="paymentmethod_id"
+		    type="text"
+		    label="COM_DDC_PAYMENT_ID"
+		    description="COM_DDC_PAYMENT_ID_DESC"
+		/>
+		<field name="paymentmethod_name" 
+		    type="text"
+			label="COM_DDC_PAYMENT_METHOD_NAME"
+			description="COM_DDC_PAYMENT_METHOD_NAME_DESC"
+		/>
+		<field name="payment_clientid"
+		    type="text"
+		    label="COM_DDC_PAYMENT_CLIENT_ID"
+		    description="COM_DDC_PAYMENT_CLIENT_ID_DESC"
+		/>
+		<field name="payment_client_secret"
+		    type="text"
+		    label="COM_DDC_PAYMENT_CLIENT_SECRET"
+		    description="COM_DDC_PAYMENT_CLIENT_SECRET_DESC"
+		/>
+		<field name="payment_clientid_sandbox"
+		    type="text"
+		    label="COM_DDC_PAYMENT_SANDBOX_CLIENT_ID"
+		    description="COM_DDC_PAYMENT_SANDBOX_CLIENT_ID_DESC"
+		/>
+		<field name="paymentl_client_secret_sandbox"
+		    type="text"
+		    label="COM_DDC_PAYMENT_SANDBOX_CLIENT_SECRET"
+		    description="COM_DDC_PAYMENT_SANDBOX_CLIENT_SECRET_DESC"
+		/>
+		<field name="payment_mode" type="radio"
+			default="sandbox"
+			class="btn-group"
+			label="COM_DDC_PAYMENT_MODE"
+			description="COM_DDC_PAYMENT_MODE_DESC">
+
+			<option value="sandbox">COM_DDC_SANDBOX</option>
+			<option value="live">COM_DDC_LIVE</option>
+		</field>
+		<field name="paymenturl"
+		    type="url"
+			default="https://api.sandbox.paypal.com"
+			label="COM_DDC_PAYMENT_URL"
+			description="COM_DDC_PAYMENT_URL_DESC"
+		/>
+		<field name="payment_logo"
+		    type="url"
+			default=""
+			label="COM_DDC_PAYMENT_LOGO"
+			description="COM_DDC_PAYMENT_LOGO_DESC"
+		/>
+		<field name="payment_success_url"
+		    type="url"
+			default=""
+			label="COM_DDC_PAYMENT_SUCCESS_URL"
+			description="COM_DDC_PAYMENT_URL_DESC"
+		/>
+		<field name="payment_cancel_url"
+		    type="url"
+			default=""
+			label="COM_DDC_PAYMENT_CANCEL_URL"
+			description="COM_DDC_PAYMENT_URL_DESC"
+		/>
+		<field name="paymenturl_sandbox"
+		    type="url"
+			default="https://api.sandbox.paypal.com"
+			label="COM_DDC_PAYMENT_URL"
+			description="COM_DDC_PAYMENT_URL_DESC"
+		/>
+		<field name="payment_success_url_sandbox"
+		    type="url"
+			default=""
+			label="COM_DDC_PAYMENT_SANDBOX_SUCCESS_URL"
+			description="COM_DDC_PAYMENT_URL_DESC"
+		/>
+		<field name="payment_cancel_url_sandbox"
+		    type="url"
+			default=""
+			label="COM_DDC_PAYMENT_SANDBOX_CANCEL_URL"
+			description="COM_DDC_PAYMENT_URL_DESC"
+		/>
+    </fieldset>
 	<fieldset name="permissions"
 		description="JCONFIG_PERMISSIONS_DESC"
 		label="JCONFIG_PERMISSIONS_LABEL"

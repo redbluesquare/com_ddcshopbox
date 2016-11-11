@@ -2,15 +2,14 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 JHtml::_('behavior.tooltip');
+$myuser_id = JFactory::getUser()->id;
 ?>
-<div class="span12">
-	<form action="<?php echo JRoute::_('index.php?option=com_ddcshopbox&controller=edit'); ?>"
-      method="post" name="adminForm" id="adminForm">
-        <fieldset class="span12">
-                <legend><?php echo JText::_( 'COM_DDC_VENDOR_DETAILS' ); ?></legend>
-                <div class="adminformlist">
-					<div class="span8">
-					<div class="row-fluid">
+<?php 
+if(isset($this->item->user_id)): ?>
+<form action="<?php echo JRoute::_('index.php'); ?>" method="post">
+	<legend><?php echo JText::_( 'COM_DDC_VENDOR_DETAILS' ); ?></legend>
+		<div class="row-fluid">
+			<div class="span8">
 					<?php foreach($this->form->getFieldset('main_top') as $field): ?>
 						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
 							<?php echo $field->input;?>
@@ -29,9 +28,8 @@ JHtml::_('behavior.tooltip');
 						<?php endif;?>
 					<?php endforeach; ?>
 					<div class="clearfix"></div>
-					</div>
-					</div>
-					<div class="span4">
+			</div>
+			<div class="span4">
 					<?php foreach($this->form->getFieldset('main_right') as $field): ?>
 						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
 							<?php echo $field->input;?>
@@ -49,12 +47,22 @@ JHtml::_('behavior.tooltip');
 						</div>
 						<?php endif;?>
 					<?php endforeach; ?>
-					</div>
-				</div>
-        </fieldset>
+			</div>
         <div>
-                <input type="hidden" name="task" value="uservendor.edit" />
+                <input type="hidden" name="task" value="vendor.save" />
+                <input type="hidden" name="option" value="com_ddcshopbox" />
+                <input type="hidden" name="controller" value="edit" />
                 <?php echo JHtml::_('form.token'); ?>
+                <button type="submit" class="btn btn-primary"><?php echo JText::_('COM_DDC_SUBMIT'); ?></button>
         </div>
 	</form>
+
+<?php 
+else:
+?>
+<div>
+	<p><?php echo JText::_('COM_DDC_USER_UNATHORISED');?></p>
 </div>
+<?php 
+endif;
+?>

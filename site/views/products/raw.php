@@ -6,7 +6,7 @@ class DdcshopboxViewProductsRaw extends JViewHtml
   {
     $app = JFactory::getApplication();
     $type = $app->input->get('type');
-    $id = $app->input->get('id');
+    $id = $app->input->get('product_id');
     $view = $app->input->get('view');
  
     //retrieve task list from model

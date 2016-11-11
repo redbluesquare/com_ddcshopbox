@@ -22,6 +22,15 @@
 			description="COM_DDCDDC_ALIAS_DESC"
 			class="span9"
 		/>
+		<field
+			name="description"
+			type="editor"
+			label="COM_DDC_VENDOR_DESCRIPTION_LABEL"
+			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
+			filter="safehtml"
+			rows="10"
+			max-height="200px"
+		/>
 	</fieldset>
 	<fieldset name="main_right">
 	    <field
@@ -124,19 +133,6 @@
 			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
 			filter="raw"
 			row="5"
-		/>
-	</fieldset>
-	<fieldset name="apartment_right">
-		
-		
-		<field
-			name="hits"
-			type="text"
-			label="COM_DDCBOOKIT_APARTMENT_RESIDENCE_TABLE_LABEL"
-			description="COM_DDCBOOKIT_APARTMENT_RESIDENCE_TABLE_DESC"
-			hidden="true"
-			class="hidden"
-			default="0"
 		/>
 	</fieldset>
 </form>

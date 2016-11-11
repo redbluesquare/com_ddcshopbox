@@ -45,5 +45,11 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
         
     return $query;
   }
-
+  
+  public function store($data = null)
+  {
+  	$data = $data ? $data : JRequest::getVar('jform', array(), 'post', 'array');
+  }
+  
+  
 }
