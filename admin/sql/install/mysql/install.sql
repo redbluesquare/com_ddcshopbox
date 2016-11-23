@@ -78,15 +78,15 @@ CREATE TABLE IF NOT EXISTS `#__ddc_currencies` (
   KEY `currency_numeric_code` (`currency_numeric_code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 COMMENT='Used to store currencies';
 
-CREATE TABLE IF NOT EXISTS `dev_ddc_images` (
+CREATE TABLE IF NOT EXISTS `#__ddc_images` (
   `ddc_image_id` int(11) NOT NULL AUTO_INCREMENT,
   `linked_table` text NOT NULL,
   `link_id` int(11) NOT NULL,
   `image_link` text NOT NULL,
   `details` text NOT NULL,
   `state` tinyint(3) NOT NULL,
-  `created` DATETIME NOT NULL default '0000-00-00 00:00:00',
-  `modified` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY (`ddc_image_id`),
   KEY `link_id` (`link_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
@@ -343,14 +343,25 @@ CREATE TABLE IF NOT EXISTS `#__ddc_product_prices` (
 
 CREATE TABLE IF NOT EXISTS `#__ddc_shoppingcart_headers` (
   `ddc_shoppingcart_header_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL default 0,
+  `session_id` varchar(100),
   `shipping_cost` double default '0.00',
+  `delivery_type` int(11) NULL,
   `delivery_time` TIME default '0:00:00',
   `delivery_date` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `email` varchar(150) NOT NULL,
+  `address_line_1` varchar(100),
+  `address_line_2` varchar(100),
+  `address_line_3` varchar(100),
+  `town` varchar(100),
+  `county` varchar(100),
+  `post_code` varchar(10) NOT NULL,
+  `country` int(11) NOT NULL,
+  `payment_method` int(11) NULL,
   `catid` int(11) NOT NULL default '0',
   `state` tinyint(3) NOT NULL,
-  `created` DATETIME NOT NULL default '0000-00-00 00:00:00',
-  `modified` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY (`ddc_shoppingcart_header_id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
@@ -359,18 +370,51 @@ CREATE TABLE IF NOT EXISTS `#__ddc_shoppingcart_details` (
   `ddc_shoppingcart_detail_id` int(11) NOT NULL AUTO_INCREMENT,
   `shoppingcart_header_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
+  `product_quantity` double default '0.00',
   `price` double default '0.00',
   `discount` double default '0.00',
   `discount_end_date` DATETIME NOT NULL default '0000-00-00 00:00:00',
   `images` text NOT NULL,
   `catid` int(11) NOT NULL default '0',
   `state` tinyint(3) NOT NULL,
-  `created` DATETIME NOT NULL default '0000-00-00 00:00:00',
-  `modified` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
   `hits` int(10) NOT NULL,
   PRIMARY KEY (`ddc_shoppingcart_detail_id`),
   KEY `shoppingcart_header_id` (`shoppingcart_header_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE #__ddc_outcodes (
+    ddc_outcode_id INT(11) NOT NULL AUTO_INCREMENT,
+    postcode VARCHAR(5) NOT NULL,
+    eastings INT(7) NOT NULL,
+    northings INT(7) NOT NULL,
+    latitude DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(11, 8) NOT NULL,
+    town VARCHAR(255) NULL,
+    region VARCHAR(255) NULL,
+    uk_region VARCHAR(255) NULL,
+    country VARCHAR(3) NULL,
+    country_string VARCHAR(255) NULL,
+    PRIMARY KEY(id)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `#__ddc_user_vendor_interests` (
+  `ddc_user_vendor_interest_id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` VARCHAR(60) NOT NULL,
+  `lastname` VARCHAR(60) NOT NULL,
+  `email_to` VARCHAR(100) NOT NULL,
+  `town` VARCHAR(60) NOT NULL,
+  `ddc_vendor_1` VARCHAR(60) NULL,
+  `ddc_vendor_2` VARCHAR(60) NULL,
+  `ddc_vendor_3` VARCHAR(60) NULL,
+  `comment` TEXT NULL,
+  `state` tinyint(3) NOT NULL,
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY (`ddc_user_vendor_interest_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 
 CREATE TABLE IF NOT EXISTS `#__ddc_user_vendor` (
   `ddc_user_vendor_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -388,23 +432,23 @@ CREATE TABLE IF NOT EXISTS `#__ddc_vendors` (
   `ddc_vendor_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `alias` varchar(100) NOT NULL,
-  `vendor_currency` int(11),
-  `vendor_accepted_currencies` varchar(1536) NOT NULL DEFAULT '',
+  `vendor_currency` int(11) NOT NULL DEFAULT '52',
+  `vendor_accepted_currencies` varchar(1536) NOT NULL DEFAULT '52',
   `introduction` text NULL,
   `description` text NULL,
   `owner` int(11) NOT NULL DEFAULT '0',
   `images` text NULL,
-  `address1` varchar(60) NOT NULL,
+  `address1` varchar(60) NOT NULL DEFAULT '',
   `address2` varchar(60) NULL,
-  `city` varchar(60) NULL,
-  `county` varchar(60) NOT NULL,
-  `post_code` varchar(10) NOT NULL,
-  `country` int(11) NOT NULL,
-  `services` varchar(100) NOT NULL,
-  `state` tinyint(3) NOT NULL,
+  `city` VARCHAR(60) NULL DEFAULT '',
+  `county` varchar(60) NULL DEFAULT '',
+  `post_code` varchar(10) NOT NULL DEFAULT '',
+  `country` int(11) NOT NULL DEFAULT '222',
+  `services` varchar(100) NULL DEFAULT '',
+  `state` tinyint(3) NOT NULL DEFAULT '1',
   `created` DATETIME NOT NULL default '0000-00-00 00:00:00',
   `modified` DATETIME NOT NULL default '0000-00-00 00:00:00',
-  `hits` int(10) NOT NULL,
+  `hits` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ddc_vendor_id`),
   KEY `post_code` (`post_code`),
   KEY `owner` (`owner`),

@@ -26,6 +26,7 @@ $dim_result = $this->product->product_length*$this->product->product_width*$this
 			<button class="btn pull-right btn-primary"onclick="ddcUpdateCart(<?php echo $this->product->ddc_product_id; ?>)"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-shopping-cart"></i></button>
 			<form id="ddcCart<?php echo $this->product->ddc_product_id; ?>" class="pull-right col-xs-3">
 				<input type="number" class="col-xs-12" min="<?php echo $this->model->getpartjsonfield($this->product->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($this->product->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($this->product->product_params,'step_order_level'); ?>" name="jform[product_quantity]" value="<?php echo $this->model->getpartjsonfield($this->product->product_params,'step_order_level'); ?>"/>
+				<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->session->get('shoppingcart_header_id',null); ?>" />
 				<input type="hidden" name="option" value="com_ddcshopbox" />
 				<input type="hidden" name="controller" value="update" />
 				<input type="hidden" name="jform[table]" value="ddcshoppingcart" />

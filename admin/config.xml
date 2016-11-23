@@ -8,6 +8,15 @@
 		    label="COM_DDC_GOOGLE_API_KEY"
 		    description="COM_DDC_GOOGLE_API_KEY_DESC"
 		/>
+		<field name="ddc_currency" type="list"
+			default="GBP"
+			class="btn-group"
+			label="COM_DDC_CURRENCY"
+			description="COM_DDC_CURRENCY_DESC">
+
+			<option value="GBP">COM_DDC_GBP_BRITISH_POUND</option>
+			<option value="EUR">COM_DDC_EUR_EURO</option>
+		</field>
 		<field name="required_account" type="radio"
 			default="0"
 			class="btn-group"
@@ -52,7 +61,7 @@
 		    label="COM_DDC_PAYMENT_SANDBOX_CLIENT_ID"
 		    description="COM_DDC_PAYMENT_SANDBOX_CLIENT_ID_DESC"
 		/>
-		<field name="paymentl_client_secret_sandbox"
+		<field name="payment_client_secret_sandbox"
 		    type="text"
 		    label="COM_DDC_PAYMENT_SANDBOX_CLIENT_SECRET"
 		    description="COM_DDC_PAYMENT_SANDBOX_CLIENT_SECRET_DESC"

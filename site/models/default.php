@@ -268,15 +268,19 @@ class DdcshopboxModelsDefault extends JModelBase
   {
   	$result = null;
   	$prodModel = new DdcshopboxModelsProducts();
-  	$cartdata = $this->session->get('shoppingcart',array());
+  	$scModel = new DdcshopboxModelsShopcart();
+  	$cartdata = $scModel->listItems();
   	foreach($cartdata as $cart_item)
   	{
-  		$product = $prodModel->getItem($cart_item['ddc_product_id']);
-  		$result .='<tr>';
-  		$result .='<td>'.$cart_item['product_quantity'].' x </td>';
-  		$result .='<td>'.$product->product_name.'</td>';
-  		$result .='<td>'.$product->currency_symbol." ".number_format(($cart_item['product_quantity']*$product->product_price),2).'</td>';
-  		$result .='</tr>';
+  		if($cart_item->ddc_product_id!=0)
+  		{
+  			$result .='<tr>';
+  			$result .='<td>'.$cart_item->product_quantity.' x </td>';
+  			$result .='<td>'.$cart_item->product_name.'</td>';
+  			$result .='<td>'.$cart_item->currency_symbol." ".number_format(($cart_item->product_quantity*$cart_item->product_price),2).'</td>';
+  			$result .='</tr>';
+  		}
+  		
   	}
   	
   	return $result;

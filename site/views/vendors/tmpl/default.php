@@ -15,7 +15,7 @@ if(count($this->items)>0):
 <?php 
 if($user==0):
 ?>
-	<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&postcodevalue=clear'); ?>">clear</a>
+	<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&controller=default&postcodevalue=clear'); ?>"><?php echo JText::_('COM_DDC_REMOVE_POSTCODE'); ?></a>
 <?php 
 endif;
 ?>
@@ -28,7 +28,7 @@ else:
 	<?php 
 	if($user==0):
 	?>
-		<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&postcodevalue=clear'); ?>">clear</a>
+		<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&postcodevalue=clear'); ?>"><?php echo JText::_('COM_DDC_REMOVE_POSTCODE'); ?></a>
 	<?php 
 	endif;
 	?>

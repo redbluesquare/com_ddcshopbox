@@ -1,7 +1,7 @@
 <?php
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-class DdcshopboxModelsProfile extends JModelForm
+class DdcshopboxModelsProduct extends JModelForm
 {
 	var $form    		  = null;
 	var $_user_id 		  = null;
@@ -21,7 +21,7 @@ class DdcshopboxModelsProfile extends JModelForm
 			$params = JComponentHelper::getParams('com_ddcshopbox');
 	
 			// Override the base user data with any data in the session.
-			$temp = (array) $app->getUserState('com_ddcshopbox.profile.data', array());
+			$temp = (array) $app->getUserState('com_ddcshopbox.product.data', array());
 			foreach ($temp as $k => $v)
 			{
 				$this->data->$k = $v;
@@ -47,7 +47,7 @@ class DdcshopboxModelsProfile extends JModelForm
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
-		$form = $this->loadForm('com_ddcshopbox.profile', 'profile', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_ddcshopbox.product', 'product', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form))
 		{
 			return false;
@@ -58,15 +58,20 @@ class DdcshopboxModelsProfile extends JModelForm
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_ddcshopbox.profile.data', array());
+		$data = JFactory::getApplication()->getUserState('com_ddcshopbox.product.data', array());
 		if (empty($data))
 		{
 			$jinput = JFactory::getApplication()->input;
 			$task = $jinput->get('task', "", 'STR' );
-			if(($task != 'profile.add') AND (JFactory::getUser()->id!=0))
+			if($task != 'product.add')
 			{
-				$profileModel = new DdcshopboxModelsProfiles();
-				$data = $profileModel->getItem();
+				$productModel = new DdcshopboxModelsProducts();
+				$data = $productModel->getItem();
+				$prod_params = json_decode($data->product_params, true);
+				$data->min_order_level = $prod_params['min_order_level'];
+				$data->max_order_level = $prod_params['max_order_level'];
+				$data->step_order_level = $prod_params['step_order_level'];
+				$data->product_box = $prod_params['product_box'];
 				return $data;
 			}
 		}

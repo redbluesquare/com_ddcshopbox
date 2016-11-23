@@ -1,5 +1,5 @@
-.mypostcode{position:absolute;top:200px;padding:10px; font-size:30px;font-family:Arial;color:#ccc;font-weight:300;}
-.mypostcodebtn{position:absolute;top:200px;z-index:2000;padding:12px 40px 12px 40px;background:green;color:#fcfcfc;font-size:30px;border:none;border-radius:20px;font-weight:bold;}
+#mypostcode{position:relative;top:6px;border-radius:20px;padding:10px;width:380px; font-size:30px;font-family:Montserrat;color:#ccc;font-weight:300;}
+#mypostcodebtn{position:relative;left:-40px;z-index:1020;padding:12px 40px 12px 40px;background:green;color:#fcfcfc;font-size:30px;border:none;border-radius:20px;font-weight:bold;}
 .header-homepage{background:url(http://www.ineedtext.com/FoodBlog/wp-content/uploads/2012/09/Whole-Foods-054.jpg);background-size: 100%;}
 .header-foot{background:#ededed;padding:40px 0px 40px 0px;}
 .body-main{margin-top:20px;}
@@ -11,3 +11,11 @@ table{max-width: 100%;background-color: transparent;border-collapse: collapse;bo
 .ddctable th, .ddctable td{padding: 3px;line-height: 20px;text-align: left;vertical-align: top;border-top: 1px solid #eee;}
 .page-header{margin:0px;}
 #jform_shipping{margin-right:3px;margin-left:7px;}
+.hero{margin:10px auto;padding:30px;min-height:300px;background:#3c497c;border-radius:10px;}
+#IntroText1,#IntroText2,#IntroText3,#IntroText4,#IntroText5{color:#fefefe;font-size:1.5em;}
+#IntroText1,#IntroText2,#IntroText3,#IntroText4,#IntroText5,#IntroText6{display: none;}
+#IntroText6{color:#fef5de;font-size:2em;}
+#postcodeForm{margin: 0 auto; max-width:800px;text-align: center;}
+.introWIW div{position:relative;text-align:center;height:180px;}
+.introWIW div p{position:relative;bottom:0px;}
+

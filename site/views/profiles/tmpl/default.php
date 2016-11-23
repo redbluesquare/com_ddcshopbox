@@ -6,7 +6,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 		<h3><?php echo $this->profile->name?></h3>		
 	</div>
 	<div class="span3">
-		<a href="#profileaddressModal" role="button" data-toggle="modal" class="btn pull-right"><i class="icon icon-user"></i> <?php echo JText::_('COM_DDC_UPDATE_PROFILE'); ?></a>
+		<button type="button" role="button" data-toggle="modal" class="btn pull-right" data-target="#profileaddressModal"><i class="icon icon-user"></i> <?php echo JText::_('COM_DDC_UPDATE_PROFILE'); ?></button>
 	</div>
 </div>
 <?php $this->_profileAddressView->form = $this->form; ?>

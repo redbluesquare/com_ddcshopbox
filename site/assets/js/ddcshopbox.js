@@ -71,15 +71,24 @@ function ddcUpdateCart(id)
 
 }
 
-function checkPayment()
+function checkPayment(id)
 {
 	var cartInfo = {};
 	var result = false;
-	var url = "";
-	jQuery("#ddcshopcart :input").each(function(idx,ele){
-		cartInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
-	});
-	console.log(cartInfo);
+	var login = 0;
+	if(id == 1)
+	{
+		jQuery("#ddcshopcart :input").each(function(idx,ele){
+			cartInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+		});
+	}
+	if(id == 2)
+	{
+		jQuery("#deliveryInfo :input").each(function(idx,ele){
+			cartInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+		});
+	}
+
 	jQuery.ajax({
 		url:'index.php',
 		type:'POST',
@@ -89,9 +98,21 @@ function checkPayment()
 		{
 			if ( data.success ){
 				//console.log(data);
-				result = data.success;
-				url = data.url;
-				jQuery("#p3loginModal").modal('show');
+				if(data.login == 0)
+				{
+					jQuery("#p3loginModal").modal('show');
+				}
+				else
+				{
+					jQuery('#ddcshopcart').addClass("hide");
+					jQuery('#processPayment1').addClass("hide");
+					jQuery('#deliveryInfo').delay( 800 ).removeClass("hide");
+					jQuery('#processPayment2').removeClass("hide");
+					if(id == 2)
+					{
+						window.location = data;
+					}
+				}
 				
 			}
 		}
@@ -100,6 +121,32 @@ function checkPayment()
 function _(el){
     return document.getElementById(el);
 }
+
+jQuery(document).ready(function(){
+	runslide();
+	jQuery('#GetIntBtn').click(function(){
+		jQuery('#GetIntBtn').fadeOut(500);
+		jQuery('#getInterest').slideDown( "slow",function(){
+
+		});
+	});
+});
+function runslide() {
+	jQuery('#IntroText1').fadeIn(1500).delay(3500).fadeIn(1500, function() {
+		jQuery('#IntroText2').fadeIn(1500).delay(3500).fadeIn(1500, function() {
+			jQuery('#IntroText3').fadeIn(1500).delay(3500).fadeIn(1500, function() {
+				jQuery('#IntroText4').fadeIn(1500).delay(3500).fadeIn(1500, function() {
+					jQuery('#IntroText5').fadeIn(1500).delay(3500).fadeIn(1500, function() {
+						jQuery('#IntroText6').fadeIn(1500);
+					});
+				});
+			});
+		});
+	});
+}
+
+
+
 function uploadPhoto(item,id){
     
 

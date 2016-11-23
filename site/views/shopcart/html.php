@@ -1,6 +1,6 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); 
  
-class DdcshopboxViewsProfilesHtml extends JViewHtml
+class DdcshopboxViewsShopcartHtml extends JViewHtml
 {
 	protected $data;
 	protected $form;
@@ -16,18 +16,16 @@ class DdcshopboxViewsProfilesHtml extends JViewHtml
   	{
     	$app = JFactory::getApplication();
     	$layout = $this->getLayout();
-    
-    	//retrieve task list from model
     	$profilesModel = new DdcshopboxModelsProfiles();
-    	$profileModel = new DdcshopboxModelsProfile();
-    	
+    	$this->session = JFactory::getSession();
+    
     	switch($layout) {
     		case "default":
     			default:
-    			$this->session = JFactory::getSession();
     			$this->profile = $profilesModel->getItem();
-    			$this->form = $profileModel->getForm();
-    			$this->_profileAddressView = DdcshopboxHelpersView::load('profiles','_addressform','phtml');
+    			$this->items = $this->model->listItems();
+    			$this->_customloginShopboxView = DdcshopboxHelpersView::load('shopcart', '_customlogin', 'phtml');
+
     		break;
     	}
  

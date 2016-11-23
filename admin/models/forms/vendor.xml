@@ -27,7 +27,15 @@
 	    <field
 			name="vendor_currency"
 			type="sql"
-			default="0"
+			default="52"
+			label="COM_DDC_CURRENCY_LABEL"
+			description="COM_DDC_CURRENCY_DESC"
+			query="SELECT ddc_currency_id AS value, currency_code_3 as vendor_currency FROM #__ddc_currencies"
+		/>
+	    <field
+			name="vendor_accepted_currencies"
+			type="sql"
+			default="52"
 			label="COM_DDC_CURRENCY_LABEL"
 			description="COM_DDC_CURRENCY_DESC"
 			query="SELECT ddc_currency_id AS value, currency_code_3 as vendor_currency FROM #__ddc_currencies"
@@ -51,12 +59,6 @@
 			type="text"
 			label="COM_DDC_ADDRESS2_LABEL"
 			description="COM_DDC_ADDRESS2_DESC"
-		/>
-		<field
-			name="town"
-			type="text"
-			label="COM_DDC_TOWN_LABEL"
-			description="COM_DDC_TOWN_DESC"
 		/>
 		<field
 			name="city"
@@ -97,7 +99,7 @@
 			class="chzn-color-state"
 			filter="intval" 
 			size="1" 
-			default="2"
+			default="1"
 		>
 			<option value="1">
 				JPUBLISHED</option>
@@ -115,20 +117,6 @@
 			class="hidden"
 			default="vendors"
 		/>
-	</fieldset>
-	<fieldset name="main">
-		<field
-			name="description"
-			type="editor"
-			label="COM_DDC_VENDOR_DESCRIPTION_LABEL"
-			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
-			filter="raw"
-			row="5"
-		/>
-	</fieldset>
-	<fieldset name="apartment_right">
-		
-		
 		<field
 			name="hits"
 			type="text"
@@ -137,6 +125,25 @@
 			hidden="true"
 			class="hidden"
 			default="0"
+		/>
+	</fieldset>
+	<fieldset name="main">
+		<field
+			name="introduction"
+			type="textarea"
+			label="COM_DDC_VENDOR_DESCRIPTION_LABEL"
+			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
+			filter="raw"
+			cols="20"
+			row="8"
+		/>
+		<field
+			name="description"
+			type="editor"
+			label="COM_DDC_VENDOR_DESCRIPTION_LABEL"
+			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
+			filter="raw"
+			row="5"
 		/>
 	</fieldset>
 </form>

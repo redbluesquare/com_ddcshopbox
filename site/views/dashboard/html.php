@@ -1,6 +1,6 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); 
  
-class DdcshopboxViewsVendorsHtml extends JViewHtml
+class DdcshopboxViewsDashboardHtml extends JViewHtml
 {
 	protected $data;
 	protected $form;
@@ -16,7 +16,7 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
   	{
     	$app = JFactory::getApplication();
     	$layout = $this->getLayout();
-    	$this->session = JFactory::getSession();
+    	
     
     	//retrieve task list from model
     	$productsModel = new DdcshopboxModelsProducts();
@@ -26,21 +26,21 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     		case "default":
     			default:
     			$pathway = $app->getPathway();
-    			$pathway->addItem('Vendor-List', '');
+    			$pathway->addItem('Dashboard', '');
     			$this->items = $this->model->listItems();
     			$this->_vendorsListView = DdcshopboxHelpersView::load('vendors','_item','phtml');
     		break;
-    		case "vendor":
+    		case "storemanager":
     			$pathway = $app->getPathway();
-    			$pathway->addItem('Vendor', '');
+    			$pathway->addItem('Store-Manager', '');
     			$this->item = $this->model->getItem();
     			$this->products = $productsModel->listItems();
     			
     			$this->gmap($this->item->post_code,'com_ddcshopbox');
     		break;
-    		case "edit":
+    		case "productsmanager":
     			$pathway = $app->getPathway();
-    			$pathway->addItem('Edit-Vendor', '');
+    			$pathway->addItem('Products-Manager', '');
     			$this->item = $this->model->getItem();
     			$this->products = $productsModel->listItems();
     			$this->form = $vendorModel->getForm();

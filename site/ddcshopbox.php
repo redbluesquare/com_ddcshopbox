@@ -2,6 +2,9 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+//load composer classes
+require JPATH_LIBRARIES.'/vendor/autoload.php';
+
 //sessions
 jimport( 'joomla.session.session' );
 

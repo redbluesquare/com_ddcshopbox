@@ -16,12 +16,16 @@ class DdcshopboxViewsHomeHtml extends JViewHtml
   	{
     	$app = JFactory::getApplication();
     	$layout = $this->getLayout();
+    	$profileModel = new DdcshopboxModelsProfile();
     
     	switch($layout) {
     		case "default":
     			default:
     			
 
+    		break;
+    		case "subscribe":
+    			$this->form = $profileModel->getForm();
     		break;
     	}
  

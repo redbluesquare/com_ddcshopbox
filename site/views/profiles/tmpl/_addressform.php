@@ -2,7 +2,9 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 ?>
-<div id="profileaddressModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="profileaddressModalLabel" aria-hidden="true">
+<div id="profileaddressModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="profileaddressModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel"><?php echo JText::_('COM_DDC_PROFILE_ADDRESS'); ?></h3>
@@ -40,5 +42,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" onclick="saveContactAddress()"><?php echo JText::_('COM_DDC_SAVE'); ?></button>
+  </div>
+  </div>
   </div>
 </div>

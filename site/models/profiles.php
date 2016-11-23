@@ -17,7 +17,7 @@ class DdcshopboxModelsProfiles extends DdcshopboxModelsDefault
     $this->data = $jinput->get('jform', array(),'array');
 
     //If no User ID is set to current logged in user
-    $this->_user_id = $app->input->get('profile_id', JFactory::getUser()->id);
+    $this->_user_id = JFactory::getUser()->id;
 
     parent::__construct();       
   }
@@ -31,8 +31,8 @@ class DdcshopboxModelsProfiles extends DdcshopboxModelsDefault
     $query->select('u.id, u.username, u.email, u.registerDate');
     $query->from('#__users as u');
 
-    $query->select('cd.name, cd.address, cd.telephone, cd.suburb, cd.postcode, cd.id as contact_id');
-    $query->leftjoin('#__contact_details as cd on cd.user_id = u.id');
+    $query->select('cd.name, cd.address, cd.telephone, cd.suburb, cd.state, cd.postcode, cd.country, cd.email_to, cd.mobile, cd.id as contact_id');
+    $query->rightjoin('#__contact_details as cd on cd.user_id = u.id');
     $query->group("u.id");
     
     return $query;
@@ -40,7 +40,7 @@ class DdcshopboxModelsProfiles extends DdcshopboxModelsDefault
 
   protected function _buildWhere($query)
   {
-    if($this->_user_id != null)
+    if(($this->_user_id != 0) Or ($this->_user_id != NULL))
     {
     	$query->where('u.id = "'.(int)$this->_user_id.'"');
     }
