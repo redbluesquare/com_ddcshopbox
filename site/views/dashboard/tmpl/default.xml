@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-        <layout title="COM_DDCSHOPBOX_DASHBOARD_DEFAULT_VIEW">
+        <layout title="COM_DDCSHOPBOX_DASHBOARD_VIEW_DEFAULT_LAYOUT">
                 <message>
-                        <![CDATA[COM_DDCSHOPBOX_DASHBOARD_VIEW_DEFAULT_DESC]]>
+                        <![CDATA[COM_DDCSHOPBOX_DASHBOARD_VIEW_DEFAULT_LAYOUT_DESC]]>
                 </message>
         </layout>
 </metadata>

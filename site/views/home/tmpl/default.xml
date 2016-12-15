@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-        <layout title="COM_DDCSHOPBOX">
+        <layout title="COM_DDCSHOPBOX_VIEW_HOME_LAYOUT_DEFAULT">
                 <message>
-                        <![CDATA[COM_DDCSHOPBOX]]>
+                        <![CDATA[COM_DDCSHOPBOX_VIEW_HOME_LAYOUT_DEFAULT]]>
                 </message>
         </layout>
 </metadata>

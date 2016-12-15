@@ -26,13 +26,13 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     		case "default":
     			default:
     			$pathway = $app->getPathway();
-    			$pathway->addItem('Vendor-List', '');
+    			$pathway->addItem(JText::_('COM_DDC_VENDOR_LIST'), '');
     			$this->items = $this->model->listItems();
     			$this->_vendorsListView = DdcshopboxHelpersView::load('vendors','_item','phtml');
     		break;
     		case "vendor":
     			$pathway = $app->getPathway();
-    			$pathway->addItem('Vendor', '');
+    			$pathway->addItem(JText::_('COM_DDC_VENDOR'), '');
     			$this->item = $this->model->getItem();
     			$this->products = $productsModel->listItems();
     			

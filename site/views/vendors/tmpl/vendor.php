@@ -11,7 +11,7 @@ $user = JFactory::getUser()->id;
 			</div>
 			<div class="col-xs-8" style="height:100px;position:relative;">
 				<p class="title"><a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendors&layout=vendor&vendor_id='.$this->item->ddc_vendor_id); ?>"><?php echo $this->item->title; ?></a></h4>
-				<p style="margin: 0px"><?php echo $this->item->description; ?></p>
+				<p style="margin: 0px"><?php echo substr($this->item->description,0,180)."..."; ?></p>
 				<p style="margin: 0px;position:absolute;bottom:0px"><?php echo $this->item->address1." ".$this->item->address2.$this->item->city." "." ".$this->item->post_code; ?></small></p>
 			</div>
 			<div class="clearfix"></div>

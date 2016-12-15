@@ -3,7 +3,7 @@
 
 class DdcshopboxControllersDefault extends JControllerBase
 {
-  protected $postcode;
+  protected $ddclocation;
 
   function __construct()
   {
@@ -19,36 +19,21 @@ class DdcshopboxControllersDefault extends JControllerBase
   	$session = JFactory::getSession();
   	$user = JFactory::getUser()->id;
   	$model = new DdcshopboxModelsDefault();
-  	if($session->get('mypostcode',null)==null):
-	  	if($user!=null)
-	  	{
-	  		//set the postcode into the session
-	  		$this->postcode = $model->setPostcode($user);
-	  	}
-	  	else
-	  	{
-	  		$postcode = $app->input->get('mypostcode', "", 'string');
-	  		if($postcode!=null)
-	  		{
-	  			$this->postcode = $model->setPostcode("",$postcode);
-	  		}
-	  	}
-	  	$viewName = $app->input->getWord('view', 'home');
-	  	$viewFormat = $document->getType();
-	  	$layoutName = $app->input->getWord('layout', 'default');
-	  	
-	endif;
-	if($app->input->get('postcodevalue',null,'string')=='clear')
-	{
-		$session->clear('mypostcode');
-		$app->redirect(JRoute::_('index.php?option=com_ddcshopbox'));
-	}
-  	if($session->get('mypostcode',null)!=null)
+  	if($app->input->get('ddccheck',null)==1)
   	{
-		$viewName = $app->input->getWord('view', 'vendors');
-		$viewFormat = $document->getType();
-		$layoutName = $app->input->getWord('layout', 'default');
-	}
+  		$session->set('ddclocation',$app->input->get('ddclocation',null));
+  	}
+  	if($session->get('ddclocation',null)!=null)
+  	{
+  		$viewName = $app->input->getWord('view', 'products');
+  		$viewFormat = $document->getType();
+  		$layoutName = $app->input->getWord('layout', 'default');
+  	}
+	  	
+	$viewName = $app->input->getWord('view', 'products');
+	$viewFormat = $document->getType();
+	$layoutName = $app->input->getWord('layout', 'default');
+
 	
   	$app->input->set('view', $viewName);
   	

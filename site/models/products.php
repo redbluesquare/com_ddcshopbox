@@ -8,18 +8,24 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
   	var $_user_id     = null;
   	var $_product_id  = null;
   	var $_vendor_id  = null;
+  	var $_mypostcode 	= null;
+  	var $_ddclocation	= null;
   	var $_cat_id	  = null;
+  	var $_session	  	= null;
   	var $_published   = 1;
 
   function __construct()
   {
 
     $app = JFactory::getApplication();
+	$this->_session = JFactory::getSession();
 
     //If no User ID is set to current logged in user
     $this->_user_id = $app->input->get('profile_id', JFactory::getUser()->id);
     $this->_product_id = $app->input->get('product_id', null);
     $this->_vendor_id = $app->input->get('vendor_id', null);
+    $this->_ddclocation = $app->input->get('ddclocation', $this->_session->get('ddclocation',null));
+    $this->_mypostcode = explode(" ", $this->_ddclocation);
 
     parent::__construct();       
   }
@@ -31,15 +37,17 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
     $query = $db->getQuery(TRUE);
 
     $query->select('p.*');
+    $query->select('vp.*');
     $query->select('pp.*');
     $query->select('vc.*');
-    $query->select('i.*');
+    $query->select('i.details, i.image_link');
     $query->select('v.*');
     $query->from('#__ddc_products as p');
+    $query->rightJoin('#__ddc_vendor_products as vp on p.ddc_product_id = vp.product_id');
+    $query->rightJoin('#__ddc_vendors as v on vp.vendor_id = v.ddc_vendor_id');
+    $query->leftJoin('#__ddc_product_prices as pp on p.ddc_product_id = pp.product_id');
+    $query->leftJoin('#__ddc_currencies as vc on vc.ddc_currency_id = pp.product_currency');
     $query->leftJoin('#__ddc_images as i on (p.ddc_product_id = i.link_id) AND (i.linked_table = "ddc_products")');
-    $query->rightJoin('#__ddc_vendors as v on p.vendor_id = v.ddc_vendor_id');
-    $query->rightJoin('#__ddc_product_prices as pp on p.ddc_product_id = pp.product_id');
-    $query->rightJoin('#__ddc_currencies as vc on vc.ddc_currency_id = pp.product_currency');
     $query->group("p.ddc_product_id");
 
 
@@ -59,6 +67,10 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
   	if(($id!=null) And ($id > 0))
   	{
   		$query->where('p.ddc_product_id = "'. (int)$id .'"');
+  	}
+  	if($this->_ddclocation!=null)
+  	{
+  		$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.town LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
   	}
         
     return $query;

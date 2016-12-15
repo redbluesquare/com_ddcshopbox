@@ -17,6 +17,7 @@ class DdcshopboxViewsHomeHtml extends JViewHtml
     	$app = JFactory::getApplication();
     	$layout = $this->getLayout();
     	$profileModel = new DdcshopboxModelsProfile();
+    	
     
     	switch($layout) {
     		case "default":
@@ -27,6 +28,9 @@ class DdcshopboxViewsHomeHtml extends JViewHtml
     		case "subscribe":
     			$this->form = $profileModel->getForm();
     		break;
+    		case "uploadpostcodes":
+    			$this->items = $this->model->uploadpostcodes();
+    			break;
     	}
  
     	//display

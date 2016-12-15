@@ -229,7 +229,7 @@ class DdcshopboxModelsDefault extends JModelBase
   {
   }
   
-  public function setPostcode($user_id = null,$pc = null)
+  public function setLocation($user_id = null,$pc = null)
   {
   	
   	if($user_id!=null)
@@ -249,10 +249,8 @@ class DdcshopboxModelsDefault extends JModelBase
   	//check if postcode is set
   	if($pc!=null)
   	{
-  		$pc1 = explode(' ', $pc);
-  		$pc1 = trim($pc1[0]);
-  		//set session with fist half of postcode
-  		$this->session->set('mypostcode', $pc1);
+  		//set session with location
+  		$this->session->set('ddclocation', $pc);
   		return true;
   	}
   	else 
@@ -366,6 +364,109 @@ class DdcshopboxModelsDefault extends JModelBase
   		return true;
   	}
   	return false;
+  }
+  
+  /**
+   * Calculates the great-circle distance between two points, with
+   * the Haversine formula.
+   * @param float $latitudeFrom Latitude of start point in [deg decimal]
+   * @param float $longitudeFrom Longitude of start point in [deg decimal]
+   * @param float $latitudeTo Latitude of target point in [deg decimal]
+   * @param float $longitudeTo Longitude of target point in [deg decimal]
+   * @param float $earthRadius Mean earth radius in [m]
+   * @return float Distance between points in [m] (same as earthRadius)
+   */
+  public static function haversineGreatCircleDistance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000)
+  {
+  	// convert from degrees to radians
+  	$latFrom = deg2rad($latitudeFrom);
+  	$lonFrom = deg2rad($longitudeFrom);
+  	$latTo = deg2rad($latitudeTo);
+  	$lonTo = deg2rad($longitudeTo);
+  
+  	$latDelta = $latTo - $latFrom;
+  	$lonDelta = $lonTo - $lonFrom;
+  
+  	$angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+  			cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+  	return $angle * $earthRadius;
+  }
+  
+  public static function isValidFormat($postcode){
+  
+  	// return whether the postcode is in a valid format
+  	return preg_match('/^\s*(([A-Z]{1,2})[0-9][0-9A-Z]?)\s*(([0-9])[A-Z]{2})\s*$/', strtoupper($postcode));
+  
+  }
+  
+  /* Parses a postcode and returns an array with the following components:
+   *
+   * 1 - the outward code
+   * 2 - the area from the outward code
+   * 3 - the inward code
+   * 4 - the sector from the inward code
+   *
+   * The parameter is:
+   *
+   * $postcode - the postcode to parse
+   */
+  private static function parse($postcode){
+  
+  	// parse the postcode and return the result
+  	preg_match('/^\s*(([A-Z]{1,2})[0-9][0-9A-Z]?)\s*(([0-9])[A-Z]{2})\s*$/', strtoupper($postcode), $matches);
+  	return $matches;
+  
+  }
+  
+  /* Returns the district for a postcode - for example, SW1A for SW1A 0AA - or
+   * false if the postcode was not in a valid format. The parameter is:
+   *
+   * $postcode - the postcode whose district should be returned
+   */
+  public static function getDistrict($postcode){
+  
+  	// parse the postcode and return the district
+  	$parts = self::parse($postcode);
+  	return (count($parts) > 0 ? $parts[1] : false);
+  
+  }
+  
+  public function uploadpostcodes()
+  {
+  	$filename = 'postcodes.csv';
+  	$file = fopen(JPATH_COMPONENT_SITE."/assets/".$filename,"r");
+  	$postcodes = array();
+  	$headers = array();
+  	array_push($headers,fgetcsv($file,null,','));
+  	while (!feof($file))
+  	{
+  		array_push($postcodes,fgetcsv($file,null,','));
+  	}
+  	
+   	
+   	for($i=0;$i<9001;$i++):
+   		$db = JFactory::getDBO();
+   		$query = $db->getQuery(true);
+	   	$query
+	   		->insert($db->quoteName('#__ddc_outcodes'))
+	   		->columns($db->quoteName($headers[0]))
+	   		->values('"'.implode('","',$postcodes[$i]).'"');
+	   	$db->setQuery($query);
+	  	$db->execute();
+	endfor;
+
+  	
+  }
+  
+  /* Returns the district for a postcode - for example, SW1A for SW1A 0AA - or
+   * false if the postcode was not in a valid format. The parameter is:
+   *
+   * $district - the district where the shop is located
+   */
+  public function getShopDistance($district)
+  {
+  	//get session with fist half of postcode
+  	$this->session->get('ddclocation', null);
   }
   
 }

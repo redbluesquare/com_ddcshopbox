@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `#__ddc_orders` (
   `locked_by` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ddc_order_id`),
   KEY `user_id` (`user_id`),
-  KEY `ddc_vendor_id` (`virtuemart_vendor_id`),
+  KEY `ddc_vendor_id` (`ddc_vendor_id`),
   KEY `order_number` (`order_number`),
   KEY `ddc_paymentmethod_id` (`ddc_paymentmethod_id`),
   KEY `ddc_shipmentmethod_id` (`ddc_shipmentmethod_id`)
@@ -260,18 +260,31 @@ CREATE TABLE IF NOT EXISTS `#__ddc_orderstates` (
   KEY `published` (`published`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='All available order statuses' AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `#__ddc_payments` (
+  `ddc_payment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ref` varchar(100) NOT NULL,
+  `ref_id` int(11) NOT NULL,
+  `token` TEXT NOT NULL,
+  `created` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(11) NOT NULL default '0',
+  `modified_by` int(11) NOT NULL default'0',
+  `modified` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `state` tinyint(3) NOT NULL,
+  PRIMARY KEY (`ddc_payment_id`),
+  KEY `ref_id` (`ref_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `#__ddc_products` (
   `ddc_product_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `vendor_id` int(11) UNSIGNED NOT NULL,
   `product_parent_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `category_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `product_sku` varchar(120),
   `product_gtin` varchar(64),
   `product_mpn` varchar(64),
   `product_name` varchar(120),
   `product_alias` varchar(120),
   `product_description_small` text,
-  `product_desctiption` text,
+  `product_description` text,
   `product_weight` decimal(10,4),
   `product_weight_uom` varchar(7),
   `product_length` decimal(10,4),
@@ -279,15 +292,6 @@ CREATE TABLE IF NOT EXISTS `#__ddc_products` (
   `product_height` decimal(10,4),
   `product_lwh_uom` varchar(7),
   `product_url` varchar(255),
-  `low_stock_notification` int(1) UNSIGNED NOT NULL DEFAULT '0',
-  `product_available_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `product_availability` char(32),
-  `product_special` tinyint(1),
-  `product_base_uom` tinyint(3),
-  `product_packaging` decimal(8,4) UNSIGNED,
-  `product_params` varchar(2000) NOT NULL DEFAULT '',
-  `hits` int(1) unsigned,
-  `intnotes` varchar(2000),
   `metarobot` varchar(400),
   `metaauthor` varchar(400),
   `layout` char(16),
@@ -300,11 +304,7 @@ CREATE TABLE IF NOT EXISTS `#__ddc_products` (
   `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `locked_by` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ddc_product_id`),
-  KEY `vendor_id` (`vendor_id`),
   KEY `product_parent_id` (`product_parent_id`),
-  KEY `product_special` (`product_special`),
-  KEY `product_in_stock` (`product_in_stock`),
-  KEY `product_ordered` (`product_ordered`),
   KEY `published` (`published`),
   KEY `pordering` (`pordering`),
   KEY `created_on` (`created_on`),
@@ -384,9 +384,9 @@ CREATE TABLE IF NOT EXISTS `#__ddc_shoppingcart_details` (
   KEY `shoppingcart_header_id` (`shoppingcart_header_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
-CREATE TABLE #__ddc_outcodes (
+CREATE TABLE IF NOT EXISTS #__ddc_outcodes (
     ddc_outcode_id INT(11) NOT NULL AUTO_INCREMENT,
-    postcode VARCHAR(5) NOT NULL,
+    postcode VARCHAR(9) NOT NULL,
     eastings INT(7) NOT NULL,
     northings INT(7) NOT NULL,
     latitude DECIMAL(10, 8) NOT NULL,
@@ -396,7 +396,8 @@ CREATE TABLE #__ddc_outcodes (
     uk_region VARCHAR(255) NULL,
     country VARCHAR(3) NULL,
     country_string VARCHAR(255) NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(ddc_outcode_id),
+    UNIQUE INDEX `postcode` (`postcode` ASC)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `#__ddc_user_vendor_interests` (
@@ -428,6 +429,51 @@ CREATE TABLE IF NOT EXISTS `#__ddc_user_vendor` (
   KEY `vendor_id` (`vendor_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+CREATE TABLE IF NOT EXISTS `#__ddc_vendor_products` (
+  `ddc_vendor_product_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) UNSIGNED NOT NULL,
+  `vendor_id` int(11) UNSIGNED NOT NULL,
+  `vendor_product_sku` varchar(120),
+  `product_gtin` varchar(64),
+  `product_mpn` varchar(64),
+  `vendor_product_name` varchar(120),
+  `vendor_product_alias` varchar(120),
+  `product_description_small` text,
+  `product_desctiption` text,
+  `product_weight` decimal(10,4),
+  `product_weight_uom` varchar(7),
+  `product_length` decimal(10,4),
+  `product_width` decimal(10,4),
+  `product_height` decimal(10,4),
+  `product_lwh_uom` varchar(7),
+  `low_stock_notification` int(1) UNSIGNED NOT NULL DEFAULT '0',
+  `product_available_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `product_availability` char(32),
+  `product_special` tinyint(1),
+  `product_base_uom` tinyint(3),
+  `product_packaging` decimal(8,4) UNSIGNED,
+  `product_params` varchar(2000) NOT NULL DEFAULT '',
+  `hits` int(1) unsigned,
+  `intnotes` varchar(2000),
+  `metarobot` varchar(400),
+  `metaauthor` varchar(400),
+  `layout` char(16),
+  `published` tinyint(1),
+  `pordering` int(1) UNSIGNED NOT NULL DEFAULT '0',
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_vendor_product_id`),
+  KEY `vendor_id` (`vendor_id`),
+  KEY `published` (`published`),
+  KEY `pordering` (`pordering`),
+  KEY `created_on` (`created_on`),
+  KEY `modified_on` (`modified_on`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='All products are stored here.' AUTO_INCREMENT=1 ;
+
 CREATE TABLE IF NOT EXISTS `#__ddc_vendors` (
   `ddc_vendor_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
@@ -446,8 +492,8 @@ CREATE TABLE IF NOT EXISTS `#__ddc_vendors` (
   `country` int(11) NOT NULL DEFAULT '222',
   `services` varchar(100) NULL DEFAULT '',
   `state` tinyint(3) NOT NULL DEFAULT '1',
-  `created` DATETIME NOT NULL default '0000-00-00 00:00:00',
-  `modified` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
   `hits` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ddc_vendor_id`),
   KEY `post_code` (`post_code`),

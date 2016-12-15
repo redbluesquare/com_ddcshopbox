@@ -16,7 +16,7 @@
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see http://www.gnu.org/licenses.</license>
-	<version>0.0.4</version>
+	<version>0.0.1</version>
 	<description>COM_DDCSHOPBOX_DESCRIPTION</description>
 	<install>
                 <sql>
@@ -52,7 +52,8 @@
 			<folder>models</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
-			<filename>router.php</filename>
+			<filename>ddcshopbox.php</filename>
+			<filename>index.html</filename>
 		</files> 
 	<scriptfile>install.php</scriptfile>
 	<languages folder="site">
@@ -73,6 +74,7 @@
             <filename>config.xml</filename>
 			<filename>ddcshopbox.php</filename>
 			<filename>index.html</filename>
+			<filename>router.php</filename>
 		</files>  
 		<languages folder="admin">
 			<language tag="en-GB">languages/en-GB/en-GB.com_ddcshopbox.ini</language>

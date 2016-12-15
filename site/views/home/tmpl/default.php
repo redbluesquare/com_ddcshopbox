@@ -22,7 +22,7 @@ JHTML::_('behavior.calendar');
 <div class="clearfix"></div>
 </div>
 <form id="postcodeForm" method="post" class="col-xs-12">
-<input type="text"  name="mypostcode" id="mypostcode" placeholder="<?php echo JText::_('COM_DDC_ENTER_POSTCODE'); ?>"/>
+<input type="text"  name="ddclocation" id="mypostcode" placeholder="<?php echo JText::_('COM_DDC_ENTER_POSTCODE'); ?>"/>
 <input type="submit" id="mypostcodebtn" name="submit" value="<?php echo JText::_('COM_DDC_LETS_GO'); ?>" class="btn btn-success"/>
 <input name="option" type="hidden" value="com_ddcshopbox">
 <input name="checkpostcode" type="hidden" value="true" />

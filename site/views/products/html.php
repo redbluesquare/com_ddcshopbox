@@ -25,9 +25,14 @@ class DdcshopboxViewsProductsHtml extends JViewHtml
     	switch($layout) {
     		case "default":
     			default:
+    			$this->items = $this->model->listItems();
+    			$this->session = JFactory::getSession();
+    			$this->_productsListView = DdcshopboxHelpersView::load('products','_item','phtml');
+    		break;
+    		case "product":
     			$this->product = $this->model->getItem();
     			$this->session = JFactory::getSession();
-    		break;
+    			break;
     		case "edit":
     			$this->session = JFactory::getSession();
     			$this->form = $productModel->getForm();

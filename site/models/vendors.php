@@ -10,6 +10,7 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
   	var $_cat_id	  	= null;
   	var $_session	  	= null;
   	var $_mypostcode 	= null;
+  	var $_ddclocation	= null;
   	var $_published   	= 1;
   	var $_vendor_auth 	= 0;
 
@@ -19,7 +20,8 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     $app = JFactory::getApplication();
 	$this->_session = JFactory::getSession();
     $this->_vendor_id = $app->input->get('vendor_id', null);
-    $this->_mypostcode = $this->_session->get('mypostcode', null);
+    $this->_ddclocation = $app->input->get('ddclocation', $this->_session->get('ddclocation',null));
+    $this->_mypostcode = explode(" ", $this->_ddclocation);
     $layoutName = $app->input->getWord('layout', 'default');
     if($layoutName=='edit')
     {
@@ -40,8 +42,8 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     $query->select('u.name as owner_name');
     $query->select('uv.user_id');
     $query->from('#__ddc_vendors as v');
-    $query->rightJoin('#__users as u on v.owner = u.id');
-    $query->rightJoin('#__ddc_user_vendor as uv on v.ddc_vendor_id = uv.vendor_id');
+    $query->leftJoin('#__users as u on v.owner = u.id');
+    $query->leftJoin('#__ddc_user_vendor as uv on v.ddc_vendor_id = uv.vendor_id');
     $query->group("v.ddc_vendor_id");
 
 
@@ -54,15 +56,36 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     {
     	$query->where('v.ddc_vendor_id = "'. (int)$this->_vendor_id .'"');
     }
-    if($this->_mypostcode!=null)
+    if($this->_ddclocation!=null)
     {
-    	$query->where('v.post_code like "%'.$this->_mypostcode.'%"');
+    	$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.town LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
     }
     if($this->_vendor_auth==1)
     {
     	$query->where('uv.user_id = "'. (int)$this->_user_id .'"');
     }   
     return $query;
+  }
+  
+  public function getVendorDistance($vendor_pc )
+  {
+  	$ddcloc = $this->_session->get('ddclocation',null);
+  	if($ddcloc!=null)
+  	{
+  		$oc = new DdcshopboxModelsDdcoutcodes();
+  		$mypc = $oc->getItem($ddcloc);
+  		$shoppc = $oc->getItem($vendor_pc);
+  		echo '<pre>';
+  		print_r($mypc);
+  		echo '</pre>';
+  		
+  		echo '<pre>';
+  		print_r($shoppc);
+  		echo '</pre>';
+  		
+  		$dist = $this->haversineGreatCircleDistance($mypc->latitude, $mypc->longitude, $shoppc->latitude, $shoppc->longitude);
+  		echo number_format($dist/1000,3);
+  	}
   }
 
 }

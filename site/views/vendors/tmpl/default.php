@@ -13,27 +13,15 @@ if(count($this->items)>0):
 	</tbody>
 </table>
 <?php 
-if($user==0):
-?>
-	<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&controller=default&postcodevalue=clear'); ?>"><?php echo JText::_('COM_DDC_REMOVE_POSTCODE'); ?></a>
-<?php 
-endif;
-?>
-<?php 
 else:
 ?>
 
 <div class="col-xs-12">
 	<p><?php echo JText::_('COM_DDC_NO_STORES_IN_AREA'); ?></p>
-	<?php 
-	if($user==0):
-	?>
-		<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&postcodevalue=clear'); ?>"><?php echo JText::_('COM_DDC_REMOVE_POSTCODE'); ?></a>
-	<?php 
-	endif;
-	?>
+	
 </div>
 
 <?php
 endif;
+
 ?>

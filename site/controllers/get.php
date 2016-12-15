@@ -38,9 +38,7 @@ class DdcshopboxControllersGet extends DdcshopboxControllersDefault {
 		}
 		else
 		{
-			$viewName = $app->input->getWord('view', 'home');
-			$app->input->set('layout','default');
-			$app->input->set('view', $viewName);
+
 			//display view
 			return parent::execute();
 		}
