@@ -21,7 +21,10 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
 	$this->_session = JFactory::getSession();
     $this->_vendor_id = $app->input->get('vendor_id', null);
     $this->_ddclocation = $app->input->get('ddclocation', $this->_session->get('ddclocation',null));
-    $this->_mypostcode = explode(" ", $this->_ddclocation);
+  	if($this->isValidPostCodeFormat($this->_ddclocation))
+    {
+    	$this->_ddclocation = $this->getDistrict($this->_ddclocation);
+    }
     $layoutName = $app->input->getWord('layout', 'default');
     if($layoutName=='edit')
     {
@@ -58,7 +61,7 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     }
     if($this->_ddclocation!=null)
     {
-    	$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.town LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
+    	$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
     }
     if($this->_vendor_auth==1)
     {

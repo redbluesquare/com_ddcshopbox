@@ -19,7 +19,7 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     	$this->session = JFactory::getSession();
     
     	//retrieve task list from model
-    	$productsModel = new DdcshopboxModelsProducts();
+    	$vproductsModel = new DdcshopboxModelsVendorproducts();
     	$vendorModel = new DdcshopboxModelsVendor();
     	
     	switch($layout) {
@@ -34,7 +34,7 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     			$pathway = $app->getPathway();
     			$pathway->addItem(JText::_('COM_DDC_VENDOR'), '');
     			$this->item = $this->model->getItem();
-    			$this->products = $productsModel->listItems();
+    			$this->products = $vproductsModel->listItems();
     			
     			$this->gmap($this->item->post_code,'com_ddcshopbox');
     		break;

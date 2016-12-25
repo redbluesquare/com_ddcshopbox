@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-        <layout title="COM_DDCSHOPBOX_PROFILES_DEFAULT_VIEW">
+        <layout title="COM_DDCSHOPBOX_PRODUCTS_VIEW DEFAULT">
                 <message>
                         <![CDATA[COM_DDCSHOPBOX_PROFILES_VIEW_DEFAULT_DESC]]>
                 </message>

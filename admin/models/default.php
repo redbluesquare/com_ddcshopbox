@@ -229,6 +229,72 @@ class DdcshopboxModelsDefault extends JModelBase
   {
   }
   
+  // Function for resizing jpg, gif, or png image files
+  public function profile_img_resize($target, $newcopy, $w, $h, $ext) {
+  	list($w_orig, $h_orig) = getimagesize($target);
+  	$scale_ratio = $w_orig / $h_orig;
+  	if (($w / $h) > $scale_ratio) {
+  		$w = $h * $scale_ratio;
+  	} else {
+  		$h = $w / $scale_ratio;
+  	}
+  	$img = "";
+  	$ext = strtolower($ext);
+  	if ($ext == "gif"){
+  		$img = imagecreatefromgif($target);
+  	} else if($ext =="png"){
+  		$img = imagecreatefrompng($target);
+  	} else {
+  		$img = imagecreatefromjpeg($target);
+  	}
+  	$tci = imagecreatetruecolor($w, $h);
+  	// imagecopyresampled(dst_img, src_img, dst_x, dst_y, src_x, src_y, dst_w, dst_h, src_w, src_h)
+  	imagecopyresampled($tci, $img, 0, 0, 0, 0, $w, $h, $w_orig, $h_orig);
+  	imagejpeg($tci, $newcopy, 80);
+  }
+  
+  public function uploadPhoto($dest,$id,$linkedtable)
+  {
+  	$user = JFactory::getUser()->id;
+  	if($user!=0)
+  	{
+  		$date = date("Y-m-d H:i:s");
+  		//If you wish to delete all linked images
+  		//   		$db = JFactory::getDbo();
+  		//   		$query = $db->getQuery(TRUE);
+  		//   		// delete all custom keys for user 1001.
+  		//   		$conditions = array(
+  		//   				$db->quoteName('linked_id') . ' = '.(int)$id,
+  		//   				$db->quoteName('linked_table') . ' = ' . $db->quote($linkedtable)
+  		//   		);
+  
+  		//   		$query->delete($db->quoteName('#__ddc_images'));
+  		//   		$query->where($conditions);
+  
+  		//   		$db->setQuery($query);
+  		//   		$db->execute();
+  
+  		$db = JFactory::getDbo();
+  		$query = $db->getQuery(TRUE);
+  		// Insert columns.
+  		$columns = array('link_id', 'linked_table', 'image_link', 'state', 'modified_on', 'created_on');
+  
+  		// Insert values.
+  		$values = array($id, $db->quote($linkedtable), $db->quote($dest), 1, $db->quote($date), $db->quote($date));
+  
+  		// Prepare the insert query.
+  		$query
+  		->insert($db->quoteName('#__ddc_images'))
+  		->columns($db->quoteName($columns))
+  		->values(implode(',', $values));
+  		$db->setQuery($query);
+  		$result = $db->execute();
+  
+  		return true;
+  	}
+  	return false;
+  }
+  
   public function setPostcode($user_id = null,$pc = null)
   {
   	

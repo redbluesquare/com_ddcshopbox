@@ -21,27 +21,27 @@ JHtml::_('behavior.formvalidation');
 			<th><?php echo JText::_('COM_DDC_STATUS'); ?></th>
 			<th><?php echo JText::_('COM_DDC_ID'); ?></th>
 			<th><?php echo JText::_('COM_DDC_PRODUCT_NAME'); ?></th>
-			<th><?php echo JText::_('COM_DDC_PARENT_PRODUCT'); ?></th>
-			<th><?php echo JText::_('COM_DDC_CATEGORY'); ?></th>
+			<th><?php echo JText::_('COM_DDC_PRODUCT_PRICE'); ?></th>
+			<th><?php echo JText::_('COM_DDC_VENDOR'); ?></th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($this->items as $i => $item): ?>
         			<tr class="row<?php echo $i % 2; ?>">
                 		<td style="text-align: center;">
-        					<?php echo JHtml::_('jgrid.published', $item->published, 'state'); ?>
+        					<?php echo JHtml::_('jgrid.published', $item->published, 'published'); ?>
         				</td>
         				<td>
-        					<?php echo $item->ddc_product_id; ?>
+        					<?php echo $item->ddc_vendor_product_id; ?>
         				</td>
                 		<td>
-                	        <a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=products&layout=edit&product_id='.$item->ddc_product_id); ?>"><?php echo $item->product_name; ?></a>
+                	        <a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendorproducts&layout=edit&vendorproduct_id='.$item->ddc_vendor_product_id); ?>"><?php echo $item->vendor_product_name; ?></a>
+                		</td>
+                		<td style="text-align: right;" width="10%">
+                	        <?php echo $item->currency_symbol." ".number_format($item->product_price,2); ?>
                 		</td>
                 		<td>
-                	        <?php echo $item->parent_product; ?>
-                		</td>
-                		<td>
-                	        <?php echo $item->category_title; ?>
+                	        <?php echo $item->vendor_name; ?>
                 		</td>
         			</tr>
 				<?php endforeach; ?>
@@ -51,7 +51,7 @@ JHtml::_('behavior.formvalidation');
 </table>
 </div>
 <div>
-	<input type="hidden" name="jform[table]" value="products" />
+	<input type="hidden" name="jform[table]" value="vendorproducts" />
 	<input type="hidden" name="task" value="" />
     <input type="hidden" name="boxchecked" value="0" />
     <?php echo JHtml::_('form.token'); ?>

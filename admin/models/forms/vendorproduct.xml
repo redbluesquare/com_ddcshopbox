@@ -2,27 +2,26 @@
 <form>
 	<fieldset name="product_information_left">
 		<field
-			name="ddc_product_id"
+			name="ddc_vendor_product_id"
 			type="text"
 			label="COM_DDC_ID_LABEL"
 			description="COM_DDC_ID_DESC"
 			readonly="true"
 		/>
 		<field
-			name="product_name"
+			name="vendor_product_name"
 			type="text"
 			label="COM_DDC_PRODUCT_NAME_LABEL"
 			description="COM_DDCDDC_PRODUCT_NAME_DESC"
 		/>
 		<field
-			name="product_alias"
+			name="vendor_product_alias"
 			type="text"
 			label="COM_DDC_PRODUCT_ALIAS_LABEL"
 			description="COM_DDCDDC_PRODUCT_ALIAS_DESC"
-			class="span9"
 		/>
 		<field
-			name="product_sku"
+			name="vendor_product_sku"
 			type="text"
 			label="COM_DDC_PRODUCT_SKU_LABEL"
 			description="COM_DDC_PRODUCT_SKU_DESC"
@@ -36,20 +35,20 @@
 	</fieldset>
 	<fieldset name="product_information_right">
 		<field
-			name="product_parent_id"
+			name="vendor_id"
 			type="sql"
-			label="COM_DDC_PARENT_ID_LABEL"
-			description="COM_DDC_PRODUCT_ID_DESC"
-			query="SELECT ddc_product_id AS value, product_name as product_parent_id FROM #__ddc_products"
+			label="COM_DDC_VENDOR_ID_LABEL"
+			description="COM_DDC_VENDOR_ID_DESC"
+			query="SELECT ddc_vendor_id AS value, title as vendor_id FROM #__ddc_vendors"
 		>
 			<option value="0">-</option>
 		</field>
 		<field
-			name="category_id"
+			name="product_id"
 			type="sql"
-			label="COM_DDC_CATEGORY_ID_LABEL"
+			label="COM_DDC_PRODUCT_LABEL"
 			description="COM_DDC_PRODUCT_ID_DESC"
-			query="SELECT id AS value, title as category_id FROM #__categories WHERE extension ='com_ddcshopbox'"
+			query="SELECT ddc_product_id AS value, product_name as product_id FROM #__ddc_products"
 		>
 			<option value="0">-</option>
 		</field>
@@ -58,14 +57,12 @@
 			type="text"
 			label="COM_DDC_PRODUCT_GTIN_LABEL"
 			description="COM_DDC_PRODUCT_GTIN_DESC"
-			class="span9"
 		/>
 		<field
 			name="product_mpn"
 			type="text"
 			label="COM_DDC_PRODUCT_MPN_LABEL"
 			description="COM_DDC_PRODUCT_MPN_DESC"
-			class="col-xs-9"
 		/>
 		
 	</fieldset>
@@ -97,19 +94,6 @@
 			label="COM_DDC_PRODUCT_LWH_UOM_LABEL"
 			description="COM_DDC_PRODUCT_LWH_UOM_DESC"
 		/>
-		<field
-			name="product_weight"
-			type="text"
-			label="COM_DDC_PRODUCT_WEIGHT_LABEL"
-			description="COM_DDC_PRODUCT_WEIGHT_DESC"
-			default="0"
-		/>
-		<field
-			name="product_weight_uom"
-			type="text"
-			label="COM_DDC_PRODUCT_WEIGHT_UOM_LABEL"
-			description="COM_DDC_PRODUCT_WEIGHT_UOM_DESC"
-		/>
 		<field name="product_base_uom" 
 		    type="list" 
 		    label="COM_DDC_PRODUCT_BASE_UOM_LABEL"
@@ -128,6 +112,62 @@
 			<option value="4">
 				COM_DDC_PAIR</option>
 		</field>
+		</fieldset>
+	<fieldset name="product_dimensions_right">
+		<field
+			name="product_weight"
+			type="text"
+			label="COM_DDC_PRODUCT_WEIGHT_LABEL"
+			description="COM_DDC_PRODUCT_WEIGHT_DESC"
+			default="0"
+		/>
+		<field
+			name="product_weight_uom"
+			type="text"
+			label="COM_DDC_PRODUCT_WEIGHT_UOM_LABEL"
+			description="COM_DDC_PRODUCT_WEIGHT_UOM_DESC"
+		/>
+		<field
+			name="product_price"
+			type="text"
+			label="COM_DDC_PRODUCT_PRICE_LABEL"
+			description="COM_DDC_PRODUCT_PRICE_DESC"
+			default="0"
+		/>
+	    <field
+			name="ddc_product_price_id"
+			type="hidden"
+		/>
+	    <field
+			name="product_currency"
+			type="sql"
+			query="SELECT ddc_currency_id AS value, CONCAT(currency_name,', ',currency_symbol) as product_currency FROM #__ddc_currencies"
+			default="52"
+		/>
+	    <field
+			name="min_order_level"
+			type="text"
+			label="COM_DDC_MIN_ORDER_LEVEL_LABEL"
+			description="COM_DDC_MIN_ORDER_LEVEL_DESC"
+		/>
+		<field
+			name="max_order_level"
+			type="text"
+			label="COM_DDC_MAX_ORDER_LEVEL_LABEL"
+			description="COM_DDC_MAX_ORDER_LEVEL_DESC"
+		/>
+		<field
+			name="step_order_level"
+			type="text"
+			label="COM_DDC_STEP_ORDER_LEVEL_LABEL"
+			description="COM_DDC_STEP_ORDER_LEVEL_DESC"
+		/>
+		<field
+			name="product_box"
+			type="text"
+			label="COM_DDC_PRODUCT_BOX_LABEL"
+			description="COM_DDC_PRODUCT_BOX_DESC"
+		/>
 		<field
 			name="metarobot"
 			type="textarea"
@@ -169,7 +209,26 @@
 			description="COM_DDC_TABLE_DESC"
 			hidden="true"
 			class="hidden"
-			default="products"
+			default="vendorproducts"
+		/>
+	</fieldset>
+		
+	<fieldset name="product_description_bottom">
+	    <field
+		    name="product_description_small"
+		    type="textarea"
+		    label="COM_DDC_PROD_DESCR_SMALL_LABEL"
+			description="COM_DDC_PROD_DESCR_SMALL_DESC"
+			rows="5"
+			cols="30"
+		/>
+		<field
+		    name="product_description"
+		    type="textarea"
+		    label="COM_DDC_PROD_DESCR_LABEL"
+			description="COM_DDC_PROD_DESCR_DESC"
+			rows="5"
+			cols="30"
 		/>
 	</fieldset>
 </form>

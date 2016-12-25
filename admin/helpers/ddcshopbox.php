@@ -41,10 +41,14 @@ class DdcshopboxHelpersDdcshopbox
 	{
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_DASHBOARD'),
 		'index.php?option=com_ddcshopbox&view=dashboard', $submenu == 'dashboard');
+		JHtmlSidebar::addEntry(JText::_('COM_DDCSHOPBOX_CATEGORIES'),
+				'index.php?option=com_categories&view=categories&extension=com_ddcshopbox', $submenu == 'categories');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_PRODUCTS'),
 		'index.php?option=com_ddcshopbox&view=products', $submenu == 'products');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_VENDORS'),
 				'index.php?option=com_ddcshopbox&view=vendors', $submenu == 'vendors');
+		JHtmlSidebar::addEntry(JText::_('COM_DDC_VENDOR_PRODUCTS'),
+				'index.php?option=com_ddcshopbox&view=vendorproducts', $submenu == 'vendorproducts');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_USER_VENDORS'),
 				'index.php?option=com_ddcshopbox&view=uservendors', $submenu == 'uservendors');
 		// set some global property

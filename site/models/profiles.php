@@ -40,10 +40,8 @@ class DdcshopboxModelsProfiles extends DdcshopboxModelsDefault
 
   protected function _buildWhere($query)
   {
-    if(($this->_user_id != 0) Or ($this->_user_id != NULL))
-    {
-    	$query->where('u.id = "'.(int)$this->_user_id.'"');
-    }
+
+    $query->where('u.id = "'.(int)$this->_user_id.'"');
         
     return $query;
   }

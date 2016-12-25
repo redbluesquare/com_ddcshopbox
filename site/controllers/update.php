@@ -13,6 +13,8 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 	public function execute() {
 		
 		$app = JFactory::getApplication ();
+		// Get the document object.
+		$document = JFactory::getDocument();
 		$return = array ("success" => false	);
 		$jinput = JFactory::getApplication()->input;
 		$this->session = JFactory::getSession();
@@ -43,29 +45,60 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 		}
 		elseif($this->data['table']=='ddcCheckout')
 		{
-			if($user_id == 0){
-				//store paymentmethod and postage
-
-				//redirect user to login
-				$return['success'] = true;
-				$return['login'] = 0;
-				$return['url'] = JRoute::_('index.php?option=com_users&view=login&return='.base64_encode('index.php?option=com_ddcshopbox&view=shopcart'));
-				$return['msg'] = JText::_('COM_DDC_PLEASE_LOGIN');
+			if($jinput->get('paypalsuccess',null)=='false')
+			{
+				$jinput->set('paypalsuccess',null);
 			}
-			else{
-				if($jinput->get('paypalsuccess',null)=='false')
-				{
-					$jinput->set('paypalsuccess',null);
-				}
-				$model = new DdcshopboxModelsShopcart();
-				$row =$model->storeCartData($this->data);
+			$model = new DdcshopboxModelsShopcart();
+			if($row = $model->storeCartData($this->data))
+			{
 				$return['success'] = true;
 				$return['login'] = 1;
 				$return['result'] = $row;
-
+				echo json_encode($return);
+			}
+			else
+			{
+				$viewName = $app->input->getWord('view', 'shopcart');
+				$app->input->set('layout','default');
+				$app->input->set('view', $viewName);
+				//display view
+				return parent::execute();
 			}
 			
-			echo json_encode($return);
+		}
+		elseif($app->input->getMethod()=='DELETE')
+		{
+			if($this->data['table']=='shopcartdetails')
+			{
+				$model = new DdcshopboxModelsShopcart();
+				if($model->removeCartItem($this->data['ddc_shoppingcart_detail_id']))
+				{
+					$return['success'] = true;
+				}
+				else 
+				{
+					$return['success'] = false;
+				}
+				echo json_encode($return);
+			}
+		}
+		elseif($app->input->getMethod()=='UPDATE')
+		{
+			if($this->data['table']=='shopcartdetails')
+			{
+				$model = new DdcshopboxModelsShopcart();
+				if($row = $model->updateCartItem($this->data['ddc_shoppingcart_detail_id'], $this->data['product_quantity']))
+				{
+					$return['success'] = true;
+					$return['product_quantity'] = $row;
+				}
+				else
+				{
+					$return['success'] = false;
+				}
+				echo json_encode($return);
+			}
 		}
 		
 		
@@ -77,6 +110,8 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 			//display view
 			return parent::execute();
 		}
+		
+		
 	}
 		
 }

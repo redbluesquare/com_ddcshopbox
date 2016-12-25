@@ -97,7 +97,7 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   	$shipping = $paymentDetails[0]->shipping_cost;
   	for($i=0;$i<count($paymentDetails);$i++)
   	{
-  	array_push($descriptions, $paymentDetails[$i]->product_name);
+  	array_push($descriptions, $paymentDetails[$i]->vendor_product_name);
   			array_push($quantities, $paymentDetails[$i]->product_quantity);
 	  		array_push($costs,$paymentDetails[$i]->product_price);
   	}
@@ -189,7 +189,9 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   	{
   		if (count($e))
   		{
-  			JError::raiseError(500, implode('<br />', 'Error2 '.$e->getMessage()));
+  			var_dump($e->getMessage());
+  			//JError::raiseError(500, implode('<br />', 'Error2 '.$e->getMessage()));
+  			//var_dump($e);
   			return false;
   		}
   	

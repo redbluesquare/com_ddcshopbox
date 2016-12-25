@@ -26,7 +26,7 @@ $controller = new $classname();
 
 JHtml::_('bootstrap.framework');
 //Load styles and javascripts
-//DdcshopboxHelpersStyle::load();
+DdcshopboxHelpersStyle::load();
 
 // Perform the Request task
 $controller->execute();

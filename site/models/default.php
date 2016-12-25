@@ -264,19 +264,20 @@ class DdcshopboxModelsDefault extends JModelBase
   
   public function getShopCart_contents()
   {
-  	$result = null;
-  	$prodModel = new DdcshopboxModelsProducts();
+  	$result = array();
+  	$prodModel = new DdcshopboxModelsVendorproducts();
   	$scModel = new DdcshopboxModelsShopcart();
   	$cartdata = $scModel->listItems();
   	foreach($cartdata as $cart_item)
   	{
-  		if($cart_item->ddc_product_id!=0)
+  		if($cart_item->ddc_vendor_product_id!=0)
   		{
-  			$result .='<tr>';
-  			$result .='<td>'.$cart_item->product_quantity.' x </td>';
-  			$result .='<td>'.$cart_item->product_name.'</td>';
-  			$result .='<td>'.$cart_item->currency_symbol." ".number_format(($cart_item->product_quantity*$cart_item->product_price),2).'</td>';
-  			$result .='</tr>';
+  			$result[0] .='<tr>';
+  			$result[0] .='<td>'.$cart_item->product_quantity.' x </td>';
+  			$result[0] .='<td>'.$cart_item->vendor_product_name.'</td>';
+  			$result[0] .='<td id="#cartItem'.$cart_item->ddc_shoppingcart_id.'">'.$cart_item->currency_symbol." ".number_format(($cart_item->product_quantity*$cart_item->product_price),2).'</td>';
+  			$result[0] .='</tr>';
+  			$result[1] +=($cart_item->product_quantity*$cart_item->product_price);
   		}
   		
   	}
@@ -392,7 +393,7 @@ class DdcshopboxModelsDefault extends JModelBase
   	return $angle * $earthRadius;
   }
   
-  public static function isValidFormat($postcode){
+  public static function isValidPostCodeFormat($postcode){
   
   	// return whether the postcode is in a valid format
   	return preg_match('/^\s*(([A-Z]{1,2})[0-9][0-9A-Z]?)\s*(([0-9])[A-Z]{2})\s*$/', strtoupper($postcode));

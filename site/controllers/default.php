@@ -21,16 +21,16 @@ class DdcshopboxControllersDefault extends JControllerBase
   	$model = new DdcshopboxModelsDefault();
   	if($app->input->get('ddccheck',null)==1)
   	{
-  		$session->set('ddclocation',$app->input->get('ddclocation',null));
+  		$session->set('ddclocation',$app->input->get('ddclocation',null,'string'));
   	}
   	if($session->get('ddclocation',null)!=null)
   	{
-  		$viewName = $app->input->getWord('view', 'products');
+  		$viewName = $app->input->getWord('view', 'vendorproducts');
   		$viewFormat = $document->getType();
   		$layoutName = $app->input->getWord('layout', 'default');
   	}
 	  	
-	$viewName = $app->input->getWord('view', 'products');
+	$viewName = $app->input->getWord('view', 'vendorproducts');
 	$viewFormat = $document->getType();
 	$layoutName = $app->input->getWord('layout', 'default');
 

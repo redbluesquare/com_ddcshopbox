@@ -11,7 +11,7 @@ $user = JFactory::getUser()->id;
 			</div>
 			<div class="col-xs-8" style="height:100px;position:relative;">
 				<p class="title"><a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendors&layout=vendor&vendor_id='.$this->item->ddc_vendor_id); ?>"><?php echo $this->item->title; ?></a></h4>
-				<p style="margin: 0px"><?php echo substr($this->item->description,0,180)."..."; ?></p>
+				<p style="margin: 0px"><?php echo $this->item->description; ?></p>
 				<p style="margin: 0px;position:absolute;bottom:0px"><?php echo $this->item->address1." ".$this->item->address2.$this->item->city." "." ".$this->item->post_code; ?></small></p>
 			</div>
 			<div class="clearfix"></div>
@@ -23,11 +23,15 @@ $user = JFactory::getUser()->id;
 				<div style="position:relative;">
 					<img class="pull-left col-xs-3 img-rounded" src="<?php echo JRoute::_($product->image_link); ?>" hspace="7" >
 					<span class="pull-right"><?php echo $product->currency_symbol." ".number_format($product->product_price,2); ?></span>
-					<a class="title" href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=products&layout=default&product_id='.$product->ddc_product_id);?>"><?php echo $product->product_name; ?></a>
+					<a class="title" href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=products&layout=default&product_id='.$product->ddc_vendor_product_id);?>"><?php echo $product->vendor_product_name; ?></a>
 					<br>
-					<p class="pull-left col-xs-4"><?php echo $product->product_description_small; ?></p>
-					<button class="btn pull-right btn-primary"onclick="ddcUpdateCart(<?php echo $product->ddc_product_id; ?>)"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-shopping-cart"></i></button>
-					<form id="ddcCart<?php echo $product->ddc_product_id; ?>" class="pull-right" style="width:70px">
+					<p class="pull-left">
+						<?php if($this->model->getpartjsonfield($product->product_params,'product_box')){echo JText::_('COM_DDC_PRODUCT_BOX').": ".$this->model->getpartjsonfield($product->product_params,'product_box').'<br>';}?>
+    					<?php if($product->product_weight>0){echo JText::_('COM_DDC_WEIGHT').": ".number_format($product->product_weight,2)." ".$product->product_weight_uom.'<br>';}?>
+    					<?php echo substr($product->vp_desc_s,0,160);if(strlen($product->vp_desc_s)>160){echo "...";} ?>
+    				</p>
+					<button class="btn pull-right btn-primary"onclick="ddcUpdateCart(<?php echo $product->ddc_vendor_product_id; ?>)"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-shopping-cart"></i></button>
+					<form id="ddcCart<?php echo $product->ddc_vendor_product_id; ?>" class="pull-right" style="width:70px">
 						<input type="number" class="col-xs-12" min="<?php echo $this->model->getpartjsonfield($product->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($product->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($product->product_params,'step_order_level'); ?>" name="jform[product_quantity]" value="<?php echo $this->model->getpartjsonfield($product->product_params,'step_order_level'); ?>"/>
 						<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->session->get('shoppingcart_header_id',null); ?>" />
 						<input type="hidden" name="option" value="com_ddcshopbox" />
@@ -36,7 +40,7 @@ $user = JFactory::getUser()->id;
 						<input type="hidden" name="jform[task]" value="shoppingcart.update" />
 						<input type="hidden" name="format" value="raw" />
 						<input type="hidden" name="tmpl" value="component" />
-						<input type="hidden" name="jform[ddc_product_id]" value="<?php echo $product->ddc_product_id?>" />
+						<input type="hidden" name="jform[ddc_vendor_product_id]" value="<?php echo $product->ddc_vendor_product_id?>" />
 					</form>
 				</div>
 				<div class="clearfix"></div>

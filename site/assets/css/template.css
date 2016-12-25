@@ -4,7 +4,7 @@
 .header-foot{background:#ededed;padding:40px 0px 40px 0px;}
 .body-main{margin-top:20px;}
 .vendor .title{font-weight:bold;font-size:15px;}
-.vendor p{margin: 0px 0px 5px;line-height:12px;font-size:12px;}
+.vendor p{margin: 0px 0px 5px;font-size:12px;}
 main-body div.editor{max-height:500px;}
 table{max-width: 100%;background-color: transparent;border-collapse: collapse;border-spacing: 0;}
 .ddctable{width: 100%;margin-bottom: 10px;}
@@ -18,4 +18,7 @@ table{max-width: 100%;background-color: transparent;border-collapse: collapse;bo
 #postcodeForm{margin: 0 auto; max-width:800px;text-align: center;}
 .introWIW div{position:relative;text-align:center;height:180px;}
 .introWIW div p{position:relative;bottom:0px;}
-
+.small-input-margin .form-control{margin-bottom:3px;}
+.itemTick{color:#009900;}
+.itemTick:hover{color:#00ff00;}
+.ddcPriceOK{font-size: 1.5em;color: #44aaee}

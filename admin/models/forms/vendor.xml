@@ -38,7 +38,7 @@
 			default="52"
 			label="COM_DDC_CURRENCY_LABEL"
 			description="COM_DDC_CURRENCY_DESC"
-			query="SELECT ddc_currency_id AS value, currency_code_3 as vendor_currency FROM #__ddc_currencies"
+			query="SELECT ddc_currency_id AS value, currency_code_3 as vendor_accepted_currencies FROM #__ddc_currencies"
 		/>
 	    <field
 			name="owner"

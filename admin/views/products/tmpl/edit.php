@@ -7,11 +7,10 @@ JHtml::_('behavior.tooltip');
 	<form action="<?php echo JRoute::_('index.php'); ?>"
       method="post" name="adminForm" id="adminForm">
         <fieldset class="adminform">
-                <legend><?php echo JText::_( 'COM_DDC_VENDOR_DETAILS' ); ?></legend>
+                <legend><?php echo JText::_( 'COM_DDC_PRODUCT_DETAILS' ); ?></legend>
                 <div class="adminformlist">
-					<div class="span9">
-					<div class="row-fluid">
-					<?php foreach($this->form->getFieldset('main_top') as $field): ?>
+					<div class="span4">
+					<?php foreach($this->form->getFieldset('product_information_left') as $field): ?>
 						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
 							<?php echo $field->input;?>
 						<?php else:?>
@@ -30,12 +29,11 @@ JHtml::_('behavior.tooltip');
 					<?php endforeach; ?>
 					<div class="clearfix"></div>
 					</div>
-					<div class="row-fluid">
-					<?php foreach($this->form->getFieldset('main') as $field): ?>
+					<div class="span4">
+					<?php foreach($this->form->getFieldset('product_information_right') as $field): ?>
 						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
 							<?php echo $field->input;?>
 						<?php else:?>
-						<div class="span12">
 						<div class="control-group">
 							<div class="control-label">
 							<?php echo $field->label; ?>
@@ -47,15 +45,11 @@ JHtml::_('behavior.tooltip');
 								<?php echo $field->input;?>
 							</div>
 						</div>
-						</div>
 						<?php endif;?>
 					<?php endforeach; ?>
 					</div>
-					<div class="clearfix"></div>
-
-					</div>
-					<div class="span3">
-					<?php foreach($this->form->getFieldset('main_right') as $field): ?>
+					<div class="span4">
+					<?php foreach($this->form->getFieldset('product_dimensions_left') as $field): ?>
 						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
 							<?php echo $field->input;?>
 						<?php else:?>
