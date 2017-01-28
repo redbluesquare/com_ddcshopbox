@@ -8,7 +8,7 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	var $_user_id     = null;
   	var $_product_id  = null;
   	var $_cat_id	  = null;
-  	var $_published   = 1;
+  	var $_published   = 0;
   	var $_ddclocation	= null;
   	var $_ddcpostCode	= null;
   	var $_session	  	= null;
@@ -38,12 +38,12 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     $db = JFactory::getDBO();
     $query = $db->getQuery(TRUE);
 
-    $query->select('vp.*');
+    $query->select('vp.ddc_vendor_product_id, vp.vendor_product_name, vp.vendor_product_sku, vp.vendor_product_alias, vp.product_weight, vp.product_weight_uom, vp.product_length, vp.product_width, vp.product_height, vp.product_lwh_uom, vp.product_base_uom, vp.product_params, vp.published as product_state, vp.vendor_id');
     $query->select('vp.product_description_small as vp_desc_s,vp.product_description as vp_desc');
     $query->select('p.ddc_product_id,p.product_name,p.product_alias,p.product_parent_id');
-    $query->select('vc.*');
+    $query->select('vc.currency_name, vc.currency_code_3, vc.currency_symbol');
     $query->select('i.details, i.image_link');
-    $query->select('v.title as vendor_name, v.city');
+    $query->select('v.title as vendor_name, v.city, v.post_code as shop_post_code');
     $query->select('vpr.product_price, vpr.product_currency, vpr.product_id, vpr.ddc_product_price_id');
     $query->select('c.title as category_title');
     $query->from('#__ddc_vendor_products as vp');
@@ -54,6 +54,7 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     $query->leftJoin('#__ddc_currencies as vc on vc.ddc_currency_id = vpr.product_currency');
     $query->leftJoin('#__ddc_images as i on (vp.ddc_vendor_product_id = i.link_id) AND (i.linked_table = "ddc_products")');
     $query->group("vp.ddc_vendor_product_id");
+    $query->order('vp.hits');
 
 
     return $query;
@@ -75,14 +76,19 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	}
   	if($this->_ddclocation!=null)
   	{
-  		$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
-  	}    
+  		//$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
+  	} 
+  	$query->where('vp.published <> "'. (int)$this->_published .'"');
     return $query;
   }
   
   public function store($formdata = null)
   {
   	$formdata = $formdata ? $formdata : JRequest::getVar('jform', array(), 'post', 'array');
+  	if($formdata['vendor_product_alias'] == null)
+  	{
+  		$formdata['vendor_product_alias'] = JFilterOutput::stringURLSafe($formdata['vendor_product_name']);
+  	}
   	$prod_params = array(
   			'min_order_level' => $formdata['min_order_level'],
   			'max_order_level' => $formdata['max_order_level'],
@@ -122,6 +128,23 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	'table' => $formdata['table']);
   	
   	return parent::store($data);
+  }
+  
+  public function hit($pk)
+  {
+  	$hitcount = new JInput();
+  	$hitcount->getInt('hitcount', 1);
+  	if ($hitcount)
+  	{
+  		// Initialise variables.
+  		$db = JFactory::getDBO();
+  		$db->setQuery( 'UPDATE #__ddc_vendor_products SET hits = hits + 1 WHERE ddc_vendor_product_id = '.(int) $pk );
+  		if (!$db->query()) {
+  			$this->setError($db->getErrorMsg());
+  			return false;
+  		}
+  	}
+  	return true;
   }
 
 }

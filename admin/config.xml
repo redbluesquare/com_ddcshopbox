@@ -17,6 +17,24 @@
 			<option value="GBP">COM_DDC_GBP_BRITISH_POUND</option>
 			<option value="EUR">COM_DDC_EUR_EURO</option>
 		</field>
+		<field name="free_del_stop"
+		    type="number"
+		    label="COM_DDC_DEL_FREE_STOP"
+		    description="COM_DDC_DEL_FREE_STOP_DESC"
+		    step="5"
+		    min="0"
+		    max="1000"
+		    default="50"
+		/>
+		<field name="distance_limit"
+		    type="number"
+		    label="COM_DDC_DISTANCE_LIMIT"
+		    description="COM_DDC_DISTANCE_LIMIT_DESC"
+		    step="1"
+		    min="0"
+		    max="30"
+		    default="5"
+		/>
 		<field name="required_account" type="radio"
 			default="0"
 			class="btn-group"
@@ -118,6 +136,18 @@
 			description="COM_DDC_PAYMENT_URL_DESC"
 		/>
     </fieldset>
+    <fieldset name="shoppingcart"
+        label="COM_DDC_SHOPPING_CART"
+	>
+        <field name="delivery_info" 
+		    type="textarea"
+		    filter="safehtml"
+			label="COM_DDC_DELIVERY_INFO_NAME"
+			description="COM_DDC_DELIVERY_INFO_DESC"
+		/>
+        
+    </fieldset>
+    
 	<fieldset name="permissions"
 		description="JCONFIG_PERMISSIONS_DESC"
 		label="JCONFIG_PERMISSIONS_LABEL"

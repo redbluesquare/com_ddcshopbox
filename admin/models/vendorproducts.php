@@ -27,13 +27,13 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   {
     $db = JFactory::getDBO();
     $query = $db->getQuery(TRUE);
-
-    $query->select('vp.*');
+    
     $query->select('p.ddc_product_id,p.product_name,p.product_alias,p.product_parent_id');
     $query->select('vc.currency_symbol, vc.currency_code_3, vc.currency_name');
     $query->select('v.title as vendor_name');
     $query->select('vpr.product_price, vpr.product_currency, vpr.product_id, vpr.ddc_product_price_id');
     $query->select('c.title as category_title');
+    $query->select('vp.*');
     $query->from('#__ddc_vendor_products as vp');
     $query->leftJoin('#__ddc_products as p on vp.product_id = p.ddc_product_id');
     $query->leftJoin('#__categories as c on c.id = p.category_id');
@@ -63,6 +63,10 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   public function store($formdata = null)
   {
   	$formdata = $formdata ? $formdata : JRequest::getVar('jform', array(), 'post', 'array');
+  	if($formdata['vendor_product_alias'] == null)
+  	{
+  		$formdata['vendor_product_alias'] = JFilterOutput::stringURLSafe($formdata['vendor_product_name']);
+  	}
   	$prod_params = array(
   			'min_order_level' => $formdata['min_order_level'],
   			'max_order_level' => $formdata['max_order_level'],

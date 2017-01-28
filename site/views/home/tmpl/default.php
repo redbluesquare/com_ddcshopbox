@@ -9,7 +9,7 @@ JHTML::_('behavior.calendar');
 <div class="hero">
 <div class="row">
 <div class="col-xs-3 img-circle" style="margin-top:90px;background:#efefef;height:98px;">
-<img alt="" src="images\shop-icon.png" class="col-xs-12" style="position:relative;bottom:80px;">
+<img alt="" src="images/shop-icon.png" class="col-xs-12" style="position:relative;bottom:80px;">
 </div>
 <div class="col-xs-9" style="text-align: center;">
 	<span id="IntroText1"><?php echo JText::_('Imagine...');?></span><br>
@@ -25,7 +25,9 @@ JHTML::_('behavior.calendar');
 <input type="text"  name="ddclocation" id="mypostcode" placeholder="<?php echo JText::_('COM_DDC_ENTER_POSTCODE'); ?>"/>
 <input type="submit" id="mypostcodebtn" name="submit" value="<?php echo JText::_('COM_DDC_LETS_GO'); ?>" class="btn btn-success"/>
 <input name="option" type="hidden" value="com_ddcshopbox">
-<input name="checkpostcode" type="hidden" value="true" />
+<input name="controller" type="hidden" value="default">
+<input name="view" type="hidden" value="vendors">
+<input name="ddccheck" type="hidden" value="1" />
 <?php echo JHtml::_('form.token'); ?>
 </form>
 </div>
@@ -44,12 +46,12 @@ JHTML::_('behavior.calendar');
 		<p>You order your goods on KaizerMart.co.uk</p>
 	</div>
 	<div class="col-xs-4">
-		<img alt="" src="images\shops_together.png" class="col-xs-12"/>
+		<img alt="" src="images/shops_together.png" class="col-xs-12"/>
 		<p>Each local shop packs it's part of your order</p>
 	</div>
 	<div class="col-xs-4">
 		<span style="display:block;margin-left:auto;margin-right:auto;align-items: center;" class="col-xs-12">
-			<img alt="" style="display:block;margin-left:20%;margin-right:20%;" src="images\deliveryvan-image.png" class="col-xs-7"/>
+			<img alt="" style="display:block;margin-left:20%;margin-right:20%;" src="images/deliveryvan-image.png" class="col-xs-7"/>
 		</span>
 		<p>Your order is collected and delivered to you all at once</p>
 	</div>

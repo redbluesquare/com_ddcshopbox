@@ -81,7 +81,7 @@
 		<field
 			name="country"
 			type="sql"
-			default="0"
+			default="222"
 			label="COM_DDC_COUNTRY_LABEL"
 			description="COM_DDC_COUNTRY_DESC"
 			query="SELECT ddc_country_id AS value, country_name as country FROM #__ddc_countries"

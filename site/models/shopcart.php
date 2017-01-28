@@ -28,6 +28,10 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
     $this->_vendor_id = $this->_app->input->get('vendor_id', null);
     $this->_session = JFactory::getSession();
     $this->_shoppingcart_header_id = $this->_app->input->get('shoppingcart_header_id',$this->_session->get('shoppingcart_header_id',null));
+    if($this->_shoppingcart_header_id == null)
+    {
+    	$this->_session->set('shoppingcart_header_id',$this->_shoppingcart_header_id);
+    }
     $this->_params = JComponentHelper::getParams('com_ddcshopbox');
     if($this->_app->input->get('shopcart_state', null)!= null)
     {
@@ -43,13 +47,13 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
     $db = JFactory::getDBO();
     $query = $db->getQuery(TRUE);
 
-    $query->select('scd.*');
     $query->select('vp.*');
     $query->select('pp.*');
     $query->select('vc.*');
     $query->select('i.*');
     $query->select('sch.*');
     $query->select('sch.state as header_state');
+    $query->select('scd.*');
     $query->select('v.title,v.images,v.address1,v.address2,v.city as v_city,v.county as v_county,v.post_code as v_post_code');
     $query->from('#__ddc_shoppingcart_headers as sch');
     $query->leftJoin('#__ddc_shoppingcart_details as scd on (scd.shoppingcart_header_id = sch.ddc_shoppingcart_header_id)');
@@ -58,9 +62,8 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
     $query->leftJoin('#__ddc_vendors as v on vp.vendor_id = v.ddc_vendor_id');
     $query->leftJoin('#__ddc_product_prices as pp on vp.ddc_vendor_product_id = pp.product_id');
     $query->rightJoin('#__ddc_currencies as vc on vc.ddc_currency_id = pp.product_currency');
-    $query->group("scd.product_id");
-
-
+    $query->group("scd.product_id, sch.ddc_shoppingcart_header_id");
+    $query->where('sch.session_id = "'.$this->_session->getId().'"');
     return $query;
   }
 
@@ -72,7 +75,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   	}
   	else
   	{
-  		$query->where('sch.session_id = "'.$this->_session->getId().'"');
+  		//$query->where('sch.session_id = "'.$this->_session->getId().'"');
   	}
   	if($this->_user_id != 0)
   	{
@@ -93,14 +96,30 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   
   public function storeCartData($formdata = null)
   {
-  	// TODO shopping cart
 
   	//Get form data
   	$formdata = $formdata ? $formdata : JRequest::getVar('jform', array(), 'post', 'array');
   	//Is there a shopping cart setup?
   	$sc = $this->listItems();
+	
   	if(count($sc) == 0)
   	{
+  		if($this->_session->get('ddclocation',null)==null)
+  		{
+  			return array(false,1,JText::_('COM_DDC_POSTCODE_NOT_SET'));
+  		}
+  		if($this->isValidPostCodeFormat($this->_session->get('ddclocation',null)))
+  		{
+  			$stldistance = $this->getPostcodesDistance($this->_session->get('ddclocation',null), $formdata['shop_post_code'])/1000;
+  			if(number_format($stldistance,3) > number_format($this->_params->get('distance_limit'),3))
+  			{
+  				return array(false,2,JText::_('COM_DDC_LOCATED_TOO_FAR'),number_format($stldistance,3),$this->_params->get('distance_limit'));
+  			}
+  		}
+  		else 
+  		{
+  			return array(false,1,JText::_('COM_DDC_PLEASE_ENTER_VALID_POSTCODE'));
+  		}
   		//Setup cart if does not exist
   		$data = array(
   					'user_id' => $this->_user_id,
@@ -119,11 +138,13 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   			if($formdata['state'] == 2)
   			{
   				$data = array(
-  						'ddc_shoppingcart_header_id' => $formdata['ddc_shoppingcart_header_id'],
+  						'ddc_shoppingcart_header_id' => $sc[0]->ddc_shoppingcart_header_id,
   						'user_id' => $this->_user_id,
   						'state' => $formdata['state'],
   						'catid' => null,
   						'delivery_type' => $formdata['shipping_method'],
+  						'delivery_date' => $formdata['delivery_date'],
+  						'delivery_time' => $formdata['delivery_time'],
   						'shipping_cost' => $formdata['delivery_price'],
   						'session_id' => $this->_session->getId(),
   						'table' => 'shoppingcartheaders');
@@ -132,15 +153,20 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   			{
   				if(($formdata['address_line_1']==null) || ($formdata['town']==null) || ($formdata['post_code']==null) || ($formdata['email_to']==null) || ($formdata['first_name']==null) || ($formdata['last_name']==null))
   				{
-  					$formdata['state'] = 2;
+  					return false;
   				}
   				$data = array(
-  						'ddc_shoppingcart_header_id' => $formdata['ddc_shoppingcart_header_id'],
+  						'ddc_shoppingcart_header_id' => $sc[0]->ddc_shoppingcart_header_id,
   						'user_id' => $this->_user_id,
   						'state' => $formdata['state'],
   						'catid' => null,
+  						'first_name' => $formdata['first_name'],
+  						'last_name' => $formdata['last_name'],
   						'address_line_1' => $formdata['address_line_1'],
   						'address_line_2' => $formdata['address_line_2'],
+  						'delivery_date' => $formdata['delivery_date'],
+  						'delivery_time' => $formdata['delivery_time'],
+  						'shipping_cost' => $formdata['delivery_price'],
   						'town' => $formdata['town'],
   						'county' => $formdata['county'],
   						'post_code' => $formdata['post_code'],
@@ -152,10 +178,11 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   						'table' => 'shoppingcartheaders');
   			}			
   		}
+  		//user is still shopping
   		else 
   		{
   			$data = array(
-  					'ddc_shoppingcart_header_id' => $formdata['ddc_shoppingcart_header_id'],
+  					'ddc_shoppingcart_header_id' => $sc[0]->ddc_shoppingcart_header_id,
   					'user_id' => $this->_user_id,
   					'state' => 1,
   					'catid' => null,
@@ -163,6 +190,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   					'table' => 'shoppingcartheaders');
   		}
   		$row = $this->store($data);
+  		//$this->_session->set('shoppingcart_header_id', $row->ddc_shoppingcart_header_id);
   		
   		$paypal = new DdcshopboxModelsDdcpaypal();
   		$paypallogo = $this->_params->get('payment_logo');
@@ -171,6 +199,12 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   		{
   			if($this->_app->input->get('paypalsuccess',null)==="false")
   			{
+  				$data = array(
+  						'ddc_shoppingcart_header_id' => $sc[0]->ddc_shoppingcart_header_id,
+  						'user_id' => $this->_user_id,
+  						'state' => 2,
+  						'catid' => null);
+  				$row = $this->store($data);
   				echo JText::_('COM_DDC_PAYMENT_CANCELLED')."<br>";
   				echo '<a href="'.JUri::root().'index.php?option=com_ddcshopcart&view=shopcart">
 					<img src="'.$paypallogo.'" style="height:80px;" /></a>';
@@ -205,20 +239,41 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   						'ddc_shoppingcart_detail_id' => $row->ddc_shoppingcart_detail_id,
   						'product_id' => $formdata['ddc_vendor_product_id'],
   						'product_quantity' => $row->product_quantity+$formdata['product_quantity'],
+  						'price' => $formdata['product_price'],
+  						'state' => 1,
   						'session_id' => $this->_session->getId(),
   						'table' => 'shoppingcartdetails');
-  				$this->_session->set('shoppingcart_header_id',$row->ddc_shoppingcart_header_id);
+  				
   				$row = $this->store($data);
+  				//$this->_session->set('shoppingcart_header_id',$row->ddc_shoppingcart_header_id);
   				$productFound = 1;
   			}
   		}
   		if($productFound == 0)
-  		{
+  		{  			
+  			if($this->_session->get('ddclocation',null)==null)
+  			{
+  				return array(false,1,JText::_('COM_DDC_POSTCODE_NOT_SET'));
+  			}
+  			if($this->isValidPostCodeFormat($this->_session->get('ddclocation',null)))
+  			{
+  				$stldistance = $this->getPostcodesDistance($this->_session->get('ddclocation',null), $formdata['shop_post_code'])/1000;
+  				if(number_format($stldistance,3) > number_format($this->_params->get('distance_limit'),3))
+  				{
+  					return array(false,2,JText::_('COM_DDC_LOCATED_TOO_FAR'),number_format($stldistance,3),$this->_params->get('distance_limit'));
+  				}
+  			}
+  			else
+  			{
+  				return array(false,JText::_('COM_DDC_PLEASE_ENTER_VALID_POSTCODE'));
+  			}
   			//product not in cart insert row
   			$data = array(
   					'shoppingcart_header_id' => $row->ddc_shoppingcart_header_id,
   					'product_id' => $formdata['ddc_vendor_product_id'],
   					'product_quantity' => $formdata['product_quantity'],
+  					'price' => $formdata['product_price'],
+  					'state' => 1,
   					'catid' => null,
   					'session_id' => $this->_session->getId(),
   					'table' => 'shoppingcartdetails');
@@ -227,7 +282,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   		}
   	}
 	
-	return array(true,$sc[0]->header_state);
+	return array(true,$sc[0]->header_state,JText::_('COM_DDC_PRODUCT_ADDED_TO_CART'));
   }
   public function removeCartItem($id)
   {
@@ -261,7 +316,8 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   	
   	// Fields to update.
   	$fields = array(
-  			$db->quoteName('product_quantity') . ' = '.$val
+  			$db->quoteName('product_quantity') . ' = '.$val[0],
+  			$db->quoteName('price') . ' = "'.$val[1] .'"'
   	);
   	
   	// delete all custom keys for user 1001.

@@ -1,49 +1,72 @@
 <?php
 defined( '_JEXEC' ) or die( 'Restricted access' );
+$component = new JComponentHelper();
+$params = $component->getParams('com_ddcshopbox');
 $dim_result = $this->item->product_length*$this->item->product_width*$this->item->product_height;
 ?>
 <div class="row">
-	<div class="col-md-3 img-rounded">
-		<img width="90%" src="<?php echo JRoute::_($this->item->image_link); ?>" class="img-thumbnail" />
+	<div class="col-xs-3 img-rounded product_image">
+		<img style="max-height:100%;min-width:100%;" src="<?php echo JRoute::_($this->item->image_link); ?>" class="img-thumbnail" />
 	</div>
-	<div class="row col-md-9">
+	<div class="row col-xs-9">
 		<div class="pull-left col-md-8">
 			<h3 style="margin-top:10px;"><?php echo $this->item->vendor_product_name; ?></h3>
 			<p><?php echo $this->item->vp_desc; ?></p>
+			<br>
+			<p><span id="product_status<?php echo $this->item->ddc_vendor_product_id; ?>"></span></p>
 		</div>
-		<div class="pull-right col-md-4">
-			<p class="ddcPriceOK" style="text-align: right;padding-right:10px;"><?php echo $this->item->currency_symbol." ".number_format($this->item->product_price,2); ?></p>
+		<div class="pull-right col-md-4" style="text-align:right;">
+			<ul style="text-decoration:none; list-style:none;padding:0;">
+    		<?php 
+    			if($this->item->product_state == 2):?>
+    			<li><i><?php echo JText::_('COM_DDC_FROM')." "?></i><span class="ddcPriceOK"><?php echo $this->item->currency_symbol." ".number_format($this->item->product_price,2); ?></span></li>
+    		<?php else: ?>
+    			<li class="ddcPriceOK"><?php echo $this->item->currency_symbol." ".number_format($this->item->product_price,2); ?></li>
+	    		<?php
+	    		$val = 0;
+	    		if($this->session->get('ddclocation',null)==null): 
+	    			$val = 1;
+				elseif($this->item->distance/1000 < $params->get('distance_limit')):
+					$val = 1;
+				endif;
+				if($val == 1):
+				?>
+				<li class="clearfix">
+	    		<button id="ddcCartBtn<?php echo $this->item->ddc_vendor_product_id; ?>" class="btn pull-right btn-primary col-md-4"onclick="ddcUpdateCart(<?php echo $this->item->ddc_vendor_product_id; ?>)"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-shopping-cart"></i></button>
+	    		<form id="ddcCart<?php echo $this->item->ddc_vendor_product_id; ?>" class="pull-right col-md-8 clearfix">
+					<input type="number" class="col-xs-12" min="<?php echo $this->model->getpartjsonfield($this->item->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($this->item->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>" name="jform[product_quantity]" value="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>"/>
+					<input type="hidden" name="jform[product_price]" value="<?php echo number_format($this->item->product_price,2); ?>" />
+					<input type="hidden" name="option" value="com_ddcshopbox" />
+					<input type="hidden" name="controller" value="update" />
+					<input type="hidden" name="jform[table]" value="ddcshoppingcart" />
+					<input type="hidden" name="jform[task]" value="shoppingcart.update" />
+					<input type="hidden" name="format" value="raw" />
+					<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->session->get('shoppingcart_header_id',null); ?>" />
+					<input type="hidden" name="jform[shop_post_code]" value="<?php echo $this->item->shop_post_code?>" />
+					<input type="hidden" name="tmpl" value="component" />
+					<input type="hidden" name="jform[ddc_vendor_product_id]" value="<?php echo $this->item->ddc_vendor_product_id?>" />
+				</form>
+				</li>
+				<?php else: ?>
+				<li style="font-size:0.8em;line-height:13px;"><i><?php echo '~'.number_format($this->item->distance/1000,2).' km'; ?></i></li>
+				<li style="font-size:0.8em;line-height:13px;color:#990000;"><?php echo JText::_('COM_DDC_SHOP_OUT_OF_DELIVERY_RANGE'); ?></li>
+				<?php endif; ?>
+			<?php endif; ?>
+    		</ul>
 		</div>
 		<div class="clearfix"></div>
 	</div>
-	<div class="row-fluid col-md-9">
-		<div class="col-md-12">
-			<button class="btn pull-right btn-primary"onclick="ddcUpdateCart(<?php echo $this->item->ddc_vendor_product_id; ?>)"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-shopping-cart"></i></button>
-			<form id="ddcCart<?php echo $this->item->ddc_vendor_product_id; ?>" class="pull-right col-md-3">
-				<input type="number" class="col-md-12" min="<?php echo $this->model->getpartjsonfield($this->item->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($this->item->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>" name="jform[product_quantity]" value="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>"/>
-				<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->session->get('shoppingcart_header_id',null); ?>" />
-				<input type="hidden" name="option" value="com_ddcshopbox" />
-				<input type="hidden" name="controller" value="update" />
-				<input type="hidden" name="jform[table]" value="ddcshoppingcart" />
-				<input type="hidden" name="jform[task]" value="shoppingcart.update" />
-				<input type="hidden" name="format" value="raw" />
-				<input type="hidden" name="tmpl" value="component" />
-				<input type="hidden" name="jform[ddc_vendor_product_id]" value="<?php echo $this->item->ddc_vendor_product_id?>" />
-			</form>
-			
-		</div>
-	</div>
+	<div class="clearfix"></div>
 </div>
 <div class="row">
 	<div class="col-md-12">
 		<br>
 		<table class="ddctable">
 			<tbody>
-				<tr><td width="30%"><?php echo JText::_('COM_DDC_PRODUCT_SKU');?></td><td width="70%"><?php echo $this->item->product_sku; ?></td></tr>
+				<tr><td><?php echo JText::_('COM_DDC_STORE')?></td><td><a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendors&layout=vendor&vendor_id='.$this->item->vendor_id); ?>"><?php echo $this->item->vendor_name; ?></a>, <i><?php echo $this->item->city; ?></i></td></tr>
+				<tr><td><?php echo JText::_('COM_DDC_PRODUCT_BOX')?></td><td><?php echo $this->model->getpartjsonfield($this->item->product_params,'product_box'); ?></td></tr>
 				<tr><td><?php echo JText::_('COM_DDC_WEIGHT');?></td><td><?php echo $this->model->ddcnumber(number_format($this->item->product_weight,2))." ".$this->item->product_weight_uom; ?></td></tr>
 				<?php if($dim_result>0):?><tr><td><?php echo JText::_('COM_DDC_DIMENSIONS');?></td><td><?php echo $this->model->ddcnumber($this->item->product_length)." x ".$this->model->ddcnumber($this->item->product_width)." x ".$this->model->ddcnumber($this->item->product_height); ?></td></tr><?php endif; ?>
-				<tr><td><?php echo JText::_('COM_DDC_STORE')?></td><td><?php echo $this->item->vendor_name; ?></td></tr>
-				<tr><td><?php echo JText::_('COM_DDC_PRODUCT_BOX')?></td><td><?php echo $this->model->getpartjsonfield($this->item->product_params,'product_box'); ?></td></tr>
 			</tbody>
 		</table>
 		

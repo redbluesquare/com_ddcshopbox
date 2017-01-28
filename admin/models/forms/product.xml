@@ -12,13 +12,13 @@
 			name="product_name"
 			type="text"
 			label="COM_DDC_PRODUCT_NAME_LABEL"
-			description="COM_DDCDDC_PRODUCT_NAME_DESC"
+			description="COM_DDC_PRODUCT_NAME_DESC"
 		/>
 		<field
 			name="product_alias"
 			type="text"
 			label="COM_DDC_PRODUCT_ALIAS_LABEL"
-			description="COM_DDCDDC_PRODUCT_ALIAS_DESC"
+			description="COM_DDC_PRODUCT_ALIAS_DESC"
 			class="span9"
 		/>
 		<field
@@ -39,7 +39,7 @@
 			name="product_parent_id"
 			type="sql"
 			label="COM_DDC_PARENT_ID_LABEL"
-			description="COM_DDC_PRODUCT_ID_DESC"
+			description="COM_DDC_PARENT_ID_DESC"
 			query="SELECT ddc_product_id AS value, product_name as product_parent_id FROM #__ddc_products"
 		>
 			<option value="0">-</option>
@@ -48,7 +48,7 @@
 			name="category_id"
 			type="sql"
 			label="COM_DDC_CATEGORY_ID_LABEL"
-			description="COM_DDC_PRODUCT_ID_DESC"
+			description="COM_DDC_CATEGORY_ID_DESC"
 			query="SELECT id AS value, title as category_id FROM #__categories WHERE extension ='com_ddcshopbox'"
 		>
 			<option value="0">-</option>
@@ -164,7 +164,7 @@
 		</field>
 		<field
 			name="table"
-			type="text"
+			type="hidden"
 			label="COM_DDC_TABLE_LABEL"
 			description="COM_DDC_TABLE_DESC"
 			hidden="true"

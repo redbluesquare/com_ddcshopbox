@@ -22,7 +22,10 @@ class DdcshopboxControllersGet extends DdcshopboxControllersDefault {
 			
 			$model = new DdcshopboxModelsDefault();
 			$result = $model->getShopCart_contents();
-			//$this->session->clear('shoppingcart_header_id');
+			if(count($result)>0)
+			{
+				$this->session->clear('shoppingcart_header_id');
+			}
 			if($result)
 			{
 				$return['success'] = true;
@@ -31,11 +34,31 @@ class DdcshopboxControllersGet extends DdcshopboxControllersDefault {
 			}
 			else
 			{
+				$this->session->clear('shoppingcart_header_id');
 				$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
 			}
-			echo json_encode($return);
-			
+			echo json_encode($return);	
 		}
+// 		if($this->data['table']=='ddcshoppingcart')
+// 		{
+				
+// 			$model = new DdcshopboxModelsDefault();
+// 			$result = $model->getShopCart_contents();
+// 			//$this->session->clear('shoppingcart_header_id');
+// 			if($result)
+// 			{
+// 				$return['success'] = true;
+// 				$return['msg'] = JText::_('COM_DDC_SAVE_SUCCESS');
+// 				$return['result'] = $result;
+// 			}
+// 			else
+// 			{
+// 				$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+// 			}
+// 			echo json_encode($return);
+				
+// 		}
+		
 		else
 		{
 

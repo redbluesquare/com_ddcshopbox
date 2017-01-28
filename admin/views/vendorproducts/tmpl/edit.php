@@ -137,7 +137,7 @@ JHtml::_('behavior.tooltip');
 					<div class="row" id="imagetiles">
 						<?php foreach($this->productimages as $productimage): ?>
 						<div class="span4" style="height:80px;">
-							<img src="<?php echo JUri::root().$productimage->image_link; ?>" class="img-thumbnail" />
+							<img src="<?php echo JUri::root().$productimage->image_link; ?>" class="img-thumbnail" onclick="removePhoto(<?php echo $productimage->ddc_image_id; ?>)" />
 						</div>
 						<?php endforeach; ?>
 					</div>

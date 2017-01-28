@@ -128,17 +128,6 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 		{
 			if($_FILES["upload_photo"]["error"] == 0)
 			{
-				//TO DELETE the existing photo
-// 				$db = JFactory::getDbo();
-// 				$query = $db->getQuery(true);
-// 				$query->select('profile_value');
-// 				$query->from($db->quoteName('#__user_profiles'));
-// 				$query->where($db->quoteName('user_id')." = ".JFactory::getUser()->id);
-// 				$query->where($db->quoteName('profile_key')." = 'ddcpss.photo'");
-// 				$db->setQuery($query);
-// 				$result = $db->loadResult();
-		
-// 				unlink("/media/ddcpss/images/".$result);
 		
 				$item_id = $this->data['item_id'];
 				$linkedtable = $this->data['linkedtable'];

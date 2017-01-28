@@ -93,12 +93,12 @@ class DdcshopboxModelsDefault extends JModelBase
    * Build a query, where clause and return an object
    *
    */
-  public function getItem()
+  public function getItem($id = null)
   {
   	$db = JFactory::getDBO();
   
   	$query = $this->_buildQuery();
-  	$this->_buildWhere($query);
+  	$this->_buildWhere($query, $id);
   	$db->setQuery($query);
   
   	$item = $db->loadObject();
@@ -110,10 +110,10 @@ class DdcshopboxModelsDefault extends JModelBase
    *
    * @return array An array of results.
    */
-  public function listItems()
+  public function listItems($id = null)
   {
   	$query = $this->_buildQuery();
-  	$this->_buildWhere($query);
+  	$this->_buildWhere($query, $id);
   
   	$list = $this->_getList($query, $this->limitstart, $this->limit);
   	return $list;
@@ -252,7 +252,41 @@ class DdcshopboxModelsDefault extends JModelBase
   	imagecopyresampled($tci, $img, 0, 0, 0, 0, $w, $h, $w_orig, $h_orig);
   	imagejpeg($tci, $newcopy, 80);
   }
-  
+  public function getImageName($id)
+  {
+  	$db = JFactory::getDbo();
+  	$query = $db->getQuery(TRUE);
+  	$query->select('image_link');
+  	$query->from($db->quoteName('#__ddc_images'));
+  	$query->where('ddc_image_id = '.$id);
+  	$db->setQuery($query);
+  	$item = $db->loadObject();
+  	return $item;
+  }
+	public function removeImageName($id)
+	{
+		//If you wish to delete all linked images
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(TRUE);
+		// delete all custom keys for user 1001.
+		$conditions = array(
+			$db->quoteName('ddc_image_id') . ' = '.(int)$id
+		);
+		$query->delete($db->quoteName('#__ddc_images'));
+		$query->where($conditions);
+  	
+		$db->setQuery($query);
+		try
+		{
+			$db->execute();
+		}
+		catch (Exception $e) {
+			echo 'Caught exception: ',  $e->getMessage(), "\n";
+			return false();
+		}
+		return true;
+		
+	}
   public function uploadPhoto($dest,$id,$linkedtable)
   {
   	$user = JFactory::getUser()->id;
@@ -295,37 +329,11 @@ class DdcshopboxModelsDefault extends JModelBase
   	return false;
   }
   
-  public function setPostcode($user_id = null,$pc = null)
-  {
-  	
-  	if($user_id!=null)
+	public function getpartjsonfield($string,$part)
   	{
-  		//Get postcode is user is logged in
-  		$this->db = JFactory::getDBO();
-  		 
-  		$query = $this->db->getQuery(TRUE);
-  		$query->select('cd.postcode')
-  		->from('#__contact_details as cd')
-  		->where('cd.user_id = "'.$user_id.'"');
-  		$this->db->setQuery($query);
-  		$item = $this->db->loadObject();
+  		$prod_params = json_decode($string, true);
+		$item = $prod_params[$part];  	
+  		return $item;
   	}
-  	if($item->postcode!=null)
-  	{
-  		$pc = $item->postcode;
-  	}
-  	
-  	//check if postcode is set
-  	if($pc!=null)
-  	{
-  		$pc1 = explode(' ', $pc);
-  		$pc1 = trim($pc1[0]);
-  	}
-  	
-  	//set session with fist half of postcode
-  	$this->session->set('postcode', $pc1);
-  	
-  	return true;
-  }
   
 }

@@ -432,42 +432,70 @@ class DdcshopboxModelsDefault extends JModelBase
   
   }
   
-  public function uploadpostcodes()
+  public function uploadpostcodes($filename,$table)
   {
   	$filename = 'postcodes.csv';
-  	$file = fopen(JPATH_COMPONENT_SITE."/assets/".$filename,"r");
-  	$postcodes = array();
+  	$file = fopen(JPATH_SITE."/media/com_ddcshopbox/".$filename,"r");
+  	$rows = array();
   	$headers = array();
   	array_push($headers,fgetcsv($file,null,','));
   	while (!feof($file))
   	{
-  		array_push($postcodes,fgetcsv($file,null,','));
+  		array_push($rows,fgetcsv($file,null,','));
   	}
   	
-   	
-   	for($i=0;$i<9001;$i++):
+   	for($i=0;$i<count($rows);$i++):
    		$db = JFactory::getDBO();
    		$query = $db->getQuery(true);
 	   	$query
 	   		->insert($db->quoteName('#__ddc_outcodes'))
 	   		->columns($db->quoteName($headers[0]))
-	   		->values('"'.implode('","',$postcodes[$i]).'"');
+	   		->values('"'.implode('","',$rows[$i]).'"');
 	   	$db->setQuery($query);
 	  	$db->execute();
 	endfor;
-
-  	
   }
   
-  /* Returns the district for a postcode - for example, SW1A for SW1A 0AA - or
-   * false if the postcode was not in a valid format. The parameter is:
+  /* Returns the following for a postcode: 
+   * - district
+   * - latitude
+   * - longatude
    *
-   * $district - the district where the shop is located
+   * $result - the array with 3 pieces data
    */
-  public function getShopDistance($district)
+  public function getPostCodeDetails($postcode)
   {
-  	//get session with fist half of postcode
-  	$this->session->get('ddclocation', null);
+  	$db = JFactory::getDBO();
+   	$query = $db->getQuery(true);
+	$query
+	   	->select('o.postcode,o.latitude,o.longitude')
+	   	->from('#__ddc_outcodes as o')
+	   	->where('o.postcode = "'.$this->getDistrict($postcode).'"');
+	$db->setQuery($query);
+	   	
+	$item = $db->loadObject();
+	return $item;
   }
   
+  /* Get straightline distance between two postcode districts
+   * 
+   */
+  public function getPostcodesDistance($postcode1, $postcode2)
+  {
+  	if(($this->isValidPostCodeFormat($postcode1)==true) AND ($this->isValidPostCodeFormat($postcode2)==true))
+  	{
+  		$pc1 = $this->getPostCodeDetails($postcode1);
+  		$pc2 = $this->getPostCodeDetails($postcode2);
+  		return $this->haversineGreatCircleDistance($pc1->latitude, $pc1->longitude, $pc2->latitude, $pc2->longitude);
+  	}
+  	else
+  	{
+  		return false;
+  	}	
+  }
+  
+  public function sort_objects_by_distance($a, $b) {
+  	if($a->distance == $b->distance){ return 0 ; }
+  	return ($a->distance < $b->distance) ? -1 : 1;
+  }
 }

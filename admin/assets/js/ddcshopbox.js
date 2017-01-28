@@ -27,6 +27,23 @@ function _(el){
     return document.getElementById(el);
 }
 
+function removePhoto(id){
+	var photoInfo = {};
+	jQuery("#upload_form :input").each(function(idx,ele){
+		caInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+	});
+	
+	jQuery.ajax({
+		url:'index.php?option=com_ddcshopbox&controller=edit&format=raw&tmpl=component&jform[table]=images&jform[ddc_image_id]='+id,
+		type:'DELETE',
+		dataType:'JSON',
+		success:function(result)
+		{
+			//console.log(result);
+		}
+	});
+}
+
 function uploadPhoto(item,id){
     
 

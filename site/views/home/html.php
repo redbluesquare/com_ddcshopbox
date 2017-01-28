@@ -29,7 +29,7 @@ class DdcshopboxViewsHomeHtml extends JViewHtml
     			$this->form = $profileModel->getForm();
     		break;
     		case "uploadpostcodes":
-    			$this->items = $this->model->uploadpostcodes();
+    			$this->items = $this->model->uploadpostcodes('postcodes.csv','#__ddc_outcodes');
     			break;
     	}
  

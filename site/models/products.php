@@ -79,6 +79,10 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
   public function store($formdata = null)
   {
   	$formdata = $formdata ? $formdata : JRequest::getVar('jform', array(), 'post', 'array');
+  	if($formdata['product_alias'] == null)
+  	{
+  		$formdata['product_alias'] = JFilterOutput::stringURLSafe($formdata['product_name']);
+  	}
   	$prod_params = array(
   			'min_order_level' => $formdata['min_order_level'],
   			'max_order_level' => $formdata['max_order_level'],

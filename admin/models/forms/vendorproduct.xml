@@ -197,6 +197,8 @@
 		>
 			<option value="1">
 				JPUBLISHED</option>
+			<option value="2">
+				COM_DDC_NO_SALES</option>
 			<option value="0">
 				JUNPUBLISHED</option>
 			<option value="-2">
@@ -210,6 +212,15 @@
 			hidden="true"
 			class="hidden"
 			default="vendorproducts"
+		/>
+		<field
+			name="hits"
+			type="hidden"
+			label="COM_DDC_HITS_LABEL"
+			description="COM_DDC_HITS_DESC"
+			hidden="true"
+			class="hidden"
+			default="0"
 		/>
 	</fieldset>
 		

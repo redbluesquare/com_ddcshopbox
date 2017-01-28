@@ -41,7 +41,7 @@ class DdcshopboxHelpersDdcshopbox
 	{
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_DASHBOARD'),
 		'index.php?option=com_ddcshopbox&view=dashboard', $submenu == 'dashboard');
-		JHtmlSidebar::addEntry(JText::_('COM_DDCSHOPBOX_CATEGORIES'),
+		JHtmlSidebar::addEntry(JText::_('COM_DDC_CATEGORIES'),
 				'index.php?option=com_categories&view=categories&extension=com_ddcshopbox', $submenu == 'categories');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_PRODUCTS'),
 		'index.php?option=com_ddcshopbox&view=products', $submenu == 'products');
@@ -51,6 +51,8 @@ class DdcshopboxHelpersDdcshopbox
 				'index.php?option=com_ddcshopbox&view=vendorproducts', $submenu == 'vendorproducts');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_USER_VENDORS'),
 				'index.php?option=com_ddcshopbox&view=uservendors', $submenu == 'uservendors');
+		JHtmlSidebar::addEntry(JText::_('COM_DDC_SHOPCART_HEADERS'),
+				'index.php?option=com_ddcshopbox&view=shopcartheaders', $submenu == 'shopcartheaders');
 		// set some global property
 		$document = JFactory::getDocument();
 

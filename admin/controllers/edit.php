@@ -17,7 +17,7 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 		
 		$app = JFactory::getApplication ();
 		$return = array ("success" => false	);
-		$jinput = JFactory::getApplication()->input;
+		$jinput = new JInput();
 		$this->data = $jinput->get('jform', array(),'array');
 		
 		
@@ -202,6 +202,25 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 		}
 		else if($this->data['table']=='images')
 		{
+			//Initialize model
+			$modelName  = $app->input->get('models', 'default');
+			$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+			$model = new $modelName();
+			
+			if($jinput->getMethod() == 'DELETE')
+			{
+				//Get the filename
+				if($row = $model->getImageName($this->data['ddc_image_id']))
+				{
+					var_dump($row->image_link);
+					unlink(JRoute::_($row->image_link));
+					$model->removeImageName($this->data['ddc_image_id']);
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
 			if($_FILES["upload_photo"]["error"] == 0)
 			{
 				//TO DELETE the existing photo
@@ -218,9 +237,6 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 		
 				$item_id = $this->data['item_id'];
 				$linkedtable = $this->data['linkedtable'];
-				$modelName  = $app->input->get('models', 'default');
-				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
-				$model = new $modelName();
 					
 				$fileName = $_FILES["upload_photo"]["name"];
 				$fileTmpLoc = $_FILES["upload_photo"]["tmp_name"];

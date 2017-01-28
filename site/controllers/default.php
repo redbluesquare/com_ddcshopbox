@@ -19,12 +19,35 @@ class DdcshopboxControllersDefault extends JControllerBase
   	$session = JFactory::getSession();
   	$user = JFactory::getUser()->id;
   	$model = new DdcshopboxModelsDefault();
+  	$return = array();
+  	$return['success'] = false;
   	if($app->input->get('ddccheck',null)==1)
   	{
   		$session->set('ddclocation',$app->input->get('ddclocation',null,'string'));
   	}
+  	if($app->input->get('ddccheck',null)==2)
+  	{
+  		if($model->isValidPostCodeFormat($app->input->get('ddclocation',null,'string')))
+  		{
+  			$session->set('ddclocation',$app->input->get('ddclocation',null,'string'));
+  			$return['success'] = true;
+  			$return['msg'] = JText::_('COM_DDC_SAVE_SUCCESS');
+  			echo json_encode($return);
+  			return true;
+  		}
+  		else 
+  		{
+  			$return['msg'] = JText::_('COM_DDC_PLEASE_ENTER_VALID_POSTCODE');
+  			echo json_encode($return);
+  			return true;
+  		}
+  		
+  	}
   	if($session->get('ddclocation',null)!=null)
   	{
+  		if($app->input->getWord('view', 'vendorproducts')=='home'):
+  			$app->input->set('view', 'vendors');
+  		endif;
   		$viewName = $app->input->getWord('view', 'vendorproducts');
   		$viewFormat = $document->getType();
   		$layoutName = $app->input->getWord('layout', 'default');

@@ -24,14 +24,29 @@ function saveContactAddress()
 
 function scPriceTotals()
 {
-	var myval1 = Number(jQuery("#ship_price").text());
+	var valCheck = Number(jQuery('#jform_free_del_stop').val());
 	var myval2 = Number(jQuery("#products_total").text());
+	if(myval2 >= valCheck)
+	{
+		var myval1 = Number(0);
+		jQuery("#jform_delivery_price").val('0.00');
+		jQuery("#jform_delivery_price2").val('0.00');
+	}
+	else
+	{
+		var myval1 = Number(jQuery("#ship_price").text());
+		jQuery("#jform_delivery_price").val(jQuery("#ship_price").text());
+		jQuery("#jform_delivery_price2").val(jQuery("#ship_price").text());
+	}
+	
 	jQuery("#subtotal").text((myval1+myval2).toFixed(2));
 	jQuery("#subtotal2").text((myval1+myval2).toFixed(2));
 }
 
 function updateCartItem(id)
 {
+	var valCheck = Number(jQuery('#jform_free_del_stop').val());
+	var myval1 = Number(jQuery("#ship_price").text());
 	var itemQty = Number(jQuery("#itemQty"+id).val());
 	var itemPrice = Number(jQuery("#itemPrice"+id).text());
 	var itemTotal = Number(jQuery("#itemTotal"+id).text());
@@ -39,17 +54,29 @@ function updateCartItem(id)
 	var subTotal = Number(jQuery("#subtotal").text());
 	var productsTotal = Number(jQuery("#products_total").text());
 	jQuery.ajax({
-		url:'index.php?option=com_ddcshopbox&controller=update&format=raw&jform[table]=shopcartdetails&jform[ddc_shoppingcart_detail_id]='+id+'&jform[product_quantity]='+itemQty,
+		url:'index.php?option=com_ddcshopbox&controller=update&format=raw&jform[table]=shopcartdetails&jform[ddc_shoppingcart_detail_id]='+id+'&jform[product_quantity]='+itemQty+'&jform[product_price]='+itemPrice,
 		type:'UPDATE',
 		dataType:'JSON',
 		success:function(data)
 		{
 			if ( data.success ){
-				console.log(itemQty+"|"+itemPrice+"|"+itemTotal+"|"+productsTotal+"|"+subTotal);
 				jQuery("#itemTotal"+id).text((itemTotal-diffPrice).toFixed(2));
 				jQuery("#products_total").text((productsTotal-diffPrice).toFixed(2));
-				jQuery("#subtotal").text((subTotal-diffPrice).toFixed(2));
-				jQuery("#subtotal2").text((subTotal-diffPrice).toFixed(2));
+				var myval2 = Number(jQuery("#products_total").text());
+				if(myval2 >= valCheck)
+				{
+					jQuery("#ship_price").text('0.00');
+					jQuery("#jform_delivery_price").val('0.00');
+					jQuery("#jform_delivery_price2").val('0.00');
+				}
+				else
+				{
+					jQuery("#ship_price").text('3.00');
+					jQuery("#jform_delivery_price").val('3.00');
+					jQuery("#jform_delivery_price2").val('3.00');
+				}
+				jQuery("#subtotal").text((myval2+Number(jQuery("#ship_price").text())).toFixed(2));
+				jQuery("#subtotal2").text((myval2+Number(jQuery("#ship_price").text())).toFixed(2));
 				GetCartData();
 			}else{
 				
@@ -92,9 +119,8 @@ function removeCartItem(id)
 		{
 			if ( data.success ){
 				location.reload();
-				//console.log(data);
 			}else{
-				console.log(data);
+				
 			}
 		}
 	});
@@ -116,12 +142,54 @@ function ddcUpdateCart(id)
 		{
 			if ( data.success ){
 				GetCartData();
+				jQuery("#product_status"+id).addClass('alert');
+				jQuery("#product_status"+id).removeClass('alert-danger');
+				jQuery("#product_status"+id).addClass('alert-success');
+				setTimeout(function(){ 
+					jQuery("#product_status"+id).removeClass('alert', 'alert-success');
+					jQuery("#product_status"+id).text("");
+				},1500);
+				jQuery("#product_status"+id).text(data.msg);
 			}else{
-				jQuery(".ddccartarea").append(data.msg);
+				if ( data.locationset == 1 ){
+					jQuery("#getPCModal").modal('show');
+					jQuery("#ddc_vendor_product_id").val(id);
+				}
+				if ( data.locationset == 2 ){
+					jQuery("#product_status"+id).addClass('alert');
+					jQuery("#product_status"+id).addClass('alert-danger');
+					jQuery("#product_status"+id).text(data.msg);
+					jQuery("#ddcCart"+id).hide();
+					jQuery("#ddcCartBtn"+id).hide();
+				}
 			}
 		}
 	});
+}
 
+function checkMyPostCode()
+{
+	var postcodeData = {};
+	jQuery("#getPostCode :input").each(function(idx,ele){
+		postcodeData[jQuery(ele).attr('name')] = jQuery(ele).val();
+	});
+
+	jQuery.ajax({
+		url:'index.php',
+		type:'POST',
+		data:postcodeData,
+		dataType:'JSON',
+		success:function(data)
+		{
+			if ( data.success ){
+				jQuery("#getPCModal").modal('hide');
+				jQuery("#ddclocation").val(postcodeData.ddclocation)
+				ddcUpdateCart(postcodeData.ddc_vendor_product_id);
+			}else{
+				jQuery(".modal-header").append(data.msg);
+			}
+		}
+	});
 }
 
 function checkPayment(id)
@@ -244,8 +312,18 @@ jQuery(document).ready(function(){
 		myvalue = Number(jQuery(this).val())+Number(myval2);
 		jQuery("#subtotal").text(myvalue.toFixed(2));
 	});
-	myval1 = Number(jQuery("#ship_price").text());
-	myval2 = Number(jQuery("#products_total").text());
+	var valCheck = Number(jQuery('#jform_free_del_stop').val());
+	var myval2 = Number(jQuery("#products_total").text());
+	if(myval2 >= valCheck)
+	{
+		jQuery("#ship_price").text('0.00');
+		jQuery("#jform_delivery_price").val('0.00');
+		jQuery("#jform_delivery_price2").val('0.00');
+	}
+	var myval1 = Number(jQuery("#ship_price").text());
 	jQuery("#subtotal").text((myval1+myval2).toFixed(2));
 	jQuery("#subtotal2").text((myval1+myval2).toFixed(2));
+	jQuery("#jform_delivery_price").val(jQuery("#ship_price").text());
+	jQuery("#jform_delivery_price2").val(jQuery("#ship_price").text());
+	
 });

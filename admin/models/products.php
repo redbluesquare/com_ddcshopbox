@@ -57,6 +57,10 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
   public function store($formdata = null)
   {
   	$formdata = $formdata ? $formdata : JRequest::getVar('jform', array(), 'post', 'array');
+  	if($formdata['product_alias'] == null)
+  	{
+  		$formdata['product_alias'] = JFilterOutput::stringURLSafe($formdata['product_name']);
+  	}
   	$data = array(
   	'ddc_product_id'=>$formdata['ddc_product_id'],
   	'product_parent_id' => $formdata['product_parent_id'],

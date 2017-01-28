@@ -16,6 +16,7 @@ class DdcshopboxViewsVendorproductsHtml extends JViewHtml
   	{
     	$app = JFactory::getApplication();
     	$layout = $this->getLayout();
+    	$this->session = JFactory::getSession();
     	
     	//retrieve task list from model
     	$productModel = new DdcshopboxModelsProduct();
@@ -26,12 +27,17 @@ class DdcshopboxViewsVendorproductsHtml extends JViewHtml
     		case "default":
     			default:
     			$this->items = $this->model->listItems();
-    			$this->session = JFactory::getSession();
+    			foreach($this->items as $item)
+    			{
+    				$item->distance = $this->model->getPostcodesDistance($this->session->get('ddclocation',null),$item->shop_post_code);
+    			}
+    			usort($this->items,array(new DdcshopboxModelsDefault(),'sort_objects_by_distance'));
     			$this->_productsListView = DdcshopboxHelpersView::load('vendorproducts','_item','phtml');
     		break;
     		case "product":
     			$this->item = $this->model->getItem();
-    			$this->session = JFactory::getSession();
+    			$this->item->distance = $this->model->getPostcodesDistance($this->session->get('ddclocation',null),$this->item->shop_post_code);
+    			$this->model->hit($this->item->ddc_vendor_product_id);
     			break;
     	}
  

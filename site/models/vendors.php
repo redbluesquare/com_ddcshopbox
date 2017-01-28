@@ -48,7 +48,7 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     $query->leftJoin('#__users as u on v.owner = u.id');
     $query->leftJoin('#__ddc_user_vendor as uv on v.ddc_vendor_id = uv.vendor_id');
     $query->group("v.ddc_vendor_id");
-
+    $query->order('v.hits');
 
     return $query;
   }
@@ -61,13 +61,30 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     }
     if($this->_ddclocation!=null)
     {
-    	$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
+    	//$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
     }
     if($this->_vendor_auth==1)
     {
     	$query->where('uv.user_id = "'. (int)$this->_user_id .'"');
     }   
     return $query;
+  }
+  
+  public function hit($pk)
+  {
+  	$hitcount = new JInput();
+  	$hitcount->getInt('hitcount', 1);
+  	if ($hitcount)
+  	{
+  		// Initialise variables.
+  		$db = JFactory::getDBO();
+  		$db->setQuery( 'UPDATE #__ddc_vendors SET hits = hits + 1 WHERE ddc_vendor_id = '.(int) $pk );
+  		if (!$db->query()) {
+  			$this->setError($db->getErrorMsg());
+  			return false;
+  		}
+  	}
+  	return true;
   }
   
   public function getVendorDistance($vendor_pc )
@@ -89,6 +106,18 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
   		$dist = $this->haversineGreatCircleDistance($mypc->latitude, $mypc->longitude, $shoppc->latitude, $shoppc->longitude);
   		echo number_format($dist/1000,3);
   	}
+  }
+  
+  public function store($formdata = null)
+  {
+  	$formdata = $formdata ? $formdata : JRequest::getVar('jform', array(), 'post', 'array');
+  	var_dump( $formdata['alias'] );
+  	if($formdata['alias'] == null)
+  	{
+  		$formdata['alias'] = JFilterOutput::stringURLSafe($formdata['title']);
+  	}
+  	 
+  	return parent::store($formdata);
   }
 
 }

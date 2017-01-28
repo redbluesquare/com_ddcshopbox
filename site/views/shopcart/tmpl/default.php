@@ -7,6 +7,20 @@ JHTML::_('behavior.calendar');
 $products_total = null;
 $params = JComponentHelper::getParams('com_ddcshopbox');
 $app = JFactory::getApplication();
+$date = date('w');
+if($date < 5)
+{
+	$nextSaturday = strtotime('next saturday');
+	$weekNo = date('W');
+	$weekNoNextSaturday = date('W', $nextSaturday);
+}
+else 
+{
+	$nextSaturday = strtotime('next saturday');
+	$oneWeek = 60*60*24*7;
+	$nextSaturday = $nextSaturday+$oneWeek;
+}
+$del_date = Date('D. d M.',$nextSaturday)
 ?>
 
 <h1><?php echo JText::_('COM_DDC_SHOPPING_CART'); ?></h1>
@@ -36,7 +50,7 @@ $app = JFactory::getApplication();
     					
 		</td>
 		<td><?php echo $item->vendor_product_sku; ?></td>
-		<td style="text-align: center;" id="itemPrice<?php echo $item->ddc_shoppingcart_detail_id; ?>"><?php echo number_format($item->product_price,2); ?></td>
+		<td style="text-align: center;" id="itemPrice<?php echo $item->ddc_shoppingcart_detail_id; ?>"><input type="hidden" name="jform[product_price]" value="<?php echo number_format($item->product_price,2); ?>" /><?php echo number_format($item->product_price,2); ?></td>
 		<td style="text-align: center;"><input name="jform[product_quantity]" id="itemQty<?php echo $item->ddc_shoppingcart_detail_id; ?>" type="number" style="width:50px;" min="<?php echo $this->model->getpartjsonfield($item->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($item->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($item->product_params,'step_order_level'); ?>" value="<?php echo $item->product_quantity; ?>" onchange="updateCartItem(<?php echo $item->ddc_shoppingcart_detail_id; ?>)" /></td>
 		<td style="text-align: center;"><?php echo $item->discount; ?></td>
 		<td style="text-align: center;" id="itemTotal<?php echo $item->ddc_shoppingcart_detail_id; ?>"><?php echo number_format($item->product_price*$item->product_quantity,2); ?></td>
@@ -51,31 +65,44 @@ $app = JFactory::getApplication();
 		<td></td>
 	</tr>
 	<tr>
-		<td colspan="4" style="text-align: left;">
+		<td colspan="1" style="text-align: left;">
 			<?php echo JText::_('COM_DDC_SHIPPING_METHOD')?><br>
 			
-				<input type="radio" id="shipping_method" name="jform[shipping_method]" value="std" checked /><?php echo JText::_('COM_DDC_STANDARD'); ?>
-				<input type="hidden" name="jform[delivery_price]" value="3.00" />
-				<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->items[0]->ddc_shoppingcart_header_id?>" />
+				<input type="radio" id="shipping_method" name="jform[shipping_method]" value="1" checked /><?php echo JText::_('COM_DDC_STANDARD'); ?>
+				<input type="hidden" id="jform_delivery_price" name="jform[delivery_price]" value="3.00" />
+				<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->session->get('shoppingcart_header_id',null); ?>" />
 				<input type="hidden" name="jform[table]" value="ddcCheckout" />
 				<input type="hidden" name="jform[state]" value="2" />
+				<input type="hidden" id="jform_free_del_stop" name="jform[free_del_stop]" value="<?php echo $params->get('free_del_stop'); ?>"> 
 				<input type="hidden" name="controller" value="update" />
 				<input type="hidden" name="option" value="com_ddcshopbox" />
 				<input type="hidden" name="format" value="raw" />
 				<input type="hidden" name="tmpl" value="component" />
+				<input type="hidden" name="jform[delivery_date]" value="<?php echo Date('Y-m-d',$nextSaturday);?>" />
+				<input type="hidden" name="jform[delivery_time]" value="12:00:00" />
 
 		</td>
-		<td></td>
+		<td colspan="4">
+			<?php 
+				echo JText::_('COM_DDC_DELIVERY')." ";
+				echo $del_date."<br>";
+				echo "Delivery between 09:00 and 12:00";
+			?>
+		</td>
 		<td style="text-align: center;" id="ship_price"><?php echo number_format(3,2); ?></td>
+		<td></td>
 	</tr>
-		<tr style="font-weight: bold">
-		<td colspan="4" style="text-align: center;">
+	<tr style="font-weight: bold">
+		<td colspan="4" style="text-align: right;">
 			<?php echo JText::_('COM_DDC_TOTAL')?>
 		</td>
 		<td></td>
 		<td style="text-align: center;"><?php echo $this->items[0]->currency_symbol." "; ?><span id="subtotal"></span></td>
+		<td></td>
 	</tr>
-
+	<tr>
+		<td colspan="7"><?php echo $params->get('delivery_info'); ?></td>
+	</tr>
 </tbody>
 </table>
 </form>
@@ -102,7 +129,7 @@ $app = JFactory::getApplication();
 					<input class="form-control" name="jform[address_line_2]" type="text" placeholder="Address line 2" value="<?php echo $this->items[0]->address_line_2 ?>" required />
 					<input class="form-control" name="jform[town]" type="text" placeholder="Town / City*" value="<?php echo $this->items[0]->town ?>" />
 					<input class="form-control" name="jform[county]" type="text" placeholder="County*" value="<?php echo $this->items[0]->county ?>" />
-					<input class="form-control" name="jform[post_code]" type="text" placeholder="Post Code*" value="<?php echo $this->items[0]->post_code ?>" />
+					<input class="form-control" name="jform[post_code]" type="text" placeholder="Post Code*" value="<?php if($this->items[0]->post_code==null): echo $this->session->get('ddclocation', null); else: echo $this->items[0]->post_code; endif; ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -115,7 +142,7 @@ $app = JFactory::getApplication();
 			<tr>
 				<td><?php echo JText::_('COM_DDC_EMAIL_TO'); ?></td>
 				<td class="small-input-margin">
-					<input class="form-control" name="jform[email_to]" type="text" placeholder="E-mail Address*" value="<?php echo $this->items[0]->email_to ?>" /></td>
+					<input class="form-control" name="jform[email_to]" type="text" placeholder="E-mail Address*" value="<?php echo $this->items[0]->email_to ?>" required="true" validate="email" /></td>
 			</tr>
 			<tr>
 				<td>
@@ -123,6 +150,7 @@ $app = JFactory::getApplication();
 
 					<input type="radio" id="payment_method" name="jform[payment_method]" value="<?php echo $params->get('paymentmethod_id')?>" checked /><?php echo JText::_('COM_DDC_PAYPAL'); ?>
 					<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->items[0]->ddc_shoppingcart_header_id?>" />
+					<input type="hidden" id="jform_delivery_price2" name="jform[delivery_price]" value="3.00" />
 					<input type="hidden" name="jform[state]" value="3" />
 					<input type="hidden" name="jform[table]" value="ddcCheckout" />
 					<input type="hidden" name="controller" value="update" />

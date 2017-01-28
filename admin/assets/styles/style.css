@@ -1,0 +1,10 @@
+body *{
+	visibility:hidden;
+}
+#printable *{
+	visibility:visible;
+}
+#printable{position:relative;top:200px;width:90%;page-break-inside:avoid; page-break-before: always;}
+div {float: none !important;}
+.table th, .table td{border-top: 1px solid #fff;}
+tfoot{position:relative;bottom:100px;}

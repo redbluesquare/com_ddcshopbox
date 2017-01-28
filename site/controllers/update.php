@@ -27,12 +27,14 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 		{
 			if($this->data['task']=="shoppingcart.update")
 			{
-				if($model->storeCartData($this->data))
+				if($storecart = $model->storeCartData($this->data))
 				{
 					$result = $model->getShopCart_contents();
-					$return['success'] = true;
-					$return['msg'] = JText::_('COM_DDC_SAVE_SUCCESS');
+					$return['success'] = $storecart[0];
+					$return['locationset'] = $storecart[1];
+					$return['msg'] = $storecart[2];
 					$return['result'] = $result;
+					$return['msgs'] = $storecart[3];
 				}
 				else
 				{
@@ -59,6 +61,8 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 			}
 			else
 			{
+				// Add a message to the message queue
+				$app->enqueueMessage(JText::_('COM_DDC_ERROR_NOT_ALL_REQUIRED_FIELDS_ENTERED'), 'error');
 				$viewName = $app->input->getWord('view', 'shopcart');
 				$app->input->set('layout','default');
 				$app->input->set('view', $viewName);
@@ -88,7 +92,7 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 			if($this->data['table']=='shopcartdetails')
 			{
 				$model = new DdcshopboxModelsShopcart();
-				if($row = $model->updateCartItem($this->data['ddc_shoppingcart_detail_id'], $this->data['product_quantity']))
+				if($row = $model->updateCartItem($this->data['ddc_shoppingcart_detail_id'], array($this->data['product_quantity'],$this->data['product_price'])))
 				{
 					$return['success'] = true;
 					$return['product_quantity'] = $row;
