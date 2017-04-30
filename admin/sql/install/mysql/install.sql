@@ -1,9 +1,47 @@
+CREATE TABLE IF NOT EXISTS `#__ddc_bookings` (
+  `ddc_booking_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `vendor_product_id` int(11) NOT NULL,
+  `checkin_date` date NOT NULL default '0000-00-00',
+  `checkin_time` time NOT NULL default '00:00:00',
+  `timeframe` double NOT NULL default '0',
+  `checkout_date` date NOT NULL default '0000-00-00',
+  `checkout_time` time NOT NULL default '00:00:00',
+  `terms` tinyint(3) NOT NULL,
+  `first_name` varchar(20),
+  `last_name` varchar(20),
+  `contact_tel` varchar(20),
+  `contact_email` varchar(80),
+  `num_adults` int(3) NOT NULL,
+  `num_children` int(3) NOT NULL,
+  `company` varchar(30),
+  `flight` varchar(30),
+  `airport` varchar(30),
+  `arrival_time` time default '00:00:00',
+  `representative` varchar(30),
+  `source` varchar(100),
+  `booked_price` double NOT NULL,
+  `notes` text,
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(11) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(11) NOT NULL DEFAULT '0',
+  `status` tinyint(3) NOT NULL,
+  PRIMARY KEY (`ddc_booking_id`),
+  KEY `user_id` (`user_id`),
+  KEY `vendor_id` (`vendor_id`),
+  KEY `vendorproduct_id` (`vendorproduct_id`),
+  KEY `checkin` (`checkin`),
+  KEY `checkout` (`checkout`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 CREATE TABLE IF NOT EXISTS `#__ddc_coupons` (
   `ddc_coupon_id` INT(1) UNSIGNED NOT NULL AUTO_INCREMENT,
   `vendor_id` INT(1) UNSIGNED NOT NULL,
   `coupon_code` char(32) NOT NULL DEFAULT '',
-  `percent_or_total` enum('percent','total') NOT NULL DEFAULT 'percent',
-  `coupon_type` enum('gift','permanent') NOT NULL DEFAULT 'gift',
+  `percent_or_total` varchar(20) NOT NULL DEFAULT 'value',
+  `coupon_type` varchar(20) NOT NULL DEFAULT 'gift',
   `coupon_value` decimal(15,5) NOT NULL DEFAULT '0.00000',
   `coupon_start_date` datetime,
   `coupon_expiry_date` datetime,
@@ -32,9 +70,9 @@ CREATE TABLE IF NOT EXISTS `#__ddc_countries` (
   `ordering` int(1) NOT NULL DEFAULT '0',
   `published` tinyint(1) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
-  `created_by` int(1) NOT NULL DEFAULT '0',
+  `created_by` int(11) NOT NULL DEFAULT '0',
   `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `modified_by` int(11) NOT NULL DEFAULT '0',
   `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `locked_by` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ddc_country_id`),
@@ -63,9 +101,9 @@ CREATE TABLE IF NOT EXISTS `#__ddc_currencies` (
   `shared` tinyint(1) NOT NULL DEFAULT '1',
   `published` tinyint(1) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
-  `created_by` int(1) NOT NULL DEFAULT '0',
+  `created_by` int(11) NOT NULL DEFAULT '0',
   `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `modified_by` int(11) NOT NULL DEFAULT '0',
   `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `locked_by` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ddc_currency_id`),
@@ -260,6 +298,30 @@ CREATE TABLE IF NOT EXISTS `#__ddc_orderstates` (
   KEY `published` (`published`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='All available order statuses' AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `#__ddc_paymentmethods` (
+  `ddc_paymentmethod_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ddc_vendor_id` int(11) UNSIGNED NOT NULL DEFAULT '1',
+  `paymentmethod_name` varchar(100) NOT NULL DEFAULT '',
+  `paymentmethod_alias` varchar(100) NOT NULL DEFAULT '',
+  `payment_element` varchar(50) NOT NULL DEFAULT '',
+  `payment_params` varchar(5000) NOT NULL DEFAULT '',
+  `currency_id` int(1) UNSIGNED,
+  `shared` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'valide for all vendors?',
+  `ordering` int(1) NOT NULL DEFAULT '0',
+  `published` tinyint(1) NOT NULL DEFAULT '1',
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_paymentmethod_id`),
+	KEY `ddc_vendor_id` (`ddc_vendor_id`),
+	KEY `payment_element` (payment_element,`ddc_vendor_id`),
+	KEY `ordering` (`ordering`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='The payment methods of your store' AUTO_INCREMENT=1 ;
+
+
 CREATE TABLE IF NOT EXISTS `#__ddc_payments` (
   `ddc_payment_id` int(11) NOT NULL AUTO_INCREMENT,
   `ref` varchar(100) NOT NULL,
@@ -388,6 +450,21 @@ CREATE TABLE IF NOT EXISTS `#__ddc_shoppingcart_details` (
   KEY `shoppingcart_header_id` (`shoppingcart_header_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+CREATE TABLE IF NOT EXISTS `#__ddc_social_links` (
+  `ddc_social_link_id` int(11) NOT NULL AUTO_INCREMENT,
+  `link_url` varchar(100) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `cat_id` int(11) NOT NULL DEFAULT '0',
+  `vendor_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `description` varchar(255) NULL,
+  `state` tinyint(3) NOT NULL DEFAULT '1',
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `hits` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_social_link_id`),
+  KEY `vendor_id` (`vendor_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 CREATE TABLE IF NOT EXISTS #__ddc_outcodes (
     ddc_outcode_id INT(11) NOT NULL AUTO_INCREMENT,
     postcode VARCHAR(9) NOT NULL,
@@ -404,15 +481,98 @@ CREATE TABLE IF NOT EXISTS #__ddc_outcodes (
     UNIQUE INDEX `postcode` (`postcode` ASC)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+-- --------------------------------------------------------
+--
+-- Table structure for table `#__virtuemart_userinfos`
+--
+
+CREATE TABLE IF NOT EXISTS `#__ddc_userinfos` (
+  `ddc_userinfo_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `address_type` char(2) NOT NULL DEFAULT '',
+  `address_type_name` varchar(32) NOT NULL DEFAULT '',
+  `vendor_id` int(11) NOT NULL DEFAULT '0',
+  `company` varchar(64),
+  `title` varchar(32),
+  `last_name` varchar(96),
+  `first_name` varchar(96),
+  `middle_name` varchar(96),
+  `phone_1` varchar(32),
+  `phone_2` varchar(32),
+  `fax` varchar(32),
+  `address_1` varchar(96) NOT NULL DEFAULT '',
+  `address_2` varchar(64),
+  `city` VARCHAR(90) NULL DEFAULT '',
+  `county` varchar(60) NULL DEFAULT '',
+  `country_id` int(11) NOT NULL DEFAULT '0',
+  `zip` varchar(32) NOT NULL DEFAULT '',
+  `agreed` tinyint(1) NOT NULL DEFAULT '0',
+  `tos` tinyint(1) NOT NULL DEFAULT '0',
+  `customer_note` varchar(5000) NOT NULL DEFAULT '',
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_userinfo_id`),
+  KEY `i_ddc_user_id` (`ddc_userinfo_id`,`user_id`),
+  KEY `ddc_user_id` (`user_id`,`address_type`),
+  KEY `address_type` (`address_type`),
+  KEY `address_type_name` (`address_type_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 COMMENT='Customer Information, BT = BillTo and ST = ShipTo';
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `#__virtuemart_order_userinfos`
+--
+
+CREATE TABLE IF NOT EXISTS `#__ddc_order_userinfos` (
+  `ddc_order_userinfo_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `ddc_order_id` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `address_type` char(2),
+  `address_type_name` varchar(32),
+  `company` varchar(64),
+  `title` varchar(32),
+  `last_name` varchar(96),
+  `first_name` varchar(96),
+  `middle_name` varchar(96),
+  `phone_1` varchar(32),
+  `phone_2` varchar(32),
+  `fax` varchar(32),
+  `address_1` varchar(96) NOT NULL DEFAULT '',
+  `address_2` varchar(64) ,
+  `city` VARCHAR(60) NULL DEFAULT '',
+  `county` varchar(60) NULL DEFAULT '',
+  `country_id` int(11) NOT NULL DEFAULT '0',
+  `email` varchar(128),
+  `agreed` tinyint(1) NOT NULL DEFAULT '0',
+  `tos` tinyint(1) NOT NULL DEFAULT '0',
+  `customer_note` varchar(5000)  NOT NULL DEFAULT '',
+  `created_on` datetime NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(1) NOT NULL DEFAULT '0',
+  `modified_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` int(1) NOT NULL DEFAULT '0',
+  `locked_on` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `locked_by` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_order_userinfo_id`),
+  KEY `ddc_order_id` (`ddc_order_id`),
+  KEY `user_id` (`user_id`,`address_type`),
+  KEY `address_type` (`address_type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores the BillTo and ShipTo Information at order time' AUTO_INCREMENT=1 ;
+
+
+
 CREATE TABLE IF NOT EXISTS `#__ddc_user_vendor_interests` (
   `ddc_user_vendor_interest_id` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` VARCHAR(60) NOT NULL,
   `lastname` VARCHAR(60) NOT NULL,
   `email_to` VARCHAR(100) NOT NULL,
   `town` VARCHAR(60) NOT NULL,
-  `ddc_vendor_1` VARCHAR(60) NULL,
-  `ddc_vendor_2` VARCHAR(60) NULL,
-  `ddc_vendor_3` VARCHAR(60) NULL,
+  `ddc_vendor` VARCHAR(60) NULL,
+  `ip_address` VARCHAR(60) NULL,
+  `field_3` VARCHAR(60) NULL,
   `comment` TEXT NULL,
   `state` tinyint(3) NOT NULL,
   `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
@@ -435,15 +595,17 @@ CREATE TABLE IF NOT EXISTS `#__ddc_user_vendor` (
 
 CREATE TABLE IF NOT EXISTS `#__ddc_vendor_products` (
   `ddc_vendor_product_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) UNSIGNED NOT NULL,
-  `vendor_id` int(11) UNSIGNED NOT NULL,
+  `product_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `product_type` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `distrib_cat_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `vendor_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `vendor_product_sku` varchar(120),
   `product_gtin` varchar(64),
   `product_mpn` varchar(64),
   `vendor_product_name` varchar(120),
   `vendor_product_alias` varchar(120),
   `product_description_small` text,
-  `product_desctiption` text,
+  `product_description` text,
   `product_weight` decimal(10,4),
   `product_weight_uom` varchar(7),
   `product_length` decimal(10,4),
@@ -482,6 +644,7 @@ CREATE TABLE IF NOT EXISTS `#__ddc_vendors` (
   `ddc_vendor_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `alias` varchar(100) NOT NULL,
+  `cat_id` int(11) NOT NULL DEFAULT '0',
   `vendor_currency` int(11) NOT NULL DEFAULT '52',
   `vendor_accepted_currencies` varchar(1536) NOT NULL DEFAULT '52',
   `introduction` text NULL,
@@ -494,7 +657,9 @@ CREATE TABLE IF NOT EXISTS `#__ddc_vendors` (
   `county` varchar(60) NULL DEFAULT '',
   `post_code` varchar(10) NOT NULL DEFAULT '',
   `country` int(11) NOT NULL DEFAULT '222',
-  `services` varchar(100) NULL DEFAULT '',
+  `contact_numbers` varchar(500) NOT NULL DEFAULT '{}',
+  `vendor_details` text NULL DEFAULT '',
+  `allow_bookings` int(3) NOT NULL DEFAULT '0',
   `state` tinyint(3) NOT NULL DEFAULT '1',
   `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
   `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
@@ -504,4 +669,25 @@ CREATE TABLE IF NOT EXISTS `#__ddc_vendors` (
   KEY `owner` (`owner`),
   KEY `vendor_currency` (`vendor_currency`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `#__ddc_vendor_stations` (
+  `ddc_vendor_station_id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
+  `alias` varchar(100) NOT NULL,
+  `cat_id` int(11) NOT NULL DEFAULT '0',
+  `vendor_id` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `introduction` text NULL,
+  `description` text NULL,
+  `owner` int(11) NOT NULL DEFAULT '0',
+  `images` text NULL,
+  `latitude` DECIMAL(10, 8) NOT NULL,
+  `longitude` DECIMAL(11, 8) NOT NULL,
+  `state` tinyint(3) NOT NULL DEFAULT '1',
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `hits` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ddc_vendor_station_id`),
+  KEY `vendor_id` (`vendor_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 

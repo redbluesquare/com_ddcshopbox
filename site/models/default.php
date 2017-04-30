@@ -20,6 +20,7 @@ class DdcshopboxModelsDefault extends JModelBase
   	
   	$app = JFactory::getApplication();
   	$ids = $app->input->get("cids",null,'array');
+  	$this->limit = $app->input->get("limit",$this->limit);
   	
   	$this->session = JFactory::getSession();
   	
@@ -45,12 +46,14 @@ class DdcshopboxModelsDefault extends JModelBase
   	{
   		return false;
   	}
-  
-  	$row->modified_on = $date;
-  	if ( !$row->created_on )
-  	{
-  		$row->created_on = $date;
-  	}
+	if($data['table']!="userprofiles")
+	{
+		$row->modified_on = $date;
+		if ( !$row->created_on )
+		{
+			$row->created_on = $date;
+		}
+	}
   
   	// Make sure the record is valid
   	if (!$row->check())
@@ -93,12 +96,12 @@ class DdcshopboxModelsDefault extends JModelBase
    * Build a query, where clause and return an object
    *
    */
-  public function getItem($id=null)
+  public function getItem($id=null, $prod_id = null)
   {
   	$db = JFactory::getDBO();
   
   	$query = $this->_buildQuery();
-  	$this->_buildWhere($query,$id);
+  	$this->_buildWhere($query,$id,$prod_id);
   	$db->setQuery($query);
   
   	$item = $db->loadObject();
@@ -110,10 +113,10 @@ class DdcshopboxModelsDefault extends JModelBase
    *
    * @return array An array of results.
    */
-  public function listItems()
+  public function listItems($id=null, $prod_id = null)
   {
   	$query = $this->_buildQuery();
-  	$this->_buildWhere($query);
+  	$this->_buildWhere($query,$id, $prod_id);
   
   	$list = $this->_getList($query, $this->limitstart, $this->limit);
   	return $list;
@@ -265,12 +268,19 @@ class DdcshopboxModelsDefault extends JModelBase
   public function getShopCart_contents()
   {
   	$result = array();
+  	$result[0] = null;
+  	$result[1] = 0;
+  	$result[2] = 0;
   	$prodModel = new DdcshopboxModelsVendorproducts();
   	$scModel = new DdcshopboxModelsShopcart();
   	$cartdata = $scModel->listItems();
   	foreach($cartdata as $cart_item)
   	{
-  		if($cart_item->ddc_vendor_product_id!=0)
+  		if(!isset($cart_item->ddc_shoppingcart_id))
+  		{
+  			$cart_item->ddc_shoppingcart_id = null;
+  		}
+  		if($cart_item->ddc_vendor_product_id!=null)
   		{
   			$result[0] .='<tr>';
   			$result[0] .='<td>'.$cart_item->product_quantity.' x </td>';
@@ -278,10 +288,10 @@ class DdcshopboxModelsDefault extends JModelBase
   			$result[0] .='<td id="#cartItem'.$cart_item->ddc_shoppingcart_id.'">'.$cart_item->currency_symbol." ".number_format(($cart_item->product_quantity*$cart_item->product_price),2).'</td>';
   			$result[0] .='</tr>';
   			$result[1] +=($cart_item->product_quantity*$cart_item->product_price);
+  			$result[2] +=($cart_item->product_quantity);
   		}
   		
   	}
-  	
   	return $result;
   }
   

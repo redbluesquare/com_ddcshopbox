@@ -23,6 +23,7 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     $this->_user_id = $app->input->get('profile_id', JFactory::getUser()->id);
     $this->_product_id = $app->input->get('vendorproduct_id', null);
     $this->_vendor_id = $app->input->get('vendor_id', null);
+    $this->_city = $app->input->get('ddccity', null);
     $this->_ddclocation = $app->input->get('ddclocation', $this->_session->get('ddclocation',null));
     if($this->isValidPostCodeFormat($this->_ddclocation))
     {
@@ -38,23 +39,25 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     $db = JFactory::getDBO();
     $query = $db->getQuery(TRUE);
 
-    $query->select('vp.ddc_vendor_product_id, vp.vendor_product_name, vp.vendor_product_sku, vp.vendor_product_alias, vp.product_weight, vp.product_weight_uom, vp.product_length, vp.product_width, vp.product_height, vp.product_lwh_uom, vp.product_base_uom, vp.product_params, vp.published as product_state, vp.vendor_id');
-    $query->select('vp.product_description_small as vp_desc_s,vp.product_description as vp_desc');
+    $query->select('vp.ddc_vendor_product_id, vp.vendor_product_name, vp.vendor_product_sku, vp.vendor_product_alias, vp.product_weight, vp.product_weight_uom, vp.product_length, vp.product_width, vp.product_height, vp.product_lwh_uom, vp.product_base_uom, vp.product_params, vp.published as product_state, vp.vendor_id, vp.hits');
+    $query->select('vp.product_description_small as vp_desc_s,vp.product_description as vp_desc, vp.product_type');
     $query->select('p.ddc_product_id,p.product_name,p.product_alias,p.product_parent_id');
     $query->select('vc.currency_name, vc.currency_code_3, vc.currency_symbol');
     $query->select('i.details, i.image_link');
-    $query->select('v.title as vendor_name, v.city, v.post_code as shop_post_code');
-    $query->select('vpr.product_price, vpr.product_currency, vpr.product_id, vpr.ddc_product_price_id');
+    $query->select('cou.country_name');
     $query->select('c.title as category_title');
+    $query->select('v.title as vendor_name,v.address1, v.city, v.county, v.post_code as shop_post_code, v.country');
+    $query->select('vpr.product_price, vpr.product_currency, vpr.product_id, vpr.ddc_product_price_id');
     $query->from('#__ddc_vendor_products as vp');
     $query->leftJoin('#__ddc_products as p on vp.product_id = p.ddc_product_id');
     $query->leftJoin('#__categories as c on c.id = p.category_id');
     $query->leftJoin('#__ddc_vendors as v on v.ddc_vendor_id = vp.vendor_id');
+    $query->leftJoin('#__ddc_countries as cou on v.country = cou.ddc_country_id');
     $query->leftJoin('#__ddc_product_prices as vpr on vp.ddc_vendor_product_id = vpr.product_id');
     $query->leftJoin('#__ddc_currencies as vc on vc.ddc_currency_id = vpr.product_currency');
     $query->leftJoin('#__ddc_images as i on (vp.ddc_vendor_product_id = i.link_id) AND (i.linked_table = "ddc_products")');
     $query->group("vp.ddc_vendor_product_id");
-    $query->order('vp.hits');
+    $query->order('vp.hits asc');
 
 
     return $query;
@@ -69,6 +72,10 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	if($this->_vendor_id!=null)
   	{
   		$query->where('v.ddc_vendor_id = "'. (int)$this->_vendor_id .'"');
+  	}
+  	if($this->_city!=null)
+  	{
+  		$query->where('(v.city LIKE "%'. $this->_city .'%") Or (v.post_code LIKE "%'. $this->_city .'%")');
   	}
   	if(($id!=null) And ($id > 0))
   	{

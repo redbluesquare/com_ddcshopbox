@@ -41,10 +41,14 @@ class DdcshopboxHelpersDdcshopbox
 	{
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_DASHBOARD'),
 		'index.php?option=com_ddcshopbox&view=dashboard', $submenu == 'dashboard');
+		JHtmlSidebar::addEntry(JText::_('COM_DDC_COUPONS'),
+				'index.php?option=com_ddcshopbox&view=coupons', $submenu == 'coupons');
+		JHtmlSidebar::addEntry(JText::_('COM_DDC_PAYMENTMETHODS'),
+				'index.php?option=com_ddcshopbox&view=paymentmethods', $submenu == 'paymentmethods');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_CATEGORIES'),
 				'index.php?option=com_categories&view=categories&extension=com_ddcshopbox', $submenu == 'categories');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_PRODUCTS'),
-		'index.php?option=com_ddcshopbox&view=products', $submenu == 'products');
+			'index.php?option=com_ddcshopbox&view=products', $submenu == 'products');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_VENDORS'),
 				'index.php?option=com_ddcshopbox&view=vendors', $submenu == 'vendors');
 		JHtmlSidebar::addEntry(JText::_('COM_DDC_VENDOR_PRODUCTS'),

@@ -102,21 +102,21 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 
 			
 		}
-		if($this->data['table']=='contactaddress')
+		if($this->data['table']=='profiles')
 		{
 			if($this->data['task']=="edit")
 			{
 				$modelName  = $app->input->get('models', 'profiles');
 				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
 				$model = new $modelName();
-				if($row = $model->saveAddress())
+				if($row = $model->store())
 				{
 					$return['success'] = true;
 					$return['msg'] = JText::_('COM_DDC_SAVE_SUCCESS');
 				}
 				else
 				{
-					//$return['success'] = true;
+					$return['success'] = false;
 					$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
 				}
 			}
@@ -185,8 +185,8 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 					
 				$target_file = JPATH_ROOT."/media/com_ddcshopbox/images/".$dest;
 				$resized_file = JPATH_ROOT."/media/com_ddcshopbox/images/".$dest1;
-				$wmax = 200;
-				$hmax = 150;
+				$wmax = 800;
+				$hmax = 600;
 				$model->profile_img_resize($target_file, $resized_file, $wmax, $hmax, $ext);
 				unlink(JPATH_ROOT."/media/com_ddcshopbox/images/".$dest);
 				// ----------- End Universal Image Resizing Function -----------
@@ -201,6 +201,25 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 				}
 			}
 			echo $return["html"];
+		}
+		
+		if($this->data['table']=='ddcshipping')
+		{
+			$modelName  = $app->input->get('models', 'shipping');
+			$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+			$model = new $modelName();
+			if($row = $model->store())
+			{
+				$return['success'] = true;
+				$return['msg'] = $row;
+				
+			}
+			else
+			{
+				$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+			}
+			echo json_encode($return);
+				
 		}
 		
 		else

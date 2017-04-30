@@ -48,9 +48,44 @@
 			type="sql"
 			label="COM_DDC_PRODUCT_LABEL"
 			description="COM_DDC_PRODUCT_ID_DESC"
-			query="SELECT ddc_product_id AS value, product_name as product_id FROM #__ddc_products"
-		>
+			query="SELECT ddc_product_id AS value, product_name as product_id FROM #__ddc_products">
 			<option value="0">-</option>
+		</field>
+		<field name="product_type" 
+		    type="list" 
+		    label="COM_DDC_PRODUCT_TYPE_LABEL"
+			description="COM_DDC_PRODUCT_TYPE_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="1"
+		>
+			<option value="1">
+				COM_DDC_STOCK_ITEM</option>
+			<option value="2">
+				COM_DDC_NON_STOCK_ITEM</option>
+			<option value="3">
+				COM_DDC_EVENT</option>
+			<option value="4">
+				COM_DDC_APPOINTMENT</option>
+		</field>
+		<field name="distrib_cat_id" 
+		    type="list" 
+		    label="COM_DDC_DISTRIB_CAT_LABEL"
+			description="COM_DDC_DISTRIB_CAT_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="1"
+		>
+			<option value="0">
+				COM_DDC_NONE</option>
+			<option value="1">
+				COM_DDC_LOCAL_ONLY</option>
+			<option value="2">
+				COM_DDC_NATIONAL</option>
+			<option value="3">
+				COM_DDC_INTERNATIONAL</option>
 		</field>
 		<field
 			name="product_gtin"
@@ -111,6 +146,10 @@
 				COM_DDC_PACK</option>
 			<option value="4">
 				COM_DDC_PAIR</option>
+			<option value="5">
+				COM_DDC_MINUTE</option>
+			<option value="6">
+				COM_DDC_HOUR</option>
 		</field>
 		</fieldset>
 	<fieldset name="product_dimensions_right">
@@ -149,18 +188,21 @@
 			type="text"
 			label="COM_DDC_MIN_ORDER_LEVEL_LABEL"
 			description="COM_DDC_MIN_ORDER_LEVEL_DESC"
+			default="1"
 		/>
 		<field
 			name="max_order_level"
 			type="text"
 			label="COM_DDC_MAX_ORDER_LEVEL_LABEL"
 			description="COM_DDC_MAX_ORDER_LEVEL_DESC"
+			default="10"
 		/>
 		<field
 			name="step_order_level"
 			type="text"
 			label="COM_DDC_STEP_ORDER_LEVEL_LABEL"
 			description="COM_DDC_STEP_ORDER_LEVEL_DESC"
+			default="1"
 		/>
 		<field
 			name="product_box"

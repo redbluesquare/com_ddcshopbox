@@ -21,6 +21,7 @@ class DdcshopboxViewsVendorproductsHtml extends JViewHtml
     	//retrieve task list from model
     	$productModel = new DdcshopboxModelsProduct();
     	$productimagesModel = new DdcshopboxModelsProductimages();
+    	$shopcartdetailModel = new DdcshopboxModelsShopcartdetails();
     	$vendorModel = new DdcshopboxModelsVendors();
     	
     	switch($layout) {
@@ -38,6 +39,7 @@ class DdcshopboxViewsVendorproductsHtml extends JViewHtml
     			$this->item = $this->model->getItem();
     			$this->item->distance = $this->model->getPostcodesDistance($this->session->get('ddclocation',null),$this->item->shop_post_code);
     			$this->model->hit($this->item->ddc_vendor_product_id);
+    			$this->cart_items = $shopcartdetailModel->listItems($this->item->vendor_id);
     			break;
     	}
  

@@ -17,6 +17,7 @@ class DdcshopboxViewsShopcartHtml extends JViewHtml
     	$app = JFactory::getApplication();
     	$layout = $this->getLayout();
     	$profilesModel = new DdcshopboxModelsProfiles();
+    	$schModel = new DdcshopboxModelsShopcartheaders();
     	$this->session = JFactory::getSession();
     
     	switch($layout) {
@@ -25,7 +26,15 @@ class DdcshopboxViewsShopcartHtml extends JViewHtml
     			$this->profile = $profilesModel->getItem();
     			$this->items = $this->model->listItems();
     			$this->_customloginShopboxView = DdcshopboxHelpersView::load('shopcart', '_customlogin', 'phtml');
-
+    		break;
+    		case "delnote":
+    			$this->schItems = $schModel->listItems();
+    		break;
+    		case "collectionnote":
+    			$this->schItems = $schModel->listItems();
+    			break;
+    		case "deltoemail":
+    			$this->schemail = $schModel->shopcart_items();
     		break;
     	}
  

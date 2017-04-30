@@ -15,7 +15,7 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 		$app = JFactory::getApplication ();
 		// Get the document object.
 		$document = JFactory::getDocument();
-		$return = array ("success" => false	);
+		$return = array ("success" => false, "msgs" => null	);
 		$jinput = JFactory::getApplication()->input;
 		$this->session = JFactory::getSession();
 		$user_id = JFactory::getUser()->id;
@@ -45,31 +45,75 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 			echo json_encode($return);
 			
 		}
-		elseif($this->data['table']=='ddcCheckout')
+		elseif($this->data['table']=='coupon')
 		{
-			if($jinput->get('paypalsuccess',null)=='false')
+			$couponModel = new DdcshopboxModelsCoupons();
+			if($couponresult = $couponModel->updateCoupon($this->data))
 			{
-				$jinput->set('paypalsuccess',null);
-			}
-			$model = new DdcshopboxModelsShopcart();
-			if($row = $model->storeCartData($this->data))
-			{
-				$return['success'] = true;
-				$return['login'] = 1;
-				$return['result'] = $row;
-				echo json_encode($return);
+				$return['success'] = $couponresult[0];
+				$return['couponcode'] = $couponresult[1];
+				$return['result'] = $couponresult[2];
+				$return['msg'] = $couponresult[3];
 			}
 			else
 			{
-				// Add a message to the message queue
-				$app->enqueueMessage(JText::_('COM_DDC_ERROR_NOT_ALL_REQUIRED_FIELDS_ENTERED'), 'error');
-				$viewName = $app->input->getWord('view', 'shopcart');
-				$app->input->set('layout','default');
-				$app->input->set('view', $viewName);
-				//display view
-				return parent::execute();
+				$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+			}	
+			echo json_encode($return);
+				
+		}
+		elseif($this->data['table']=='uservendorinterests')
+		{
+			$uviModel = new DdcshopboxModelsUservendorinterests();
+			if(!$uviModel->checkUserVendorInterests($this->data['vendor_id'],JFactory::getUser()->id))
+			{
+				if($uviresult = $uviModel->store($this->data))
+				{
+					$return['success'] = true;
+					$return['counter'] = count($uviModel->listItems($this->data['vendor_id']));
+					$return['msg'] = JText::_('COM_DDC_SAVE_SUCCESS');
+				}
+				else
+				{
+					$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+				}
 			}
 			
+			echo json_encode($return);
+		
+		}
+		elseif($this->data['table']=='ddcCheckout')
+		{
+				if($jinput->get('paypalsuccess',null)=='false')
+				{
+					$jinput->set('paypalsuccess',null);
+				}
+				$model = new DdcshopboxModelsShopcart();
+				if($row = $model->storeCartData($this->data))
+				{
+					if($jinput->get('paypalsuccess',null)=='true')
+					{
+						$model = new DdcshopboxModelsDdcpaypal();
+						$model->makePaypalPayment();
+					}
+					else
+					{
+						$return['success'] = true;
+						$return['login'] = 1;
+						$return['result'] = $row;
+						echo json_encode($return);
+					}
+				}
+				else
+				{
+					// Add a message to the message queue
+					$app->enqueueMessage(JText::_('COM_DDC_ERROR_NOT_ALL_REQUIRED_FIELDS_ENTERED'), 'error');
+					$viewName = $app->input->getWord('view', 'shopcart');
+					$app->input->set('layout','default');
+					$app->input->set('view', $viewName);
+					//display view
+					return parent::execute();
+				}
 		}
 		elseif($app->input->getMethod()=='DELETE')
 		{
@@ -104,8 +148,6 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 				echo json_encode($return);
 			}
 		}
-		
-		
 		else
 		{
 			$viewName = $app->input->getWord('view', 'home');
@@ -114,8 +156,6 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 			//display view
 			return parent::execute();
 		}
-		
-		
 	}
 		
 }

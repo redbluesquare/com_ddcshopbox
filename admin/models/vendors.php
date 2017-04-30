@@ -54,7 +54,37 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
   		{
   			$formdata['alias'] = JFilterOutput::stringURLSafe($formdata['title']);
   		}
-  	 
+  		$contact_numbers = array(
+  				'contact_tel' => $formdata['contact_tel']
+  		);
+  		$formdata['contact_numbers'] = json_encode($contact_numbers);
+  		$shop_details = array(
+  				'day_1_open' => $formdata['day_1_open'],
+  				'day_1_open_time' => $formdata['day_1_open_time'],
+  				'day_1_close_time' => $formdata['day_1_close_time'],
+  				'day_2_open' => $formdata['day_2_open'],
+  				'day_2_open_time' => $formdata['day_2_open_time'],
+  				'day_2_close_time' => $formdata['day_2_close_time'],
+  				'day_3_open' => $formdata['day_3_open'],
+  				'day_3_open_time' => $formdata['day_3_open_time'],
+  				'day_3_close_time' => $formdata['day_3_close_time'],
+  				'day_4_open' => $formdata['day_4_open'],
+  				'day_4_open_time' => $formdata['day_4_open_time'],
+  				'day_4_close_time' => $formdata['day_4_close_time'],
+  				'day_5_open' => $formdata['day_5_open'],
+  				'day_5_open_time' => $formdata['day_5_open_time'],
+  				'day_5_close_time' => $formdata['day_5_close_time'],
+  				'day_6_open' => $formdata['day_6_open'],
+  				'day_6_open_time' => $formdata['day_6_open_time'],
+  				'day_6_close_time' => $formdata['day_6_close_time'],
+  				'day_7_open' => $formdata['day_7_open'],
+  				'day_7_open_time' => $formdata['day_7_open_time'],
+  				'day_7_close_time' => $formdata['day_7_close_time'],
+  				'social_site_1' => $formdata['social_site_1'],
+  				'social_url_1' => $formdata['social_url_1']
+  		);
+  		$formdata['vendor_details'] = json_encode($shop_details);
+  		
   		return parent::store($formdata);
   	}
   

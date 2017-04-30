@@ -8,6 +8,8 @@ class DdcshopboxViewsShopcartPhtml extends JViewHTML
     {
     	$this->params = JComponentHelper::getParams('com_ddcshopbox');
     	
+    	$schModel = new DdcshopboxModelsShopcartheaders();
+    	$this->schItems = $schModel->listItems();
     	return parent::render();
  	}
 }

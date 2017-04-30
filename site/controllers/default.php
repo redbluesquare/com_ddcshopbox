@@ -17,10 +17,16 @@ class DdcshopboxControllersDefault extends JControllerBase
   	// Get the document object.
   	$document = JFactory::getDocument();
   	$session = JFactory::getSession();
-  	$user = JFactory::getUser()->id;
+  	$user = JFactory::getUser();
   	$model = new DdcshopboxModelsDefault();
   	$return = array();
   	$return['success'] = false;
+  	if($user->id!=0)
+  	{
+  		$profile = new DdcshopboxModelsProfiles();
+  		$myProfile = $profile->getItem();
+  		$session->set('ddclocation',$myProfile->zip);
+  	}
   	if($app->input->get('ddccheck',null)==1)
   	{
   		$session->set('ddclocation',$app->input->get('ddclocation',null,'string'));
@@ -52,7 +58,12 @@ class DdcshopboxControllersDefault extends JControllerBase
   		$viewFormat = $document->getType();
   		$layoutName = $app->input->getWord('layout', 'default');
   	}
-	  	
+  	if($app->input->get('ddccity',null)!=null)
+  	{
+  		if($app->input->getWord('view', 'cities')=='home'):
+  		$app->input->set('view', 'cities');
+  		endif;
+  	} 	
 	$viewName = $app->input->getWord('view', 'vendorproducts');
 	$viewFormat = $document->getType();
 	$layoutName = $app->input->getWord('layout', 'default');

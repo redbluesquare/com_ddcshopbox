@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fieldset name="top_left">
+		<field
+			name="ddc_paymentmethod_id"
+			type="text"
+			label="COM_DDC_ID_LABEL"
+			description="COM_DDC_ID_DESC"
+			readonly="true"
+		/>
+		<field
+			name="paymentmethod_name"
+			type="text"
+			label="COM_DDC_PAYMENTMETHOD_NAME_LABEL"
+			description="COM_DDCDDC_PAYMENTMETHOD_NAME_DESC"
+		/>
+		<field
+			name="paymentmethod_alias"
+			type="text"
+			label="COM_DDC_PAYMENTMETHOD_ALIAS_LABEL"
+			description="COM_DDCDDC_PAYMENTMETHOD_ALIAS_DESC"
+		/>
+		<field
+			name="paymentmethod_logo"
+			type="url"
+			label="COM_PAYMENTMETHOD_LOGO_URL_LABEL"
+			description="COM_PAYMENTMETHOD_LOGO_URL_DESC"
+		/>
+		<field name="paymentmethod_mode" type="radio"
+			default="sandbox"
+			class="btn-group"
+			label="COM_DDC_PAYMENT_MODE"
+			description="COM_DDC_PAYMENT_MODE_DESC">
+
+			<option value="sandbox">COM_DDC_SANDBOX</option>
+			<option value="live">COM_DDC_LIVE</option>
+		</field>
+		<field
+			name="test_api_key"
+			type="text"
+			label="COM_TEST_API_KEY_LABEL"
+			description="COM_TEST_API_KEY_DESC"
+		/>
+		<field
+			name="test_api_secret"
+			type="text"
+			label="COM_TEST_API_SECRET_LABEL"
+			description="COM_TEST_API_SECRET_DESC"
+		/>
+		<field
+			name="test_paymentmethod_url"
+			type="url"
+			label="COM_TEST_PAYMENTMETHOD_URL_LABEL"
+			description="COM_TEST_PAYMENTMETHOD_URL_DESC"
+		/>
+		<field
+			name="test_paymentmethod_url_success"
+			type="url"
+			label="COM_TEST_PAYMENTMETHOD_URL_SUCCESS_LABEL"
+			description="COM_TEST_PAYMENTMETHOD_URL_SUCCESS_DESC"
+		/>
+		<field
+			name="test_paymentmethod_url_cancel"
+			type="url"
+			label="COM_TEST_PAYMENTMETHOD_URL_CANCEL_LABEL"
+			description="COM_TEST_PAYMENTMETHOD_URL_CANCEL_DESC"
+		/>
+		<field
+			name="api_key"
+			type="text"
+			label="COM_API_KEY_LABEL"
+			description="COM_API_KEY_DESC"
+		/>
+		<field
+			name="api_secret"
+			type="text"
+			label="COM_API_SECRET_LABEL"
+			description="COM_API_SECRET_DESC"
+		/>
+		<field
+			name="paymentmethod_url"
+			type="url"
+			label="COM_PAYMENTMETHOD_URL_LABEL"
+			description="COM_PAYMENTMETHOD_URL_DESC"
+		/>
+		<field
+			name="paymentmethod_url_success"
+			type="url"
+			label="COM_PAYMENTMETHOD_URL_SUCCESS_LABEL"
+			description="COM_PAYMENTMETHOD_URL_SUCCESS_DESC"
+		/>
+		<field
+			name="paymentmethod_url_cancel"
+			type="url"
+			label="COM_PAYMENTMETHOD_URL_CANCEL_LABEL"
+			description="COM_PAYMENTMETHOD_URL_CANCEL_DESC"
+		/>
+	</fieldset>
+	<fieldset name="top_right">
+		<field
+			name="currency_id"
+			type="sql"
+			query="SELECT ddc_currency_id AS value, CONCAT(currency_name,', ',currency_symbol) as currency_id FROM #__ddc_currencies"
+			default="52"
+		/>
+		<field
+			name="vendor_id"
+			type="sql"
+			label="COM_DDC_VENDOR_ID_LABEL"
+			description="COM_DDC_VENDOR_ID_DESC"
+			query="SELECT ddc_vendor_id AS value, title as vendor_id FROM #__ddc_vendors"
+		>
+			<option value="0">-</option>
+		</field>
+		<field name="shared" 
+		    type="list" 
+		    label="COM_DDC_SHARED_LABEL"
+			description="COM_DDC_SHARED_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="1"
+		>
+			<option value="0">
+				COM_DDC_NOT_SHARED</option>
+			<option value="1">
+				COM_DDC_SHARED</option>
+		</field>
+		<field
+			name="payment_element"
+			type="text"
+			label="COM_PAYMENT_ELEMENT_LABEL"
+			description="COM_PAYMENT_ELEMENT_DESC"
+		/>
+		<field
+			name="ordering"
+			type="sql"
+			label="COM_DDC_ORDER_LABEL"
+			description="COM_DDC_ORDER_DESC"
+			query="SELECT ddc_paymentmethod_id AS value, paymentmethod_name as ordering FROM #__ddc_paymentmethods"
+		>
+			<option value="0">-</option>
+		</field>
+		<field
+			name="created_on"
+			type="text"
+			label="COM_DDC_CREATED_ON_LABEL"
+			description="COM_DDC_CREATED_ON_DESC"
+		/>
+		<field
+			name="created_by"
+			type="text"
+			label="COM_DDC_CREATED_BY_LABEL"
+			description="COM_DDC_CREATED_BY_DESC"
+		/>
+		<field
+			name="modified_on"
+			type="text"
+			label="COM_DDC_MODIFIED_ON_LABEL"
+			description="COM_DDC_CREATED_ON_DESC"
+		/>
+		<field
+			name="modified_by"
+			type="text"
+			label="COM_DDC_MODIFIED_BY_LABEL"
+			description="COM_DDC_CREATED_BY_DESC"
+		/>
+		<field
+			name="locked_on"
+			type="text"
+			label="COM_DDC_LOCKED_ON_LABEL"
+			description="COM_DDC_LOCKED_ON_DESC"
+		/>
+		<field
+			name="locked_by"
+			type="text"
+			label="COM_DDC_LOCKED_BY_LABEL"
+			description="COM_DDC_LOCKED_BY_DESC"
+		/>
+		<field name="published" 
+		    type="list" 
+		    label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="1"
+		>
+			<option value="1">
+				JPUBLISHED</option>
+			<option value="2">
+				COM_DDC_NO_SALES</option>
+			<option value="0">
+				JUNPUBLISHED</option>
+			<option value="-2">
+				JTRASHED</option>
+		</field>
+		<field
+			name="table"
+			type="text"
+			label="COM_DDC_TABLE_LABEL"
+			description="COM_DDC_TABLE_DESC"
+			hidden="true"
+			class="hidden"
+			default="paymentmethods"
+		/>
+		
+	</fieldset>
+
+</form>

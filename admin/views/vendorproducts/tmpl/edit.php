@@ -9,9 +9,9 @@ JHtml::_('behavior.tooltip');
       	
                 <div class="adminformlist">
                 <ul class="nav nav-tabs">
-  		<li class="active"><a data-toggle="tab" href="#product_information"><?php echo JText::_('COM_DDC_PRODUCT_INFORMATION'); ?></a></li>
-  		<li><a data-toggle="tab" href="#product_images"><?php echo JText::_('COM_DDC_PRODUCT_IMAGES'); ?></a></li>
-	</ul>
+  					<li class="active"><a data-toggle="tab" href="#product_information"><?php echo JText::_('COM_DDC_PRODUCT_INFORMATION'); ?></a></li>
+  					<li><a data-toggle="tab" href="#product_images"><?php echo JText::_('COM_DDC_PRODUCT_IMAGES'); ?></a></li>
+				</ul>
       	<div class="tab-content">
 		<div  id="product_information" class="tab-pane fade in active">
 			<fieldset class="adminform">

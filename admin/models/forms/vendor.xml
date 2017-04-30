@@ -87,6 +87,12 @@
 			query="SELECT ddc_country_id AS value, country_name as country FROM #__ddc_countries"
 		/>
 		<field
+			name="contact_tel"
+			type="text"
+			label="COM_DDC_CONTACT_TEL_LABEL"
+			description="COM_DDC_CONTACT_TEL_DESC"
+		/>
+		<field
 			name="images"
 			type="media"
 			label="COM_DDCBOOKIT_IMAGE_THUMB_LABEL"
@@ -108,6 +114,45 @@
 			<option value="-2">
 				JTRASHED</option>
 		</field>
+		<field name="allow_bookings" 
+		    type="list" 
+		    label="JSTATUS"
+			description="JFIELD_PUBLISHED_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="0"
+		>
+			<option value="0">
+				COM_DDC_NO</option>
+			<option value="1">
+				COM_DDC_YES</option>
+		</field>
+		<field name="social_site_1" 
+		    type="list" 
+		    label="COM_DDC_SOCIAL_SITE_LABEL"
+			description="COM_DDC_SOCIAL_SITE_DESC" 
+			class="chzn-color-state"
+			filter="intval" 
+			size="1" 
+			default="0"
+		>
+			<option value="0">
+				COM_DDC_NO_SOCIAL</option>
+			<option value="1">
+				COM_DDC_FACEBOOK</option>
+			<option value="2">
+				COM_DDC_INSTAGRAM</option>
+			<option value="3">
+				COM_DDC_TWITTER</option>
+		</field>
+		<field
+			name="social_url_1"
+			type="text"
+			label="COM_DDC_SOCIAL_URL_LABEL"
+			description="COM_DDC_DAY_1_OPEN_DESC"
+			default=""
+		/>
 		<field
 			name="table"
 			type="text"
@@ -144,6 +189,176 @@
 			description="COM_DDC_VENDOR_DESCRIPTION_DESC"
 			filter="raw"
 			row="5"
+		/>
+	</fieldset>
+	<fieldset name="page2_shop_details">
+		<field
+			name="day_1_open"
+			type="list"
+			label="COM_DDC_DAY_1_OPEN_LABEL"
+			description="COM_DDC_DAY_1_OPEN_DESC"
+			default="1"
+		>
+			<option value="1">COM_DDC_OPEN</option>
+			<option value="0">COM_DDC_CLOSED</option>
+		</field>
+		<field
+			name="day_1_open_time"
+			type="time"
+			label="COM_DDC_DAY_1_OPEN_TIME_LABEL"
+			description="COM_DDC_DAY_1_OPEN_DESC"
+			default="08:00"
+		/>
+		<field
+			name="day_1_close_time"
+			type="time"
+			label="COM_DDC_DAY_1_CLOSE_TIME_LABEL"
+			description="COM_DDC_DAY_1_OPEN_DESC"
+			default="16:00"
+		/>
+		<field
+			name="day_2_open"
+			type="list"
+			label="COM_DDC_DAY_2_OPEN_LABEL"
+			description="COM_DDC_DAY_2_OPEN_DESC"
+			default="1"
+			>
+			<option value="1">COM_DDC_OPEN</option>
+			<option value="0">COM_DDC_CLOSED</option>
+		</field>
+		<field
+			name="day_2_open_time"
+			type="time"
+			label="COM_DDC_DAY_2_OPEN_TIME_LABEL"
+			description="COM_DDC_DAY_2_OPEN_DESC"
+			default="08:00"
+		/>
+		<field
+			name="day_2_close_time"
+			type="time"
+			label="COM_DDC_DAY_2_CLOSE_TIME_LABEL"
+			description="COM_DDC_DAY_2_OPEN_DESC"
+			default="16:00"
+		/>
+		<field
+			name="day_3_open"
+			type="list"
+			label="COM_DDC_DAY_3_OPEN_LABEL"
+			description="COM_DDC_DAY_3_OPEN_DESC"
+			default="1"
+			>
+			<option value="1">COM_DDC_OPEN</option>
+			<option value="0">COM_DDC_CLOSED</option>
+		</field>
+		<field
+			name="day_3_open_time"
+			type="time"
+			label="COM_DDC_DAY_3_OPEN_TIME_LABEL"
+			description="COM_DDC_DAY_3_OPEN_DESC"
+			default="08:00"
+		/>
+		<field
+			name="day_3_close_time"
+			type="time"
+			label="COM_DDC_DAY_3_CLOSE_TIME_LABEL"
+			description="COM_DDC_DAY_3_OPEN_DESC"
+			default="16:00"
+		/>
+		<field
+			name="day_4_open"
+			type="list"
+			label="COM_DDC_DAY_4_OPEN_LABEL"
+			description="COM_DDC_DAY_4_OPEN_DESC"
+			default="1"
+			>
+			<option value="1">COM_DDC_OPEN</option>
+			<option value="0">COM_DDC_CLOSED</option>
+		</field>
+		<field
+			name="day_4_open_time"
+			type="time"
+			label="COM_DDC_DAY_4_OPEN_TIME_LABEL"
+			description="COM_DDC_DAY_4_OPEN_DESC"
+			default="08:00"
+		/>
+		<field
+			name="day_4_close_time"
+			type="time"
+			label="COM_DDC_DAY_4_CLOSE_TIME_LABEL"
+			description="COM_DDC_DAY_4_OPEN_DESC"
+			default="16:00"
+		/>
+		<field
+			name="day_5_open"
+			type="list"
+			label="COM_DDC_DAY_5_OPEN_LABEL"
+			description="COM_DDC_DAY_5_OPEN_DESC"
+			default="1"
+			>
+			<option value="1">COM_DDC_OPEN</option>
+			<option value="0">COM_DDC_CLOSED</option>
+		</field>
+		<field
+			name="day_5_open_time"
+			type="time"
+			label="COM_DDC_DAY_5_OPEN_TIME_LABEL"
+			description="COM_DDC_DAY_5_OPEN_DESC"
+			default="08:00"
+		/>
+		<field
+			name="day_5_close_time"
+			type="time"
+			label="COM_DDC_DAY_5_CLOSE_TIME_LABEL"
+			description="COM_DDC_DAY_5_OPEN_DESC"
+			default="16:00"
+		/>
+		<field
+			name="day_6_open"
+			type="list"
+			label="COM_DDC_DAY_6_OPEN_LABEL"
+			description="COM_DDC_DAY_6_OPEN_DESC"
+			default="1"
+			>
+			<option value="1">COM_DDC_OPEN</option>
+			<option value="0">COM_DDC_CLOSED</option>
+		</field>
+		<field
+			name="day_6_open_time"
+			type="time"
+			label="COM_DDC_DAY_6_OPEN_TIME_LABEL"
+			description="COM_DDC_DAY_6_OPEN_DESC"
+			default="08:00"
+		/>
+		<field
+			name="day_6_close_time"
+			type="time"
+			label="COM_DDC_DAY_6_CLOSE_TIME_LABEL"
+			description="COM_DDC_DAY_6_OPEN_DESC"
+			default="16:00"
+		/>
+		<field
+			name="day_7_open"
+			type="list"
+			label="COM_DDC_DAY_7_OPEN_LABEL"
+			description="COM_DDC_DAY_7_OPEN_DESC"
+			default="0"
+			>
+			<option value="1">COM_DDC_OPEN</option>
+			<option value="0">COM_DDC_CLOSED</option>
+		</field>
+		<field
+			name="day_7_open_time"
+			type="time"
+			label="COM_DDC_DAY_7_OPEN_TIME_LABEL"
+			description="COM_DDC_DAY_7_OPEN_DESC"
+			default="08:00"
+		/>
+		<field
+			name="day_7_close_time"
+			type="time"
+			label="COM_DDC_DAY_7_CLOSE_TIME_LABEL"
+			description="COM_DDC_DAY_7_OPEN_DESC"
+			default="16:00"
 		/>
 	</fieldset>
 </form>

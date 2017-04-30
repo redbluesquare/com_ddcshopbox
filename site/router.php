@@ -91,6 +91,24 @@ function DdcshopboxParseRoute($segments)
 			}
 			
 			break;
+		case 'cities':
+			$vars['view'] = 'cities';
+			if(count($segments)==2)
+			{
+				$vars['layout'] = 'city';
+				$vars['vendor_id'] = $segments[1];
+			}
+				
+		break;
+		case 'shipping':
+			$vars['view'] = 'shipping';
+			if(count($segments)==2)
+			{
+				$vars['layout'] = 'default';
+				$vars['vendor_id'] = $segments[1];
+			}
+		
+			break;
 	}
 	return $vars;
 }

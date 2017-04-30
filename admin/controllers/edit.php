@@ -73,7 +73,80 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 			}
 			
 		}
+		if($this->data['table']=='coupons')
+		{
+			$task = $jinput->get('task', "", 'STR' );
+			if(($task=='coupon.add') or ($task=='coupon.edit'))
+			{
+				$viewName = $app->input->getWord('view', 'coupons');
+				$app->input->set('layout','edit');
+				$app->input->set('view', $viewName);
+				 
+			}
 		
+			if($task=="coupon.save")
+			{
+				$modelName  = $app->input->get('models', 'coupons');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+		
+				if( $row = $model->store() )
+				{
+					$return['success'] = true;
+					$msg = JText::_('COM_DDC_SAVE_SUCCESS');
+				}else{
+					$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+				}
+				$viewName = $app->input->getWord('view', 'coupons');
+				$app->input->set('layout','default');
+				$app->input->set('view', $viewName);
+			}
+			if($task=="coupon.cancel")
+			{
+				$viewName = $app->input->getWord('view', 'coupons');
+				$app->input->set('layout','default');
+				$app->input->set('view', $viewName);
+			}
+			//display view
+			return parent::execute();
+		}
+		if($this->data['table']=='paymentmethods')
+		{
+			$task = $jinput->get('task', "", 'STR' );
+			if(($task=='paymentmethod.add') or ($task=='paymentmethod.edit'))
+			{
+				$viewName = $app->input->getWord('view', 'paymentmethods');
+				$app->input->set('layout','edit');
+				$app->input->set('view', $viewName);
+				 
+			}
+		
+			if($task=='paymentmethod.save')
+			{
+				$modelName  = $app->input->get('models', 'paymentmethods');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+		
+				if( $row = $model->store() )
+				{
+					$return['success'] = true;
+					$msg = JText::_('COM_DDC_SAVE_SUCCESS');
+				}else{
+					$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+				}
+				$viewName = $app->input->getWord('view', 'paymentmethods');
+				$app->input->set('layout','default');
+				$app->input->set('view', $viewName);
+			}
+			if($task=="paymentmethod.cancel")
+			{
+				$viewName = $app->input->getWord('view', 'paymentmethods');
+				$app->input->set('layout','default');
+				$app->input->set('view', $viewName);
+			}
+			//display view
+			return parent::execute();
+		}
 		if($this->data['table']=='products')
 		{
 			$task = $jinput->get('task', "", 'STR' );
@@ -156,6 +229,51 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 			//display view
 			return parent::execute();
 		}
+		if($this->data['table']=='shoppingcartheaders')
+		{
+			$task = $jinput->get('task', "", 'STR' );
+			if(($task=='shopcartheader.add') or ($task=='shopcartheader.edit'))
+			{
+				$viewName = $app->input->getWord('view', 'shopcartheaders');
+				$app->input->set('layout','edit');
+				$app->input->set('view', $viewName);
+				 
+			}
+		
+			if($task=="shopcartheader.save")
+			{
+				$modelName  = $app->input->get('models', 'shopcartheaders');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+				$viewName = $app->input->getWord('view', 'shopcartheaders');
+				$app->input->set('layout','default');
+				$app->input->set('view', $viewName);
+			}
+			if($task=="shopcartheader.cancel")
+			{
+				$viewName = $app->input->getWord('view', 'shopcartheaders');
+				$app->input->set('layout','default');
+				$app->input->set('view', $viewName);
+			}
+			if($task=="shopcartheader.delete")
+			{
+				$modelName  = $app->input->get('models', 'shopcartheaders');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+				if($model->trashCart($app->input->get('shoppingcart_header_id',null)))
+				{
+					// Add a message to the message queue
+					$app->enqueueMessage(JText::_('COM_DDC_CART_TRASHED'), 'SUCCESS');
+					$app->input->set('shoppingcart_header_id',null);
+				}
+				$viewName = $app->input->getWord('view', 'shopcartheaders');
+				$app->input->set('layout','default');
+				$app->input->set('view', $viewName);
+			}
+			//display view
+			return parent::execute();
+		}
+		
 		
 		if($this->data['table']=='uservendors')
 		{

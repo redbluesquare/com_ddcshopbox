@@ -11,13 +11,13 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
   </div>
   <div class="modal-body">
 	<div class="row-fluid">
-		<form id="contactAddressForm">
-			<?php foreach($this->form->getFieldset('profile_address') as $field): ?>
+		<form id="contactAddressForm" style="height:300px;overflow:scroll;">
+			<?php foreach($this->form->getFieldset('profile_fields') as $field): ?>
 					<div class="row-fluid">
 						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
 							<?php echo $field->input;?>
 						<?php else:?>
-						<div class="span4">
+						<div class="col-xs-4 control-group">
 							<div class="control-label">
 							<?php echo $field->label; ?>
 							<?php if (!$field->required && $field->type != 'Spacer') : ?>
@@ -25,16 +25,81 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 							<?php endif; ?>
 							</div>
 						</div>
-						<div class="span8">
+						<div class="col-xs-8">
 							<div class="controls">
 								<?php echo $field->input;?>
 							</div>
 						</div>
-						<div class="clearfix"></div>
+						<div class="clearfix" style="padding-bottom:3px;"></div>
 						<?php endif;?>
 					</div>
 					<?php endforeach; ?>
-			<input name="jform[table]" type="hidden" value="contactaddress" />
+					<?php foreach($this->form->getFieldset('address_fields') as $field): ?>
+					<div class="row-fluid">
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="col-xs-4 control-group">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+						</div>
+						<div class="col-xs-8">
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<div class="clearfix" style="padding-bottom:3px;"></div>
+						<?php endif;?>
+					</div>
+					<?php endforeach; ?>
+					<?php foreach($this->form->getFieldset('contact_fields') as $field): ?>
+					<div class="row-fluid">
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="col-xs-4 control-group">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+						</div>
+						<div class="col-xs-8">
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<div class="clearfix" style="padding-bottom:3px;"></div>
+						<?php endif;?>
+					</div>
+					<?php endforeach; ?>
+					<?php foreach($this->form->getFieldset('hidden_fields') as $field): ?>
+					<div class="row-fluid">
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="col-xs-4 control-group">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+						</div>
+						<div class="col-xs-8">
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<div class="clearfix" style="padding-bottom:3px;"></div>
+						<?php endif;?>
+					</div>
+					<?php endforeach; ?>
 			<input name="jform[task]" type="hidden" value="edit" />
 			
 		</form>

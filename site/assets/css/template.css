@@ -1,27 +1,72 @@
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src: url(../fonts/glyphicons-halflings-regular.eot);
+    src: url(../fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'), url(../fonts/glyphicons-halflings-regular.woff2) format('woff2'), url(../fonts/glyphicons-halflings-regular.woff) format('woff'), url(../fonts/glyphicons-halflings-regular.ttf) format('truetype'), url(../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')
+}
+.cartBase{width:50%;height:110px;}
+.profileBase{width:50%;}
+.cartCounter{position:relative;top:-90px;right:-30px;width:35px;height:35px;text-align:center;padding:7px;background:#EB018B;border-radius:30px;color:#fcfcfc;}
+.profileCounter{position:relative;top:-90px;right:-30px;width:35px;height:35px;text-align:center;padding:7px;background:#262262;border-radius:30px;color:#F399C0;}
+.cartTotal{position:relative;bottom:40px;text-align:center;}
+.vendorInfo{position:relative;height:100px;}
+.favShop{padding:1px;position:absolute;left:80px;width:56px;height:21px;top:80px;border:1px solid #cfcfcf;border-radius:3px;font-size:0.9em;}
+.favShop img{width:18px;}
 #mypostcode{position:relative;top:6px;border-radius:20px;padding:10px;width:380px; font-size:30px;font-family:Montserrat;color:#ccc;font-weight:300;}
 #mypostcodebtn{position:relative;left:-40px;z-index:1020;padding:12px 40px 12px 40px;background:green;color:#fcfcfc;font-size:30px;border:none;border-radius:20px;font-weight:bold;}
 .header-homepage{background:url(http://www.ineedtext.com/FoodBlog/wp-content/uploads/2012/09/Whole-Foods-054.jpg);background-size: 100%;}
 .header-foot{background:#ededed;padding:40px 0px 40px 0px;}
 .body-main{margin-top:20px;}
-.vendor .title{font-weight:bold;font-size:15px;}
-.vendor p{margin: 0px 0px 5px;font-size:12px;}
+.vendor-header{background:#ebede5;padding:10px 0px 10px;}
+.vendor-header .title>a{font-weight:bold;font-size:25px;color:#3c497c;}
+.vendor-available{width:25px;margin-left:15px;font-size:12px;position:relative;top:55px;text-align:center;}
+.vendor-available:before{background: #73ba5e;box-shadow: 0px 0px 10px rgba(142, 191, 118, 0.65);width: 8px;height: 10px;content: ' ';position: relative;display: block;top: 0;left: 50%;margin-left: -0.5em;
+	margin-bottom:3px;font-size: 0.7em;border-radius: 36.0em;border: none}
+.vendor-unavailable{width:23px;margin-left:15px;font-size:12px;position:relative;top:55px;text-align:center;}
+.vendor-unavailable:before{background: #d3686c;box-shadow: 0px 0px 10px rgba(211, 114, 108, 0.65);width: 8px;height: 10px;content: ' ';position: relative;display: block;top: 0;left: 50%;margin-left: -0.5em;
+	margin-bottom:3px;font-size: 0.7em;border-radius: 36.0em;border: none}
+.vendor-address{margin: 0px 0px 0px 15px;font-size:13px;position:absolute;bottom:20px}
 main-body div.editor{max-height:500px;}
 table{max-width: 100%;background-color: transparent;border-collapse: collapse;border-spacing: 0;}
-.ddctable{width: 100%;margin-bottom: 10px;}
+.ddctable{width: 100%;margin: 10px 0px 10px 0px;}
 .ddctable th, .ddctable td{padding: 3px;line-height: 20px;text-align: left;vertical-align: top;border-top: 1px solid #eee;}
 .page-header{margin:0px;}
+.icon-calendar{position: relative;top: 1px;display: inline-block;font-family: 'Glyphicons Halflings';font-style: normal;
+  font-weight: normal;line-height: 1;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
+.icon-calendar:before {content: "\e109";}
+.delivery_form_enquiry{background:#eee;padding:10px 0px 0px 10px;}
+.delivery_parcel_sizes{background:#3c49d9;color:#fefefe;}
+.delivery_parcel_destination{background:#b3dc77;color:#383838;}
+.delivery_parcel_services{background:#9681dc;color:#fefefe;}
 #jform_shipping{margin-right:3px;margin-left:7px;}
 .hero{margin:10px auto;padding:30px;min-height:300px;background:#3c497c;border-radius:10px;}
 #IntroText1,#IntroText2,#IntroText3,#IntroText4,#IntroText5{color:#fefefe;font-size:1.5em;}
 #IntroText1,#IntroText2,#IntroText3,#IntroText4,#IntroText5,#IntroText6{display: none;}
 #IntroText6{color:#fef5de;font-size:2em;}
+#printText, #printText3, #printText2{padding:5px;}
+.labels_dims{margin-top:25px;}
+.labels_dims > p{padding:3px;}
 #postcodeForm{margin: 0 auto; max-width:800px;text-align: center;}
 .introWIW div{position:relative;text-align:center;height:180px;}
 .introWIW div p{position:relative;bottom:0px;}
 .small-input-margin .form-control{margin-bottom:3px;}
 .itemTick{color:#009900;}
 .itemTick:hover{color:#00ff00;}
-.ddcPriceOK{font-size: 1.5em;color: #44aaee}
+.productItembar{border:1px solid #cfcfcf;margin:5px;padding-bottom:0px;}
+.productItembar > .itembar{padding:0px;height:100%;overflow:hidden;}
+.productItembar > .itembar > a{width:inherit;height:inherit;}
+.productDescbar{height:120px;padding:5px 5px 5px 10px;}
+.productPricebar{height:120px;}
+.productItemgroup{border:1px solid #cfcfcf;margin:10px;padding-bottom:10px;height:330px;}
+.productItemgroup > .itembar{max-width:170px;padding:0px;height:100%;overflow:hidden;}
+.productItemgroup > .itembar  >a{width:inherit;height:inherit;}
+.productItemgroup > .itembar > a>img{object-fit:contain;width:100%;height:100%;}
+.ddcPrice{text-align:right;}
+.productDescgroup{height:70px;padding:5px;}
+.productPricegroup{height:70px;}
+.ddcPriceOK{font-size: 1.5em;color: #44aaee;text-align:right;}
+.ddcPrice{font-size: 1.5em;color: #267f29;text-align:right;}
+.stripeCard{padding:5px;background:#efefef;border-radius:10px;color:#3d3d3d;font-size:0.8em;}
+.ddcShopData{font-size:0.8em;text-align:right;line-height:5px;padding:0px;margin:0px;}
 .alert .close {position: relative;top: -2px;line-height: 20px;}
 .alert-success {color: #468847;background-color: #dff0d8;border-color: #d6e9c6;}
 .alert-success h4 {color: #468847;}
@@ -32,4 +77,71 @@ table{max-width: 100%;background-color: transparent;border-collapse: collapse;bo
 .alert-block {padding-top: 14px;padding-bottom: 14px;}
 .alert-block > p, .alert-block > ul {margin-bottom: 0;}
 .alert-block p + p {margin-top: 5px;}
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+   .loading {display:block;position:absolute;z-index:1000;top:0;left:0;height:100%;width:100%;
+background: rgba( 255, 255, 255, .8 ) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;}
 
+@media(max-width: 767px){
+	.productItembar{height:360px;}
+	.productItembar > .itembar{width:100%;padding:0px;height:156px;overflow:hidden;}
+	.productItembar > .itembar > a > img{object-fit:contain;min-width:100%;min-height:100%;}
+	.productDescbar{height:90px;padding:5px;}
+	.productPricebar{height:80px;}
+}
+@media(min-width: 768px){
+	.productItembar{height:120px;}
+	.productItembar > .itembar{width:156px;height:118px;overflow:hidden;}
+	.productItembar > .itembar > a>img{object-fit:contain;min-width:100%;max-height:100%;}
+}
+@media print{
+	@page {
+  		size: A4;
+	}
+	@page :blank {
+  		@top-center { content: "This page is intentionally left blank." }
+	}
+	body *{
+		visibility:hidden;
+	}
+	#printable *{
+		visibility:visible;
+		
+	}
+	#printable{width:90%;page-break-inside:avoid; page-break-after: always;}
+	div {float: none !important;}
+	.table th, .table td{border-top: 1px solid #fff;}
+	tfoot{}
+	@page:right{
+  		@bottom-right {
+    		content: counter(page);
+  		}
+	}
+
+	@page:left{
+  		@bottom-left {
+    		content: counter(page);
+  		}
+	}
+}
+.btnCart{animation: mymove 0.9s;-webkit-animation: mymove 0.9s;animation-delay: 1.5s;}
+@keyframes mymove {
+    0%   {transform: translateX(0px)}
+    5%   {transform: translateX(0px)}
+    10%  {transform: translateX(-4px)}
+    15%  {transform: translateX(0px)}
+    20%  {transform: translateX(4px)}
+    25%  {transform: translateX(0px)}
+    30%  {transform: translateX(-4px)}
+    35%  {transform: translateX(0px)}
+    40%  {transform: translateX(4px)}
+    45%  {transform: translateX(0px)}
+    50%  {transform: translateX(-4px)}
+    55%  {transform: translateX(0px)}
+    60%  {transform: translateX(4px)}
+    65%  {transform: translateX(0px)}
+    100% {transform: translateX(0px)}
+}

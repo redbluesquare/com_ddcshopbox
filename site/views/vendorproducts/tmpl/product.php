@@ -3,12 +3,27 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 $component = new JComponentHelper();
 $params = $component->getParams('com_ddcshopbox');
 $dim_result = $this->item->product_length*$this->item->product_width*$this->item->product_height;
+
+$document =& JFactory::getDocument();
+$document->setTitle($this->item->vendor_product_name);
+$document->setMetaData("image",$this->item->image_link);
+$document->setMetaData("geo.placename",$this->item->address1.", ".$this->item->address2." ".$this->item->city.", ".$this->item->county.", ".$this->item->shop_post_code.", ".$this->item->country_name);
+$document->setDescription($this->item->vp_desc);
+
 ?>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8&appId=122601401136";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <div class="row">
-	<div class="col-xs-3 img-rounded product_image">
-		<img style="max-height:100%;min-width:100%;" src="<?php echo JRoute::_($this->item->image_link); ?>" class="img-thumbnail" />
+	<div class="col-xs-4 img-rounded product_image">
+		<img style="min-height:100%;min-width:100%;" src="<?php echo JRoute::_($this->item->image_link); ?>" class="img-thumbnail" />
 	</div>
-	<div class="row col-xs-9">
+	<div class="row col-xs-8">
 		<div class="pull-left col-md-8">
 			<h3 style="margin-top:10px;"><?php echo $this->item->vendor_product_name; ?></h3>
 			<p><?php echo $this->item->vp_desc; ?></p>
@@ -32,7 +47,7 @@ $dim_result = $this->item->product_length*$this->item->product_width*$this->item
 				if($val == 1):
 				?>
 				<li class="clearfix">
-	    		<button id="ddcCartBtn<?php echo $this->item->ddc_vendor_product_id; ?>" class="btn pull-right btn-primary col-md-4"onclick="ddcUpdateCart(<?php echo $this->item->ddc_vendor_product_id; ?>)"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-shopping-cart"></i></button>
+	    		<button id="ddcCartBtn<?php echo $this->item->ddc_vendor_product_id; ?>" data-trigger="hover" title="Add to Cart" data-content="Click to add this product to your shopping cart on the left" data-toggle="popover" data-placement="bottom" class="btn btnCart pull-right btn-primary col-md-4" onclick="ddcUpdateCart(<?php echo $this->item->ddc_vendor_product_id; ?>)"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-shopping-cart"></i></button>
 	    		<form id="ddcCart<?php echo $this->item->ddc_vendor_product_id; ?>" class="pull-right col-md-8 clearfix">
 					<input type="number" class="col-xs-12" min="<?php echo $this->model->getpartjsonfield($this->item->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($this->item->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>" name="jform[product_quantity]" value="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>"/>
 					<input type="hidden" name="jform[product_price]" value="<?php echo number_format($this->item->product_price,2); ?>" />
@@ -53,14 +68,12 @@ $dim_result = $this->item->product_length*$this->item->product_width*$this->item
 				<?php endif; ?>
 			<?php endif; ?>
     		</ul>
+    		<!-- Your like button code -->
+			  <div class="fb-like" 
+			  	data-href="<?php echo JUri::current(); ?>" data-layout="button_count" data-action="like"
+			  	data-size="small" data-show-faces="false" data-share="false"></div>
 		</div>
 		<div class="clearfix"></div>
-	</div>
-	<div class="clearfix"></div>
-</div>
-<div class="row">
-	<div class="col-md-12">
-		<br>
 		<table class="ddctable">
 			<tbody>
 				<tr><td><?php echo JText::_('COM_DDC_STORE')?></td><td><a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendors&layout=vendor&vendor_id='.$this->item->vendor_id); ?>"><?php echo $this->item->vendor_name; ?></a>, <i><?php echo $this->item->city; ?></i></td></tr>
@@ -69,7 +82,37 @@ $dim_result = $this->item->product_length*$this->item->product_width*$this->item
 				<?php if($dim_result>0):?><tr><td><?php echo JText::_('COM_DDC_DIMENSIONS');?></td><td><?php echo $this->model->ddcnumber($this->item->product_length)." x ".$this->model->ddcnumber($this->item->product_width)." x ".$this->model->ddcnumber($this->item->product_height); ?></td></tr><?php endif; ?>
 			</tbody>
 		</table>
+	</div>
+	<div class="clearfix"></div>
+	<br>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<br>
 		
 		
+	
+	</div>
+	<div class="col-md-12">
+		<h2><?php echo JText::_('COM_DDC_MOST_POPULAR_PRODUCTS'); ?></h2>
+		<?php 
+		$i=0;
+		foreach($this->cart_items as $item): ?>
+			<div class="col-md-3 col-sm-4 col-xs-6" style="padding:3px;">
+			<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendorproducts&layout=product&vendorproduct_id='.$item->ddc_vendor_product_id); ?>" style="text-decoration:none;">
+			<div style="height:250px;border:1px solid #efefef;border-radius:10px;overflow:hidden;padding:0px;margin:2px;">
+			<img src="<?php echo JRoute::_().$item->image_link; ?>" width="100%" /><br>
+			<h4 style="text-align:center;"><?php echo $item->vendor_product_name; ?></h4>
+			<p style="text-align:right;padding-right:10px;color:#333;"><span class="ddcPrice"><?php echo $item->currency_symbol." ".number_format($item->product_price,2); ?></span>
+			<small><?php if($item->product_base_uom==1): echo "/each"; elseif($item->product_base_uom==2): echo "/set"; elseif($item->product_base_uom==3): echo "/pack"; else: echo "/pair"; endif; ?></small>
+			</p>
+			</div>
+			</a>
+			</div>
+			<?php $i++; ?>
+			<?php if($i==4):
+				break;
+			endif; ?>
+		<?php endforeach; ?>
 	</div>
 </div>

@@ -1,6 +1,7 @@
 <?php // no direct access
 defined( '_JEXEC' ) or die( 'Restricted access' ); 
 
+
 class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
 {
  
@@ -27,10 +28,10 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
     $this->_product_id = $this->_app->input->get('product_id', null);
     $this->_vendor_id = $this->_app->input->get('vendor_id', null);
     $this->_session = JFactory::getSession();
-    $this->_shoppingcart_header_id = $this->_app->input->get('shoppingcart_header_id',$this->_session->get('shoppingcart_header_id',null));
+    $this->_shoppingcart_header_id = $this->_session->get('shoppingcart_header_id',null);
     if($this->_shoppingcart_header_id == null)
     {
-    	$this->_session->set('shoppingcart_header_id',$this->_shoppingcart_header_id);
+    	$this->_session->set('shoppingcart_header_id',$this->_app->input->get('shoppingcart_header_id',null));
     }
     $this->_params = JComponentHelper::getParams('com_ddcshopbox');
     if($this->_app->input->get('shopcart_state', null)!= null)
@@ -50,6 +51,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
     $query->select('vp.*');
     $query->select('pp.*');
     $query->select('vc.*');
+    $query->select('coup.*');
     $query->select('i.*');
     $query->select('sch.*');
     $query->select('sch.state as header_state');
@@ -62,6 +64,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
     $query->leftJoin('#__ddc_vendors as v on vp.vendor_id = v.ddc_vendor_id');
     $query->leftJoin('#__ddc_product_prices as pp on vp.ddc_vendor_product_id = pp.product_id');
     $query->rightJoin('#__ddc_currencies as vc on vc.ddc_currency_id = pp.product_currency');
+    $query->leftJoin('#__ddc_coupons as coup on coup.ddc_coupon_id = sch.coupon_id');
     $query->group("scd.product_id, sch.ddc_shoppingcart_header_id");
     $query->where('sch.session_id = "'.$this->_session->getId().'"');
     return $query;
@@ -106,7 +109,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   	{
   		if($this->_session->get('ddclocation',null)==null)
   		{
-  			return array(false,1,JText::_('COM_DDC_POSTCODE_NOT_SET'));
+  			return array(false,1,JText::_('COM_DDC_POSTCODE_NOT_SET'),null);
   		}
   		if($this->isValidPostCodeFormat($this->_session->get('ddclocation',null)))
   		{
@@ -118,7 +121,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   		}
   		else 
   		{
-  			return array(false,1,JText::_('COM_DDC_PLEASE_ENTER_VALID_POSTCODE'));
+  			return array(false,1,JText::_('COM_DDC_PLEASE_ENTER_VALID_POSTCODE'),null);
   		}
   		//Setup cart if does not exist
   		$data = array(
@@ -151,10 +154,11 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   			}
   			if($formdata['state'] == 3)
   			{
-  				if(($formdata['address_line_1']==null) || ($formdata['town']==null) || ($formdata['post_code']==null) || ($formdata['email_to']==null) || ($formdata['first_name']==null) || ($formdata['last_name']==null))
+  				if(($formdata['address_line_1']==null) || ($formdata['town']==null) || ($formdata['post_code']==null) || ($formdata['email_to']==null) || ($formdata['mobile_no']==null) || ($formdata['first_name']==null) || ($formdata['last_name']==null))
   				{
   					return false;
   				}
+  				
   				$data = array(
   						'ddc_shoppingcart_header_id' => $sc[0]->ddc_shoppingcart_header_id,
   						'user_id' => $this->_user_id,
@@ -164,8 +168,6 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   						'last_name' => $formdata['last_name'],
   						'address_line_1' => $formdata['address_line_1'],
   						'address_line_2' => $formdata['address_line_2'],
-  						'delivery_date' => $formdata['delivery_date'],
-  						'delivery_time' => $formdata['delivery_time'],
   						'shipping_cost' => $formdata['delivery_price'],
   						'town' => $formdata['town'],
   						'county' => $formdata['county'],
@@ -173,14 +175,16 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   						'mobile_no' => $formdata['mobile_no'],
   						'telephone_no' => $formdata['telephone_no'],
   						'email_to' => $formdata['email_to'],
+  						'comment' => $formdata['comment'],
   						'payment_method'=> $formdata['payment_method'],
   						'session_id' => $this->_session->getId(),
   						'table' => 'shoppingcartheaders');
   			}			
   		}
-  		//user is still shopping
+  		
   		else 
   		{
+  			//user is still shopping
   			$data = array(
   					'ddc_shoppingcart_header_id' => $sc[0]->ddc_shoppingcart_header_id,
   					'user_id' => $this->_user_id,
@@ -190,40 +194,99 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   					'table' => 'shoppingcartheaders');
   		}
   		$row = $this->store($data);
-  		//$this->_session->set('shoppingcart_header_id', $row->ddc_shoppingcart_header_id);
   		
-  		$paypal = new DdcshopboxModelsDdcpaypal();
-  		$paypallogo = $this->_params->get('payment_logo');
-  		$sc = $this->listItems();
-  		if($sc[0]->header_state==3)
+  		if(isset($formdata['payment_method']) && ($formdata['payment_method'] == 1))
   		{
-  			if($this->_app->input->get('paypalsuccess',null)==="false")
-  			{
-  				$data = array(
-  						'ddc_shoppingcart_header_id' => $sc[0]->ddc_shoppingcart_header_id,
-  						'user_id' => $this->_user_id,
-  						'state' => 2,
-  						'catid' => null);
-  				$row = $this->store($data);
-  				echo JText::_('COM_DDC_PAYMENT_CANCELLED')."<br>";
-  				echo '<a href="'.JUri::root().'index.php?option=com_ddcshopcart&view=shopcart">
-					<img src="'.$paypallogo.'" style="height:80px;" /></a>';
-  			}
-  			elseif($this->_app->input->get('paypalsuccess',null)==="true")
-  			{
-  				if($sc[0]->header_state==3)
+	  		$paypal = new DdcshopboxModelsDdcpaypal();
+	  		$paypallogo = $this->_params->get('payment_logo');
+	  		$sc = $this->listItems();
+	  		if($sc[0]->header_state==3)
+	  		{
+  				if($this->_app->input->get('paypalsuccess',null)==="false")
   				{
-  					$paypal->makePaypalPayment();
+  					$data = array(
+  							'ddc_shoppingcart_header_id' => $sc[0]->ddc_shoppingcart_header_id,
+  							'user_id' => $this->_user_id,
+  							'state' => 2,
+  							'catid' => null);
+  					$row = $this->store($data);
+  					echo JText::_('COM_DDC_PAYMENT_CANCELLED')."<br>";
+  					echo '<a href="'.JUri::root().'index.php?option=com_ddcshopcart&view=shopcart">
+					<img src="'.$paypallogo.'" style="height:80px;" /></a>';
   				}
-  			}
-  			elseif($this->_app->input->get('paypalsuccess',null)===null)
-  			{
-  				if($sc[0]->header_state==3){
-  					$paypal->createPaypalPayment();
+  				elseif($this->_app->input->get('paypalsuccess',null)==="true")
+  				{
+  					if($sc[0]->header_state==3)
+  					{
+  						$paypal->makePaypalPayment();
+  					}
   				}
-  			}
+  				elseif($this->_app->input->get('paypalsuccess',null)===null)
+  				{
+  					if($sc[0]->header_state==3){
+  						$paypal->createPaypalPayment();
+  					}
+  				}
+	  		}
   		}
-
+	  	elseif(isset($formdata['payment_method']) && ($formdata['payment_method']==2))
+	  	{
+	  		$ddcstripe = new DdcshopboxModelsDdcstripe();
+	  		$ddcprofile = new DdcshopboxModelsProfiles();
+	  		$user_id = 0;
+	  		//check if logged in
+	  		if(JFactory::getUser()->id!=0)
+	  		{
+	  			//user logged in
+	  			$user_id = JFactory::getUser()->id;
+	  			//check if user is setup as stripe customer
+	  			if($ddcstripe->isStripeCustomer())
+	  			{
+	  				if($formdata['stripeCusToken']=='false')
+	  				{
+	  					$ddcstripe->updateStripeCustomer();
+	  				}
+	  				//create stripe payment by charging customer
+	  				$result = $ddcstripe->chargeStripeCustomer();
+	  				if($result)
+	  				{
+	  					//update shopping cart as paid
+	  					$this->updateShopcartAsPaid();
+	  				}
+	  			}
+	  			else 
+	  			{
+	  				//convert token to customer token and save
+	  				$return = $ddcstripe->createStripeCustomer();
+	  				
+	  				//create stripe payment by charging customer
+	  				try
+	  				{
+	  					$result = $ddcstripe->chargeStripeCustomer();
+	  				}
+	  				catch(Exception $e)
+	  				{
+	  					echo $e->getMessage();
+	  				}
+	  				if($result == true)
+	  				{
+	  					//update shopping cart as paid
+	  					$this->updateShopcartAsPaid();
+	  				}
+	  			}
+	  		}
+	  		else 
+	  		{
+	  				//create stripe payment by charging one time payment
+	  				$result = $ddcstripe->chargeStripePayment();
+	  				if($result == true)
+	  				{
+	  					//update shopping cart as paid
+	  					$this->updateShopcartAsPaid();
+	  				}
+	  		}
+	  		return array(true,$sc[0]->header_state,JText::_('COM_DDC_PAYMENT_COMPLETE'),null);
+	  	}
   	}
   	
   	if($formdata['table']!='ddcCheckout')
@@ -233,6 +296,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   		{
   			if($row->product_id == $formdata['ddc_vendor_product_id'])
   			{
+  				if($row->header_state < 4):
   				//product is in cart update row
   				$data = array(
   						'shoppingcart_header_id' => $row->ddc_shoppingcart_header_id,
@@ -246,6 +310,9 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   				
   				$row = $this->store($data);
   				//$this->_session->set('shoppingcart_header_id',$row->ddc_shoppingcart_header_id);
+  				else:
+  					return array(false);
+  				endif;
   				$productFound = 1;
   			}
   		}
@@ -260,7 +327,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   				$stldistance = $this->getPostcodesDistance($this->_session->get('ddclocation',null), $formdata['shop_post_code'])/1000;
   				if(number_format($stldistance,3) > number_format($this->_params->get('distance_limit'),3))
   				{
-  					return array(false,2,JText::_('COM_DDC_LOCATED_TOO_FAR'),number_format($stldistance,3),$this->_params->get('distance_limit'));
+  					return array(false,2,JText::_('COM_DDC_LOCATED_TOO_FAR'),number_format($stldistance,3));
   				}
   			}
   			else
@@ -281,9 +348,37 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   			$row = $this->store($data);
   		}
   	}
-	
-	return array(true,$sc[0]->header_state,JText::_('COM_DDC_PRODUCT_ADDED_TO_CART'));
+	return array(true,$sc[0]->header_state,JText::_('COM_DDC_PRODUCT_ADDED_TO_CART'),null);
   }
+  
+  public function updateShopcartAsPaid()
+  {
+  	$db = JFactory::getDBO();
+  	$query = $db->getQuery(TRUE);
+  	// Fields to update.
+  	$fields = array($db->quoteName('state') . ' = 4',$db->quoteName('modified_on'). ' = '.$db->quote($date));
+  		
+  	// Conditions for which records should be updated.
+  	$conditions = array(
+  			$db->quoteName('ddc_shoppingcart_header_id') . ' = '.$this->_session->get('shoppingcart_header_id',null)
+  	);
+  	$query->update($db->quoteName('#__ddc_shoppingcart_headers'))->set($fields)->where($conditions);
+  	$db->setQuery($query);
+  	$result = $db->execute();
+  	
+  	$sent = false;
+  	$modelSh = new DdcshopboxModelsShopcartheaders();
+  	$sent = $modelSh->sendshopcartEmail();
+  	
+  	$this->_session->clear('shoppingcart_header_id');
+  	
+  	// Add a message to the message queue
+  	$result = JText::_('COM_DDC_PAYMENT_COMPLETE');
+  	$result .= '<br><a href="'.JUri::root().'">Click here</a> to return to the homepage.';
+  	
+  	return $result;
+  }
+  
   public function removeCartItem($id)
   {
   	// Get a db connection.
@@ -310,27 +405,20 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   {
   	// Get a db connection.
   	$db = JFactory::getDbo();
-  
   	// Create a new query object.
   	$query = $db->getQuery(true);
-  	
   	// Fields to update.
   	$fields = array(
   			$db->quoteName('product_quantity') . ' = '.$val[0],
   			$db->quoteName('price') . ' = "'.$val[1] .'"'
   	);
-  	
-  	// delete all custom keys for user 1001.
+  	// For which the following conditions are true.
   	$conditions = array(
   			$db->quoteName('ddc_shoppingcart_detail_id') . ' = '.$id
   	);
-  
   	$query->update($db->quoteName('#__ddc_shoppingcart_details'))->set($fields)->where($conditions);
-  
   	$db->setQuery($query);
-  
   	$result = $db->execute();
-  
   	return $result;
   }
 }

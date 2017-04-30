@@ -5,7 +5,7 @@
 	<author>Darryl Usher</author>
 	<authorEmail>info@digidevcloud.co.uk</authorEmail>
 	<authorUrl>http://www.digidevcloud.co.uk</authorUrl>
-	<copyright>(C)2012 - 2016 DigiDevCloud. All rights reserved.</copyright>
+	<copyright>(C)2012 - 2017 DigiDevCloud. All rights reserved.</copyright>
 	<license>This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see http://www.gnu.org/licenses.</license>
-	<version>0.0.6</version>
+	<version>0.2.7</version>
 	<description>COM_DDCSHOPBOX_DESCRIPTION</description>
 	<install>
                 <sql>
@@ -40,8 +40,8 @@
         <!-- SQL files to run on update -->
         <update>
                 <schemas>
-                        <schemapath type="mysql">sql/updates/mysql</schemapath>
-                        <schemapath type="mysqli">sql/updates/mysql</schemapath>
+                        <schemapath type="mysql">sql/update/mysql</schemapath>
+                        <schemapath type="mysqli">sql/update/mysql</schemapath>
                 </schemas>
         </update>
 		<files folder="site">

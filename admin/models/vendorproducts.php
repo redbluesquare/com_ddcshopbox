@@ -76,6 +76,8 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	$data = array(
   	'ddc_vendor_product_id'=>$formdata['ddc_vendor_product_id'],
   	'product_id' => $formdata['product_id'],
+	'product_type' => $formdata['product_type'],
+  	'distrib_cat_id' => $formdata['distrib_cat_id'],
   	'vendor_id' => $formdata['vendor_id'],
   	'vendor_product_name' => $formdata['vendor_product_name'],
   	'vendor_product_alias' => $formdata['vendor_product_alias'],

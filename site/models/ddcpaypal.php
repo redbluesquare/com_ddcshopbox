@@ -9,6 +9,7 @@ use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Details;
 use PayPal\Api\Amount;
 use PayPal\Api\RedirectUrls;
+use PayPal\Api\Cost;
 use PayPal\Api\Item;
 use PayPal\Api\ShippingCost;
 use PayPal\Api\ItemList;
@@ -95,11 +96,12 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   	$quantities = array();
   	$costs = array();
   	$shipping = $paymentDetails[0]->shipping_cost;
+  	$shipping_discount = $paymentDetails[0]->coupon_value;
   	for($i=0;$i<count($paymentDetails);$i++)
   	{
-  	array_push($descriptions, $paymentDetails[$i]->vendor_product_name);
-  			array_push($quantities, $paymentDetails[$i]->product_quantity);
-	  		array_push($costs,$paymentDetails[$i]->product_price);
+  		array_push($descriptions, $paymentDetails[$i]->vendor_product_name);
+  		array_push($quantities, $paymentDetails[$i]->product_quantity);
+	  	array_push($costs,$paymentDetails[$i]->product_price);
   	}
   	$subtotal = 0.00;
   	
@@ -115,6 +117,7 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   		  	$items[$i]->setName(substr($descriptions[$i],0,60));
   		  	$items[$i]->setQuantity((int)$quantities[$i]);
   		  	$items[$i]->setCurrency($currency);
+  		  	
   	}
   	
   	$itemList = new ItemList();
@@ -124,10 +127,15 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   	$details = new Details();
   	$details->setSubtotal(number_format($subtotal,2));
   	$details->setShipping(number_format($shipping,2));
+  	$details->setShippingDiscount($shipping_discount);
   	
+  	if($shipping_discount >($subtotal+$shipping))
+  	{
+  		$shipping_discount = ($subtotal+$shipping);
+  	}
   	
   	$amount = new Amount();
-  	$amount->setTotal($subtotal+$shipping)
+  	$amount->setTotal($subtotal+$shipping-$shipping_discount)
   	->setCurrency($currency)
   	->setDetails($details);
   	
@@ -147,6 +155,7 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   		->setCancelUrl($this->_params->get('payment_cancel_url_sandbox'));
   	}
   	
+  	if(($subtotal+$shipping-$shipping_discount) > 0):
   	
   	$payment->setIntent('sale')
   	->setPayer($payer)
@@ -189,9 +198,7 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   	{
   		if (count($e))
   		{
-  			var_dump($e->getMessage());
-  			//JError::raiseError(500, implode('<br />', 'Error2 '.$e->getMessage()));
-  			//var_dump($e);
+  			JError::raiseError(500, implode('<br />', 'Error2 '.$e->getMessage()));
   			return false;
   		}
   	
@@ -199,6 +206,10 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   	
   	$approvalUrl = $payment->getApprovalLink();
   	$this->_app->redirect($approvalUrl);
+  	else:
+  		$this->_app->input->set('paypalsuccess',"true");
+  		$this->_app->input->set('paypal_makepayment',101);
+  	endif;
   }
   	
   
@@ -237,7 +248,7 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   	$PayerID = $this->_app->input->get('PayerID',null);
   	$token = $this->_app->input->get('token',null);
   	
-  	if($token!=null)
+  	if(($token!=null) AND ($paymentId!=null))
   	{
   		$tokendata = json_encode(array('paypal_hash' => md5($paymentId)));
 
@@ -266,13 +277,12 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
   				);
   			$conditions = array(
   							$db->quoteName('ref') . ' = '.$db->quote('ddcshopbox'),
-  							$db->quoteName('ref_id') . ' = ' . $payitem->ref_id);
+  							$db->quoteName('ref_id') . ' = ' . $this->_session->get('shoppingcart_header_id',null));
   			$query->update($db->quoteName('#__ddc_payments'))->set($fields)->where($conditions);
   			$db->setQuery($query);
   			$result = $db->execute();
   		}
   		
-   		
    		try {
    			$payment = Payment::get($paymentId,$api);
    		} catch (PayPal\Exception\PayPalConnectionException $ex) {
@@ -282,7 +292,6 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
    		} catch (Exception $ex) {
    			die($ex);
    		}
-   		
    		
    		$execute = new PaymentExecution();
    		$execute->setPayerId($PayerID);
@@ -297,8 +306,6 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
    			die($ex);
    		}
    		
-   		
-
    		$db = JFactory::getDBO();
    		$query = $db->getQuery(TRUE);
    		// Fields to update.
@@ -314,25 +321,31 @@ class DdcshopboxModelsDdcpaypal extends DdcshopboxModelsDefault
    		$query->update($db->quoteName('#__ddc_payments'))->set($fields)->where($conditions);
    		$db->setQuery($query);
    		$result = $db->execute();
-   		
-   		$db = JFactory::getDBO();
-   		$query = $db->getQuery(TRUE);
-   		// Fields to update.
-   		$fields = array($db->quoteName('state') . ' = 4',$db->quoteName('modified_on'). ' = '.$db->quote($date));
-   		
-   		// Conditions for which records should be updated.
-   		$conditions = array(
-   				$db->quoteName('ddc_shoppingcart_header_id') . ' = '.$this->_session->get('shoppingcart_header_id',null)
-   		);
-   		$query->update($db->quoteName('#__ddc_shoppingcart_headers'))->set($fields)->where($conditions);
-   		$db->setQuery($query);
-   		$result = $db->execute();
-   		echo "Thank you, your payment is complete. ";
-   		echo '<a href="'.JUri::root().'">Click here</a> to return to the homepage.';
-   		$this->_session->clear('shoppingcart_header_id');
-   		//$url = 'index.php?option=com_ddcshopbox&view=shopcart&layout=complete&shoppingcart_header_id='.$this->_session->get('shoppingcart_header_id',null);
-   		//$this->_app->redirect($url, JText::_('COM_DDC_PAYMENT_COMPLETE'));
   	}
+   	$db = JFactory::getDBO();
+   	$query = $db->getQuery(TRUE);
+   	// Fields to update.
+   	$fields = array($db->quoteName('state') . ' = 4',$db->quoteName('modified_on'). ' = '.$db->quote($date));
+   		
+   	// Conditions for which records should be updated.
+   	$conditions = array(
+   			$db->quoteName('ddc_shoppingcart_header_id') . ' = '.$this->_session->get('shoppingcart_header_id',null)
+   	);
+   	$query->update($db->quoteName('#__ddc_shoppingcart_headers'))->set($fields)->where($conditions);
+   	$db->setQuery($query);
+   	$result = $db->execute();
+   	
+   	$sent = false;
+   	$modelSh = new DdcshopboxModelsShopcartheaders();
+   	
+   	$sent = $modelSh->sendshopcartEmail();
+   	
+   	// Add a message to the message queue
+   	$this->_app->enqueueMessage(JText::_('COM_DDC_PAYMENT_COMPLETE'), 'success');
+   	echo '<a href="'.JUri::root().'">Click here</a> to return to the homepage.';
+   	$this->_session->clear('shoppingcart_header_id');
+
+  	
   }
 
 }

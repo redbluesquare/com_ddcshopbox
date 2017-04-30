@@ -1,66 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset name="profile_address">
-		<field name="address" type="textarea"
-			label="COM_DDC_ADDRESS_LABEL"
-			description="COM_DDC_ADDRESS_DESC"
+	<fieldset name="profile_fields">
+		<field name="company" type="text"
+			label="COM_DDC_COMPANY_LABEL"
+			description="COM_DDC_COMPANY_DESC"
 			rows="3"
+			cols="70"
+		/>
+		<field name="title"
+		    type="list"
+			label="COM_DDC_TITLE_LABEL"
+			description="COM_DDC_TITLE_DESC"
+			default=""
+		>
+			<option value="">-</option>
+			<option value="master">COM_DDC_MASTER</option>
+			<option value="mr">COM_DDC_MR</option>
+			<option value="miss">COM_DDC_MISS</option>
+			<option value="mrs">COM_DDC_MRS</option>
+			<option value="dr">COM_DDC_DR</option>
+			<option value="prof">COM_DDC_PROFESSOR</option>
+		</field>
+		<field name="first_name" type="text"
+			label="COM_DDC_FIRST_NAME_LABEL"
+			description="COM_DDC_FIRST_NAME_DESC"
+			size="30"
+		/>
+		<field name="middle_name"
+		    type="text"
+			label="COM_DDC_MIDDLE_NAME_LABEL"
+			description="COM_DDC_MIDDLE_NAME_DESC"
+			size="30"
+		/>
+		<field name="last_name" type="text"
+			label="COM_DDC_LAST_NAME_LABEL"
+			description="COM_DDC_LAST_NAME_DESC"
+			size="30"
+		/>
+	</fieldset>
+	<fieldset name="address_fields">
+		<field name="address_type"
+		    type="list"
+			label="COM_DDC_ADDRESS_TYPE_LABEL"
+			description="COM_DDC_ADDRESS_TYPE_DESC"
+			default="ST"
+		>
+			<option value="ST">COM_DDC_SHIP_TO</option>
+		</field>
+		<field name="address_1" type="text"
+			label="COM_DDC_ADDRESS_1_LABEL"
+			description="COM_DDC_ADDRESS_1_DESC"
 			cols="30"
 		/>
-		<field name="suburb" type="text"
-			label="COM_DDC_SUBURB_LABEL"
-			description="COM_DDC_SUBURB_DESC"
+		<field name="address_2" type="text"
+			label="COM_DDC_ADDRESS_2_LABEL"
+			description="COM_DDC_ADDRESS_2_DESC"
 			size="30"
 		/>
-		<field name="state" type="text"
-			placeholder="COM_DDC_STATE_LABEL"
-			description="COM_DDC_STATE_DESC"
+		<field name="city" type="text"
+			label="COM_DDC_CITY_LABEL"
+			description="COM_DDC_CITY_DESC"
 			size="30"
 		/>
-		<field name="postcode" type="text"
-			placeholder="COM_DDC_POSTCODE_LABEL"
+		<field name="county" type="text"
+			label="COM_DDC_COUNTY_LABEL"
+			description="COM_DDC_COUNTY_DESC"
+			size="30"
+		/>
+		<field name="zip" type="text"
+			label="COM_DDC_POSTCODE_LABEL"
 			description="COM_DDC_POSTCODE_DESC"
-			size="30"
+			size="20"
 		/>
-		<field name="country" type="text"
-			placeholder="COM_DDC_COUNTRY_LABEL"
+		<field name="country_id"
+		    type="sql"
+		    label="COM_DDC_COUNTRY_LABEL"
 			description="COM_DDC_COUNTRY_DESC"
+			query="SELECT ddc_country_id AS value, country_name AS country_id FROM #__ddc_countries"
+			default="222"
+		/>
+	</fieldset>
+	<fieldset name="contact_fields">
+		<field name="phone_1" type="text"
+			label="COM_DDC_LAND_LINE_LABEL"
+			description="COM_DDC_LAND_LINE_DESC"
 			size="30"
 		/>
-		<field name="telephone" type="text"
-			label="COM_DDC_TELEPHONE_LABEL"
-			description="COM_DDC_TELEPHONE_DESC"
-
+		<field name="phone_2" type="text"
+			label="COM_DDC_MOBILE_NUMBER_LABEL"
+			description="COM_DDC_MOBILE_NUMBER_DESC"
 			size="30"
 		/>
-		<field name="mobile" type="text"
-			label="COM_DDC_MOBILE_LABEL"
-			description="COM_DDC_MOBILE_DESC"
+		<field name="fax" type="text"
+			label="COM_DDC_FAX_LABEL"
+			description="COM_DDC_FAX_DESC"
 			size="30"
 		/>
-		<field name="email_to" type="text"
-			label="COM_DDC_EMAIL_TO_LABEL"
-			description="COM_DDC_EMAIL_TO_DESC"
+	</fieldset>
+	<fieldset name="hidden_fields">
+		<field name="agreed"
+		    type="hidden"
+			label="COM_DDC_AGREED_LABEL"
+			description="COM_DDC_AGREED_DESC"
 			size="30"
+			class="hidden"
+		/>
+		<field name="tos"
+		    type="hidden"
+			label="COM_DDC_TERMS_LABEL"
+			description="COM_DDC_TERMS_DESC"
+			size="30"
+			class="hidden"
+		/>
+		<field name="customer_note"
+		    type="hidden"
+			label="COM_DDC_CUSTOMER_NOTE_LABEL"
+			description="COM_DDC_CUSTOMER_NOTE_DESC"
+			size="30"
+			class="hidden"
 		/>
 		<field
-			name="contact_id"
+			name="table"
 			type="hidden"
+			label="COM_DDC_TABLE_LABEL"
+			description="COM_DDC_TABLE_DESC"
+			class="hidden"
+			default="profiles"
+			readonly="true"
+		/>
+		<field name="ddc_userinfo_id"
+		    type="hidden"
 			label="COM_DDC_ID_LABEL"
 			description="COM_DDC_ID_DESC"
-			readonly="true"
+			class="hidden"
+			size="30"
+		/>
+		<field name="address_type_name"
+		    type="hidden"
+			label="COM_DDC_ADDRESS_TYPE_NAME_LABEL"
+			description="COM_DDC_DDRESS_TYPE_NAME_DESC"
+			class="hidden"
+		/>
+		<field name="vendor_id"
+		    type="hidden"
+			label="COM_DDC_VENDOR_ID_LABEL"
+			description="COM_DDC_VENDOR_ID_DESC"
+			class="hidden"
 		/>
 	</fieldset>
 	<fieldset name="get_interest">
 	    <field name="firstname" type="text"
-			label="COM_DDC_FIRSTNAME_LABEL"
-			description="COM_DDC_FIRSTNAME_DESC"
+			label="COM_DDC_FIRST_NAME_LABEL"
+			description="COM_DDC_FIRST_NAME_DESC"
 			size="20" maxlength="30"
 			class="form-control"
 		/>
 	    <field name="lastname" type="text"
-			label="COM_DDC_LASTNAME_LABEL"
-			description="COM_DDC_LASTNAME_DESC"
+			label="COM_DDC_LAST_NAME_LABEL"
+			description="COM_DDC_LAST_NAME_DESC"
 			size="20" maxlength="30"
 			class="form-control"
 		/>

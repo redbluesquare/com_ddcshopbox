@@ -1,6 +1,6 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); 
  
-class DdcshopboxViewProductsRaw extends JViewHtml
+class DdcshopboxViewsVendorproductsRaw extends JViewHtml
 {
   function render()
   {

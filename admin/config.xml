@@ -13,7 +13,6 @@
 			class="btn-group"
 			label="COM_DDC_CURRENCY"
 			description="COM_DDC_CURRENCY_DESC">
-
 			<option value="GBP">COM_DDC_GBP_BRITISH_POUND</option>
 			<option value="EUR">COM_DDC_EUR_EURO</option>
 		</field>
@@ -40,9 +39,16 @@
 			class="btn-group"
 			label="COM_DDC_REQUIRED_ACCOUNT"
 			description="COM_DDC_REQUIRED_ACCOUNT_DESC">
-
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
+		</field>
+		<field
+			name="distrib_cat_id"
+			type="sql"
+			label="COM_DDC_CATEGORY_ID_LABEL"
+			description="COM_DDC_CATEGORY_ID_DESC"
+			query="SELECT id AS value, title as distrib_cat_id FROM #__categories WHERE extension ='com_ddcshopbox' And parent_id ='1'">
+			<option value="0">-</option>
 		</field>
 		<field name="url_terms"
 		    type="url"

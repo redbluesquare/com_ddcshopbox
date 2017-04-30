@@ -1,0 +1,1 @@
+ALTER TABLE `#__ddc_vendors` ADD COLUMN `cat_id` int(11) NOT NULL DEFAULT '0' AFTER `alias`;

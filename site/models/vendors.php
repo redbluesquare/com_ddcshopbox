@@ -44,9 +44,11 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     $query->select('v.*');
     $query->select('u.name as owner_name');
     $query->select('uv.user_id');
+    $query->select('cou.country_name');
     $query->from('#__ddc_vendors as v');
     $query->leftJoin('#__users as u on v.owner = u.id');
     $query->leftJoin('#__ddc_user_vendor as uv on v.ddc_vendor_id = uv.vendor_id');
+    $query->leftJoin('#__ddc_countries as cou on v.country = cou.ddc_country_id');
     $query->group("v.ddc_vendor_id");
     $query->order('v.hits');
 
@@ -66,6 +68,10 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     if($this->_vendor_auth==1)
     {
     	$query->where('uv.user_id = "'. (int)$this->_user_id .'"');
+    }
+    if($this->_published!=null)
+    {
+    	$query->where('v.state = "'. (int)$this->_published .'"');
     }   
     return $query;
   }
@@ -119,5 +125,4 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
   	 
   	return parent::store($formdata);
   }
-
 }
