@@ -5,19 +5,22 @@ class DdcshopboxModelsShopcartheaders extends DdcshopboxModelsDefault
 {
  
     //Define class level variables
-  	var $_user_id     = null;
-  	var $_vendor_id  = null;
-  	var $_cat_id	  = null;
-  	var $_shoppingcart_header_id	  = null;
-  	var $_published   = 1;
+  	var $_user_id     				= null;
+  	var $_vendor_id  				= null;
+  	var $_app		  				= null;
+  	var $_cat_id	  				= null;
+  	var $_session					= null;
+  	var $_shoppingcart_header_id	= null;
+  	var $_published   				= 1;
 
   function __construct()
   {
 
-    $app = JFactory::getApplication();
+    $this->_app = JFactory::getApplication();
 
-    $this->_vendor_id = $app->input->get('vendor_id', null);
-    $this->_shoppingcart_header_id = $app->input->get('shoppingcart_header_id', null);
+    $this->_vendor_id = $this->_app->input->get('vendor_id', null);
+    $this->_session = JFactory::getSession();
+  	$this->_shoppingcart_header_id = $this->_app->input->get('shoppingcart_header_id',null);
 
     parent::__construct();       
   }
@@ -32,7 +35,7 @@ class DdcshopboxModelsShopcartheaders extends DdcshopboxModelsDefault
     $query->select('p.ddc_payment_id, p.ref, p.ref_id, p.token, p.state as payment_state');
     $query->select('count(DISTINCT vp.vendor_id) as total_vendors,vp.vendor_id');
     $query->select('coup.*');
-    $query->select('v.title, v.address1, v.address2, v.city, v.county, v.post_code');
+    $query->select('v.title, v.address1, v.address2, v.city, v.county, v.post_code, v.ddc_vendor_id');
     $query->select('vpr.product_price, vpr.product_currency, vpr.product_id, vpr.ddc_product_price_id');
     $query->from('#__ddc_shoppingcart_headers as sh');
     $query->leftJoin('#__ddc_shoppingcart_details as sd on sd.shoppingcart_header_id = sh.ddc_shoppingcart_header_id');
@@ -44,16 +47,20 @@ class DdcshopboxModelsShopcartheaders extends DdcshopboxModelsDefault
     $query->leftJoin('#__ddc_coupons as coup on coup.ddc_coupon_id = sh.coupon_id');
     $query->group('sh.ddc_shoppingcart_header_id');
 
-
     return $query;
   }
 
-  protected function _buildWhere(&$query)
+  protected function _buildWhere(&$query,$id = null)
   {
     if($this->_shoppingcart_header_id!=null)
     {
     	$query->group('vp.vendor_id');
     	$query->where('sh.ddc_shoppingcart_header_id = "'. (int)$this->_shoppingcart_header_id .'"');
+    }
+    if($id!=null)
+    {
+    	$query->group('vp.vendor_id');
+    	$query->where('sh.ddc_shoppingcart_header_id = "'. (int)$id .'"');
     }
         
     return $query;
@@ -69,12 +76,12 @@ class DdcshopboxModelsShopcartheaders extends DdcshopboxModelsDefault
   		return parent::store($formdata);
   	}
   	
-  	public function shopcart_items()
+  	public function shopcart_items($id = null)
   	{
   		//get the new booking posted by function storebooking()
   		$params = JComponentHelper::getParams('com_ddcshopbox');
   		$modelSch = new DdcshopboxModelsShopcartheaders();
-  		$this->shopcart = $modelSch->getItem();
+  		$this->shopcart = $modelSch->getItem($id);
   		$cart_id = (string)$this->shopcart->ddc_shoppingcart_header_id;
   		$token = (string)$this->shopcart->token;
   		$first_name = (string)$this->shopcart->first_name;
@@ -121,11 +128,14 @@ class DdcshopboxModelsShopcartheaders extends DdcshopboxModelsDefault
   			</tbody>
   			</table style="width:100%;">
   			<table><tbody>
-  			<tr><td></td><td></td><td></td></tr>
+  			<tr><td colspan="3">We are very excited about our mission to help local businesses and communities and really thank you for placing an order with us. We are now validating the order with the shop(s) and once we have confirmation, we will notify you of confirmed delivery dates and when payment will be taken.<br>
+  					<i>Please note that we do our very best to provide up to date prices, however, certain shop prices are based on weight which may vary. Should you have any questions on your purchase, please get in touch.</i>
+  				</td>
+  			</tr>
   			</tbody></table>
 EOT;
   		$scdItems = new DdcshopboxModelsShopcartdetails();
-  		$items = $scdItems->listItems($this->cart->vendor_id);
+  		$items = $scdItems->listItems();
   		$message_body = '<table><tbody>';
   		$totalprice = 0;
   		$message_body .="<tr><td><b>Product</b></td><td><b>Details</b></td><td></td><td style=\"text-align:center;\"><b>Quantity</b></td><td style=\"text-align:center;\"><b>Price</b></td></tr>";
@@ -138,7 +148,7 @@ EOT;
   			$product_weight_uom = (string)$item->product_weight_uom;
   			$image_link = (string)JRoute::_($item->image_link);
   			$shop_name = (string)$item->title;
-  			$shop_postcode = (string)strtoupper($item->post_code);
+  			$shop_postcode = (string)strtoupper($item->shop_postcode);
   			$totalprice = number_format($totalprice+($item->product_quantity*$item->price),2);
 			$message_body .='<tr class="row'.$i.'" style="border-top:1px solid #cfcfcf;padding:5px;">';
 			$message_body .='<td style="width:350px;"><img src="'.$image_link.'" style="float:left;max-height:48px;width:64px;object-fit:contain;padding:3px 5px 5px 2px"><b>'.$vendor_product_name.'</b><br>'.$shop_name.', '.$shop_postcode.'</td>';
@@ -232,11 +242,11 @@ EOT;
   		return $result;
   	}
   	
-  	public function sendshopcartEmail()
+  	public function sendshopcartEmail($id = null)
   	{
   		//save the new booking and send to customer
   		$modelSch = new DdcshopboxModelsShopcartheaders();
-  		$cart = $modelSch->shopcart_items();
+  		$cart = $modelSch->shopcart_items($id);
   		$params = JComponentHelper::getParams('com_ddcshopbox');
   		$mail = JFactory::getMailer();
 

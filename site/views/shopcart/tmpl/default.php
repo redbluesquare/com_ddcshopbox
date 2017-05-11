@@ -199,11 +199,11 @@ else
 				<td class="payMethods">
 					<?php echo JText::_('COM_DDC_PAYMENT_METHOD')?><br>
 
-					<input type="radio" name="jform[payment_method]" value="<?php echo $params->get('paymentmethod_id')?>" checked /> <?php echo JText::_('COM_DDC_PAYPAL'); ?>
-					<input type="radio" name="jform[payment_method]" value="2" /> <?php echo JText::_('COM_DDC_CARD'); ?>
-					<div class="hide stripeCard">
+					<input type="hidden" name="jform[payment_method]" value="<?php echo $params->get('paymentmethod_id')?>" />
+					<input type="radio" name="jform[payment_method]" value="2" checked /> <?php echo JText::_('COM_DDC_CARD'); ?>
+					<div class="stripeCard">
 						<span id="stripePayWith">
-							<input type="radio" name="jform[change_card]" id="jform_change_card_1" value="1" checked /> <?php echo JText::_('COM_DDC_PAY_WITH')?> <b><span id="stripeBrand"></span> <span id="stripeExpire"></span> <span id="stripeLast4"></span></b><br></span>
+						<input type="radio" name="jform[change_card]" id="jform_change_card_1" value="1" checked /> <?php echo JText::_('COM_DDC_PAY_WITH')?> <b><span id="stripeBrand"></span> <span id="stripeExpire"></span> <span id="stripeLast4"></span></b><br></span>
 						<input type="radio" name="jform[change_card]" id="jform_change_card_0" value="0" /> <?php echo JText::_('COM_DDC_CHANGE_CARD')?>
 						
 					</div>
@@ -221,7 +221,6 @@ else
 	<?php if($app->input->get('paypalsuccess',null)!="true"):?>
 		<span id="payBtn">
 			<button id="paypal_payment" class="btn btn-primary pull-right hide" type="submit"><?php echo JText::_('COM_DDC_PAY'); ?></button>
-			<button id="cardPaymentbtn" type="submit" class="btn btn-primary pull-right"><?php echo JText::_('COM_DDC_PAY'); ?></button>
 		</span>
 		<script src="https://checkout.stripe.com/checkout.js"></script>
 
@@ -229,7 +228,9 @@ else
 		<input name="jform[stripeApiToken]" id="jform_stripeApiToken" value="<?php echo $this->model->getpartjsonfield($this->pmethod->payment_params, $api_key); ?>" type="hidden" />
 		<input name="jform[stripeToken]" id="jform_stripeToken" value="" type="hidden" />
 	<?php endif; ?>
+	<button id="cardPaymentbtn" class="btn btn-primary pull-right"><?php echo JText::_('COM_DDC_PAY'); ?></button>
 </form>
+
 <script>
 var handler = StripeCheckout.configure({
 	  key: jQuery('#jform_stripeApiToken').val(),
@@ -241,6 +242,7 @@ var handler = StripeCheckout.configure({
 		  
 	  }
 });
+checkCardPmnt();
 </script>
 
 <?php 

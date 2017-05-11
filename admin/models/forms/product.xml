@@ -106,10 +106,18 @@
 		/>
 		<field
 			name="product_weight_uom"
-			type="text"
+			type="list"
 			label="COM_DDC_PRODUCT_WEIGHT_UOM_LABEL"
 			description="COM_DDC_PRODUCT_WEIGHT_UOM_DESC"
-		/>
+			default="grams"
+		>
+			<option value="grams">
+				COM_DDC_GRAMS</option>
+			<option value="kg">
+				COM_DDC_KILOGRAMS</option>
+			<option value="ounces">
+				COM_DDC_OUNCES</option>
+		</field>
 		<field name="product_base_uom" 
 		    type="list" 
 		    label="COM_DDC_PRODUCT_BASE_UOM_LABEL"
@@ -145,6 +153,12 @@
 			filter="raw"
 			row="5"
 			cols="30"
+		/>
+		<field
+			name="pordering"
+			type="text"
+			label="COM_DDC_PRODUCT_ORDERING_LABEL"
+			description="COM_DDC_PRODUCT_ORDERING_DESC"
 		/>
 		<field name="published" 
 		    type="list" 

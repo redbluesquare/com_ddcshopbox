@@ -1,17 +1,37 @@
 <?php
 defined( '_JEXEC' ) or die( 'Restricted access' );
 ?>
+<?php 
+//load Stripe model
+$ddcstripe = new DdcshopboxModelsDdcstripe();
+$customer = $ddcstripe->getStripeCustomer(2);
+$cards = 0;
+if(count($customer)>0)
+{
+	$cards = 1;
+}
+?>
 <div class="row-fluid">
-	<div class="col-xs-9">
+	<div class="col-xs-8">
 		<h3><?php echo $this->profile->first_name." ".$this->profile->last_name; ?></h3>
 		<p></p>
-		<h3><?php echo JText::_('COM_DDC_CARD_DETAILS')?></h3>
-		<?php 
-		//load Stripe model
-		$ddcstripe = new DdcshopboxModelsDdcstripe();
-		$customer = $ddcstripe->getStripeCustomer(2);
-		?>
-		<div style="padding:10px;font-size:0.8em;border: 1px solid #eee;border-radius:20px;" class="col-xs-12 hide">
+		<h2>Purchase history</h2>
+		<p>We will be adding all your purchase history here soon :-) </p>
+		<p>. </p>
+		<p>. </p>
+		<p>. </p>
+		<p>. </p>
+		<p>. </p>
+	</div>
+	<div class="col-xs-4">
+		<div class="col-xs-12" style="margin-bottom:5px;">
+			<button type="button" role="button" data-toggle="modal" class="btn pull-right" data-target="#profileaddressModal"><i class="icon icon-user"></i> <?php echo JText::_('COM_DDC_UPDATE_ADDRESS'); ?></button>
+		</div>
+		<?php if(count($customer)!=0): ?>
+		<div class="col-xs-12">
+			<button class="btn pull-right" onclick="showCardDetails"><?php echo JText::_('COM_DDC_CARD_DETAILS')?></button>
+		</div>
+		<div class="cardDetails hide" style="padding:10px;font-size:0.8em;border: 1px solid #eee;border-radius:20px;" class="col-xs-12 <?php if(count($customer)==0):?>hide<?php endif; ?>">
 		<table>
 			<tbody>
 				<tr>
@@ -29,9 +49,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 			</tbody>
 		</table>
 		</div>
-	</div>
-	<div class="col-xs-3">
-		<button type="button" role="button" data-toggle="modal" class="btn pull-right" data-target="#profileaddressModal"><i class="icon icon-user"></i> <?php echo JText::_('COM_DDC_UPDATE_PROFILE'); ?></button>
+		<?php endif; ?>
 	</div>
 </div>
 <?php $this->_profileAddressView->form = $this->form; ?>

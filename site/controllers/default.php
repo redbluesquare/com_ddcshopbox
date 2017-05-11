@@ -24,18 +24,22 @@ class DdcshopboxControllersDefault extends JControllerBase
   	if($user->id!=0)
   	{
   		$profile = new DdcshopboxModelsProfiles();
-  		$myProfile = $profile->getItem();
-  		$session->set('ddclocation',$myProfile->zip);
+  		if(($session->get("ddclocation", null) == null) or ($app->input->get('ddccheck',null)!=1))
+  		{
+  			$myProfile = $profile->getItem();
+  			$model->setLocation($myProfile->zip);
+  		}
   	}
   	if($app->input->get('ddccheck',null)==1)
   	{
-  		$session->set('ddclocation',$app->input->get('ddclocation',null,'string'));
+  		$model->setLocation($app->input->get('ddccity',null, 'string'));
+  		//$model->setLocation($app->input->get('ddclocation',null, 'safehtml'));
   	}
   	if($app->input->get('ddccheck',null)==2)
   	{
   		if($model->isValidPostCodeFormat($app->input->get('ddclocation',null,'string')))
   		{
-  			$session->set('ddclocation',$app->input->get('ddclocation',null,'string'));
+  			$model->setLocation($app->input->get('ddclocation',null,'string'));
   			$return['success'] = true;
   			$return['msg'] = JText::_('COM_DDC_SAVE_SUCCESS');
   			echo json_encode($return);

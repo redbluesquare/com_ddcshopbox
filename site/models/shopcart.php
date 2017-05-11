@@ -15,6 +15,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   	var $_shoppingcart_header_id 	= null;
   	var $_params					= null;
   	var $_app						= null;
+  	var $_data						= null;
 
   function __construct()
   {
@@ -38,6 +39,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
     {
     	$this->_published = $this->_app->input->get('shopcart_state', null);
     }
+    $this->_data = $this->_app->input->get('jform', array(),'array');
 
     parent::__construct();       
   }
@@ -246,43 +248,69 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
 	  				{
 	  					$ddcstripe->updateStripeCustomer();
 	  				}
-	  				//create stripe payment by charging customer
-	  				$result = $ddcstripe->chargeStripeCustomer();
-	  				if($result)
+	  				
+	  				$dbCustomer = $ddcstripe->getStripeCustomer();
+	  				$stripeCustomerToken = json_decode($dbCustomer->profile_value);
+	  					
+	  				//save payment for later
+	  				$result = $this->storePaymentForLater($stripeCustomerToken->stripeCustomerToken);
+	  				if($result == true)
 	  				{
-	  					//update shopping cart as paid
-	  					$this->updateShopcartAsPaid();
+	  					//update shopping cart as complete
+	  					$this->updateShopcartAsComplete();
 	  				}
+	  				
+// 	  				//create stripe payment by charging customer
+// 	  				$result = $ddcstripe->chargeStripeCustomer();
+// 	  				if($result)
+// 	  				{
+// 	  					//update shopping cart as paid
+// 	  					$this->updateShopcartAsPaid();
+// 	  				}
 	  			}
 	  			else 
 	  			{
 	  				//convert token to customer token and save
 	  				$return = $ddcstripe->createStripeCustomer();
 	  				
-	  				//create stripe payment by charging customer
-	  				try
-	  				{
-	  					$result = $ddcstripe->chargeStripeCustomer();
-	  				}
-	  				catch(Exception $e)
-	  				{
-	  					echo $e->getMessage();
-	  				}
+	  				$dbCustomer = $ddcstripe->getStripeCustomer();
+	  				$stripeCustomerToken = json_decode($dbCustomer->profile_value);
+	  				
+	  				//save payment for later
+	  				$result = $this->storePaymentForLater($stripeCustomerToken->stripeCustomerToken);
 	  				if($result == true)
 	  				{
-	  					//update shopping cart as paid
-	  					$this->updateShopcartAsPaid();
+	  					//update shopping cart as complete
+	  					$this->updateShopcartAsComplete();
 	  				}
+	  				
+// 	  				//create stripe payment by charging customer
+// 	  				try
+// 	  				{
+// 	  					$result = $ddcstripe->chargeStripeCustomer();
+// 	  				}
+// 	  				catch(Exception $e)
+// 	  				{
+// 	  					echo $e->getMessage();
+// 	  				}
+// 	  				if($result == true)
+// 	  				{
+// 	  					//update shopping cart as paid
+// 	  					$this->updateShopcartAsComplete();
+// 	  				}
 	  			}
 	  		}
 	  		else 
 	  		{
 	  				//create stripe payment by charging one time payment
-	  				$result = $ddcstripe->chargeStripePayment();
+	  				//$result = $ddcstripe->chargeStripePayment();
+	  				
+	  				//save payment for later
+	  				$result = $this->storePaymentForLater();
 	  				if($result == true)
 	  				{
-	  					//update shopping cart as paid
-	  					$this->updateShopcartAsPaid();
+	  					//update shopping cart as complete
+	  					$this->updateShopcartAsComplete();
 	  				}
 	  		}
 	  		return array(true,$sc[0]->header_state,JText::_('COM_DDC_PAYMENT_COMPLETE'),null);
@@ -351,7 +379,36 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
 	return array(true,$sc[0]->header_state,JText::_('COM_DDC_PRODUCT_ADDED_TO_CART'),null);
   }
   
-  public function updateShopcartAsPaid()
+  public function storePaymentForLater($stripeChargeToken = null)
+  {
+  	//get customer variable back and save to db
+  	if($stripeChargeToken==null)
+  	{
+  		$stripeChargeToken = $this->_data['stripeToken'];
+  	}
+  	$date = date("Y-m-d H:i:s");
+  	//add customer value to #__user_profiles table
+  	// Get a db connection.
+  	$db = JFactory::getDbo();
+  	// Create a new query object.
+  	$query = $db->getQuery(true);
+  	// Insert columns.
+  	$columns = array('ref','ref_id', 'token', 'state', 'created', 'modified', 'created_by', 'modified_by');
+  	// Insert values.
+  	$values = array($db->quote('ddcshopbox'),$this->_session->get('shoppingcart_header_id',null),$db->quote($stripeChargeToken),1,$db->quote($date),$db->quote($date),0,0);
+  	// Prepare the insert query.
+  	$query
+  	->insert($db->quoteName('#__ddc_payments'))
+  	->columns($db->quoteName($columns))
+  	->values(implode(',', $values));
+  	// Set the query using our newly populated query object and execute it.
+  	$db->setQuery($query);
+  	$result = $db->execute();
+  	
+  	return $result;
+  }
+  
+  public function updateShopcartAsComplete()
   {
   	$db = JFactory::getDBO();
   	$query = $db->getQuery(TRUE);
@@ -368,7 +425,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   	
   	$sent = false;
   	$modelSh = new DdcshopboxModelsShopcartheaders();
-  	$sent = $modelSh->sendshopcartEmail();
+  	$sent = $modelSh->sendshopcartEmail($this->_session->get('shoppingcart_header_id',null));
   	
   	$this->_session->clear('shoppingcart_header_id');
   	

@@ -14,10 +14,11 @@ class DdcshopboxModelsShopcartdetails extends DdcshopboxModelsDefault
   function __construct()
   {
 
-    $app = JFactory::getApplication();
+    $this->_app = JFactory::getApplication();
 
-    $this->_vendor_id = $app->input->get('vendor_id', null);
-    $this->_shoppingcart_header_id = $app->input->get('shoppingcart_header_id', null);
+    $this->_vendor_id = $this->_app->input->get('vendor_id', null);
+    $this->_session = JFactory::getSession();
+  	$this->_shoppingcart_header_id = $this->_app->input->get('shoppingcart_header_id',null);
 
     parent::__construct();       
   }
@@ -30,18 +31,20 @@ class DdcshopboxModelsShopcartdetails extends DdcshopboxModelsDefault
 
     $query->select('sd.*');
     $query->select('(SELECT count(DISTINCT scd.ddc_shoppingcart_detail_id) FROM #__ddc_shoppingcart_details as scd WHERE scd.product_id = vp.ddc_vendor_product_id) as qty_bought');
-    $query->select('v.*');
+    $query->select('v.ddc_vendor_id, v.title, v.post_code as shop_postcode');
+    $query->select('p.pordering as p_order');
     $query->select('i.*');
     $query->select('vp.*');
     $query->select('vc.currency_name, vc.currency_code_3, vc.currency_symbol');
     $query->select('vpr.product_price, vpr.product_currency, vpr.product_id, vpr.ddc_product_price_id');
     $query->from('#__ddc_shoppingcart_details as sd');
-    $query->leftJoin('#__ddc_vendor_products as vp on vp.ddc_vendor_product_id = sd.product_id');
+    $query->rightJoin('#__ddc_vendor_products as vp on vp.ddc_vendor_product_id = sd.product_id');
     $query->leftJoin('#__ddc_product_prices as vpr on vp.ddc_vendor_product_id = vpr.product_id');
     $query->leftJoin('#__ddc_currencies as vc on vc.ddc_currency_id = vpr.product_currency');
     $query->leftJoin('#__ddc_images as i on (vp.ddc_vendor_product_id = i.link_id) AND (i.linked_table = "ddc_products")');
     $query->leftJoin('#__ddc_vendors as v on v.ddc_vendor_id = vp.vendor_id');
-    $query->order('qty_bought desc');
+    $query->leftJoin('#__ddc_products as p on vp.product_id = p.ddc_product_id');
+    $query->order('p.pordering asc');
 
     return $query;
   }
@@ -61,8 +64,7 @@ class DdcshopboxModelsShopcartdetails extends DdcshopboxModelsDefault
     if($prod_id!=null)
     {
     	$query->where('vp.ddc_vendor_product_id = '. (int)$prod_id .'');
-    }
-        
+    }   
     return $query;
   }
   

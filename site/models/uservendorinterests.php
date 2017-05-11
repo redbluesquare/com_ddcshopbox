@@ -63,12 +63,12 @@ class DdcshopboxModelsUservendorinterests extends DdcshopboxModelsDefault
   	$user_id = JFactory::getUser()->id;
 	
   	$uvResult = $this->listItems($vendor_id,$user_id);
+  	$result = false;
   	if(count($uvResult)>0)
   	{
-  		$result = false;
   		if($user_id==0)
   		{
-  			$result = true;
+  			$result = false;
   			$check = true;
   		}else{
   			$check = false;

@@ -69,7 +69,6 @@ class DdcshopboxControllersGet extends DdcshopboxControllersDefault {
 			
 			echo json_encode($return);
 		}
-		
 		else
 		{
 

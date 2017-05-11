@@ -22,6 +22,7 @@ JHtml::_('behavior.formvalidation');
 			<th><?php echo JText::_('COM_DDC_ID'); ?></th>
 			<th><?php echo JText::_('COM_DDC_PRODUCT_NAME'); ?></th>
 			<th><?php echo JText::_('COM_DDC_PARENT_PRODUCT'); ?></th>
+			<th><?php echo JText::_('COM_DDC_PRODUCT_ORDERING'); ?></th>
 			<th><?php echo JText::_('COM_DDC_CATEGORY'); ?></th>
 		</tr>
 	</thead>
@@ -39,6 +40,9 @@ JHtml::_('behavior.formvalidation');
                 		</td>
                 		<td>
                 	        <?php echo $item->parent_product; ?>
+                		</td>
+                		<td>
+                	        <?php echo $item->pordering; ?>
                 		</td>
                 		<td>
                 	        <?php echo $item->category_title; ?>

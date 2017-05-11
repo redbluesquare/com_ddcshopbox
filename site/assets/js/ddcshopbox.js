@@ -1,29 +1,3 @@
-//function GetCartData() {
-//
-//    jQuery.ajax({
-//    	url:'index.php?option=com_ddcshopbox&controller=get&jform[table]=ddcshoppingcart&format=raw',
-//    	type:'GET',
-//    	dataType:'JSON',
-//    	success:function(data)
-//      	{
-//    		if ( data.success ) {
-//    			jQuery(".ddccartarea").html(data.result[0]);
-//    			jQuery(".ddccartarea").append('<tr><td></td><td><b>Total</b></td><td><b>&pound; '+data.result[1].toFixed(2)+'</b></td></tr>');
-//    			jQuery(".cartTotal").html("&pound; "+data.result[1].toFixed(2));
-//    			jQuery("#countCart").html(data.result[2]);
-//      		}else{
-//      			//jQuery(".ddccartarea").html(data.result);
-//      		}
-//      	}
-//    });
-//}
-//jQuery(document).ready(function(){
-//	jQuery(".popup").on('click',function(){
-//		var popup = document.getElementById("myPopup");
-//	    popup.classList.toggle("show");
-//	});
-//	GetCartData();
-//});
 function addFavshop(id)
 {
 	jQuery.ajax({
@@ -689,58 +663,8 @@ jQuery(document).ready(function(){
 	});
 
 	jQuery("input[name='jform[payment_method]']").change(function(){
-		if(jQuery("input[type=radio][name='jform[payment_method]']:checked").val()==2){
-			jQuery('#paypal_payment').addClass('hide');
-			jQuery('#cardPaymentbtn').removeClass('hide');
-			jQuery.ajax({
-				url:'index.php?option=com_ddcshopbox&controller=get&format=raw&tmpl=component&jform[table]=ddcstripecustomer',
-				type:'GET',
-				dataType:'JSON',
-				ajaxStart: function() { jQuery("body").addClass("loading");    },
-			    ajaxStop: function() { jQuery("body").removeClass("loading"); },
-				success:function(data)
-				{
-					if ( data.success == true ){
-						jQuery(".stripeCard").removeClass('hide');
-						jQuery("#stripeBrand").html(data.cardInfo.stripeCustomerBrand);
-						jQuery("#stripeExpire").html(data.cardInfo.stripeCustomerExp_month+" / "+data.cardInfo.stripeCustomerExp_year);
-						jQuery("#stripeLast4").html("... "+data.cardInfo.stripeCustomerlast4);
-						jQuery("#jform_stripeCustToken").val("true");
-						jQuery("#jform_change_card_0").attr('checked', false);
-					}else{
-						jQuery(".stripeCard").removeClass('hide');
-						jQuery("#stripePayWith").addClass('hide');
-						jQuery("#jform_stripeCustToken").val("false");
-						jQuery("#jform_change_card_0").attr('checked', true);
-					}
-				}
-			});
-		}
-		else{
-			jQuery('#paypal_payment').removeClass('hide');
-			jQuery('#cardPaymentbtn').addClass('hide');
-			jQuery(".stripeCard").addClass('hide');
-		}
-		document.getElementById('cardPaymentbtn').addEventListener('click', function(e) {
-			var sch = jQuery("#jform_ddc_shoppingcart_header_id").val();
-			if(jQuery("#jform_stripeCustToken").val()=="false")
-			{
-				// Open Checkout with further options:
-		  		handler.open({
-		    		name: 'Ushbub',
-		    		email: email_to,
-		    		description: 'Shopping cart #'+sch,
-		    		zipCode: false,
-		    		currency: 'gbp'
-		  		});
-			}
-			else
-			{
-				submitDel();
-			}
-		  e.preventDefault();
-		});
-		
+		//enter function to check card payment method
+		checkCardPmnt();
 	});
 	jQuery("#deliveryInfo").on("change",function(){
 		if(jQuery("input[type=radio][name='jform[change_card]']:checked").val()==1){
@@ -754,6 +678,33 @@ jQuery(document).ready(function(){
 	email_to = jQuery("#jform_email_to").val();
 	jQuery("#jform_email_to").on('blur',function(){
 		email_to = jQuery("#jform_email_to").val();
+	});
+	
+	jQuery("#submitIntBtn").click(function(){
+		var delInfo = {};
+		jQuery("#getInterestForm :input").each(function(idx,ele){
+			delInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+		});
+		jQuery.ajax({
+			url:'index.php?option=com_ddcshopbox&controller=edit&format=raw&tmpl=component',
+			type:'POST',
+			data:delInfo,
+			dataType:'JSON',
+			success:function(data)
+			{
+				if ( data.success ){
+					jQuery("#getInterest").addClass('hide');
+					jQuery("#system-message-container").addClass('alert');
+					jQuery("#system-message-container").addClass('alert-success');
+					jQuery("#system-message-container").html(data.msg);
+				}else{
+					jQuery(".modal-header").append(data.msg);
+				}
+			}
+		});
+		jQuery("html, body").delay(1000).animate({
+	        scrollTop: jQuery('#system-message-container').offset().top-150
+	    }, 800);
 	});
 });
 	
@@ -774,9 +725,64 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	  var d = R * c; // Distance in km
 	  return d;
-	}
+}
 function deg2rad(deg) {
 	  return deg * (Math.PI/180)
+}
+function checkCardPmnt(){
+	if(jQuery("input[type=radio][name='jform[payment_method]']:checked").val()==2){
+		jQuery('#paypal_payment').addClass('hide');
+		jQuery('#cardPaymentbtn').removeClass('hide');
+		jQuery.ajax({
+			url:'index.php?option=com_ddcshopbox&controller=get&format=raw&tmpl=component&jform[table]=ddcstripecustomer',
+			type:'GET',
+			dataType:'JSON',
+			ajaxStart: function() { jQuery("body").addClass("loading");    },
+		    ajaxStop: function() { jQuery("body").removeClass("loading"); },
+			success:function(data)
+			{
+				if ( data.success == true ){
+					jQuery(".stripeCard").removeClass('hide');
+					jQuery("#stripeBrand").html(data.cardInfo.stripeCustomerBrand);
+					jQuery("#stripeExpire").html(data.cardInfo.stripeCustomerExp_month+" / "+data.cardInfo.stripeCustomerExp_year);
+					jQuery("#stripeLast4").html("... "+data.cardInfo.stripeCustomerlast4);
+					jQuery("#jform_stripeCustToken").val("true");
+					jQuery("#jform_change_card_0").attr('checked', false);
+				}else{
+					jQuery(".stripeCard").removeClass('hide');
+					jQuery("#stripePayWith").addClass('hide');
+					jQuery("#jform_stripeCustToken").val("false");
+					jQuery("#jform_change_card_0").attr('checked', true);
+				}
+			}
+		});
+	}
+	else{
+		jQuery('#paypal_payment').removeClass('hide');
+		jQuery('#cardPaymentbtn').addClass('hide');
+		jQuery(".stripeCard").addClass('hide');
+	}
+	document.getElementById('cardPaymentbtn').addEventListener('click', function(e) {
+		var email_to;
+		email_to = jQuery("#jform_email_to").val();
+		var sch = jQuery("#jform_ddc_shoppingcart_header_id").val();
+		if(jQuery("#jform_stripeCustToken").val()=="false")
+		{
+			// Open Checkout with further options:
+	  		handler.open({
+	    		name: 'Ushbub',
+	    		email: email_to,
+	    		description: 'Shopping cart #'+sch,
+	    		zipCode: false,
+	    		currency: 'gbp'
+	  		});
+		}
+		else
+		{
+			submitDel();
+		}
+	  e.preventDefault();
+	});
 }
 
 function submitDel()
@@ -814,4 +820,44 @@ function submitDel()
 			}
 		}
 	});
+}
+
+function postReview()
+{
+	var delInfo = {};
+	jQuery("#reviewPost :input").each(function(idx,ele){
+		delInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+	});
+	jQuery.ajax({
+		url:'index.php',
+		type:'POST',
+		data:delInfo,
+		dataType:'JSON',
+		beforeSend: function() { jQuery(".btnReview").html("processing..");    },
+	    complete: function() { jQuery(".btnReview").html("Add Review"); },
+		success:function(data)
+		{
+			if ( data.success ){
+				jQuery(".btnReview").addClass('hide');
+				jQuery("#reviewPost :input").prop('readonly', true);
+				jQuery(".removeCartItem").addClass('hide');
+				jQuery("#reviewPostStatus").addClass('alert');
+				jQuery("#reviewPostStatus").addClass('alert-success');
+				jQuery("#reviewPostStatus").append("Thank you for your review.");
+			}else{
+				jQuery("#reviewPostStatus").addClass('alert');
+				jQuery("#reviewPostStatus").addClass('alert-error');
+				jQuery("#reviewPostStatus").append("Thank you of your review. Unfortunately, something went wrong. If it continues please e-mail admin@ushbub.co.uk");
+			}
+		}
+	});
+}
+
+function changeTown()
+{
+	jQuery("#changeTown").removeClass("hide");
+}
+function showCardDetails()
+{
+	jQuery("#cardDetails").removeClass("hide");
 }

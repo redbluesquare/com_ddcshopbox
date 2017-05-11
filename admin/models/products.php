@@ -35,6 +35,7 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
     $query->leftJoin('#__ddc_products as pp on pp.product_parent_id = p.ddc_product_id');
     $query->leftJoin('#__categories as c on c.id = p.category_id');
     $query->group("p.ddc_product_id");
+    $query->order('c.title asc,p.pordering asc');
 
 
     return $query;
@@ -78,6 +79,7 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
   	'product_weight' => $formdata['product_weight'],
   	'product_weight_uom' => $formdata['product_weight_uom'],
   	'product_base_uom' => $formdata['product_base_uom'],
+  	'pordering' => $formdata['pordering'],
   	'published' => $formdata['published'],
   	'product_params' => json_encode($prod_params),
   	'metarobot' => $formdata['metarobot'],

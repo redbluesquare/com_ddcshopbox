@@ -35,7 +35,7 @@ $params = JComponentHelper::getParams('com_ddcshopbox');
     		<?php endif; ?>
     		<?php 
     		$uvi = new DdcshopboxModelsUservendorinterests();
-    		if($uvi->checkUserVendorInterests($this->item->ddc_vendor_id)==false)
+    		if($uvi->checkUserVendorInterests($this->item->ddc_vendor_id,JFactory::getUser()->id)==false)
     		{
     			$image = 'images/bg-heart.png';
     		}
@@ -44,7 +44,7 @@ $params = JComponentHelper::getParams('com_ddcshopbox');
     		}
     		?>
     		
-    		<div class="favShop" onclick="addFavshop(<?php echo $this->item->ddc_vendor_id; ?>)"><img id="favShopImg<?php echo $this->item->ddc_vendor_id; ?>" src="<?php echo JRoute::_($image); ?>" class="pull-left" /><span id="favShopCounter<?php echo $this->item->ddc_vendor_id; ?>" class="pull-right"><?php echo count($uvi->listItems($this->item->ddc_vendor_id)); ?></span></div>
+    		<div class="favShop" <?php if(JFactory::getUser()->id!=0): ?>onclick="addFavshop(<?php echo $this->item->ddc_vendor_id; ?>)"<?php endif; ?>><img id="favShopImg<?php echo $this->item->ddc_vendor_id; ?>" src="<?php echo JRoute::_($image); ?>" class="pull-left" /><span id="favShopCounter<?php echo $this->item->ddc_vendor_id; ?>" class="pull-right"><?php echo count($uvi->listItems($this->item->ddc_vendor_id)); ?></span></div>
     	</div>
     	
     </div>

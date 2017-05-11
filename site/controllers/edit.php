@@ -153,20 +153,20 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 					$return["html"] = "Error, please first select a file!";
 					exit();
 				}
-				else if($fileSize > 5242880)
+				elseif($fileSize > 5242880)
 				{ // if file size is larger than 5 Megabytes
 					$return["html"] = "ERROR: Your file was larger than 5 Megabytes in size.";
 					unlink($fileTmpLoc); // Remove the uploaded file from the PHP temp folder
 					exit();
 				}
-				else if (!preg_match("/.(gif|jpg|png|jpeg)$/i", $fileName) )
+				elseif (!preg_match("/.(gif|jpg|png|jpeg)$/i", $fileName) )
 				{
 					// This condition is only if you wish to allow uploading of specific file types
 					$return["html"] = "ERROR: Your image was not .gif, .jpg, or .png.";
 					unlink($fileTmpLoc); // Remove the uploaded file from the PHP temp folder
 					exit();
 				}
-				else if ($fileErrorMsg == 1)
+				elseif ($fileErrorMsg == 1)
 				{ // if file upload error key is equal to 1
 					$return["html"] = "ERROR: An error occured while processing the file. Try again.";
 					exit();
@@ -180,7 +180,6 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 					unlink($fileTmpLoc); // Remove the uploaded file from the PHP temp folder
 					exit();
 				}
-				//unlink($fileTmpLoc); // Remove the uploaded file from the PHP temp folder
 				// ---------- Include Universal Image Resizing Function --------
 					
 				$target_file = JPATH_ROOT."/media/com_ddcshopbox/images/".$dest;
@@ -203,7 +202,7 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 			echo $return["html"];
 		}
 		
-		if($this->data['table']=='ddcshipping')
+		elseif($this->data['table']=='ddcshipping')
 		{
 			$modelName  = $app->input->get('models', 'shipping');
 			$modelName  = 'DdcshopboxModels'.ucwords($modelName);
@@ -221,7 +220,117 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 			echo json_encode($return);
 				
 		}
+		elseif($this->data['table']=='ddcfavshop')
+		{
+			$modelName  = $app->input->get('models', 'default');
+			$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+			$model = new $modelName();
+			$emaildata = array(
+					'town'=>$this->data['town'],
+					'local_shop_1' => $this->data['local_shop_1'],
+					'local_shop_2' => $this->data['local_shop_2'],
+					'local_shop_3' => $this->data['local_shop_3'],
+					'comment' => $this->data['comment'],
+					'email_to' => $this->data['email_to'],
+					'table' => $this->data['table']
+				);
+			if($row = $model->sendEmail('Email from user Interest',$emaildata))
+			{
+				$return['success'] = true;
+				$return['msg'] = JText::_('COM_DDC_THANKS_FOR_INTEREST');
 		
+			}
+			else
+			{
+				$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+			}
+			echo json_encode($return);
+		}
+		elseif($this->data['table']=='ddcevent')
+		{
+			$modelName  = $app->input->get('models', 'default');
+			$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+			$model = new $modelName();
+			$emaildata = array(
+					'ddctitle'=>$this->data['ddctitle'],
+					'location' => $this->data['location'],
+					'start_date' => $this->data['start_date'],
+					'start_time' => $this->data['start_time'],
+					'end_date' => $this->data['end_date'],
+					'end_time' => $this->data['end_time'],
+					'description' => $this->data['description'],
+					'organiser' => $this->data['organiser'],
+					'email_to' => $this->data['email_to'],
+					'table' => $this->data['table']
+			);
+			if($row = $model->sendEmail('Email about new Event',$emaildata))
+			{
+				$return['success'] = true;
+				$return['msg'] = JText::_('COM_DDC_THANKS_FOR_INTEREST');
+		
+			}
+			else
+			{
+				$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+			}
+			echo json_encode($return);
+		}
+		elseif($this->data['table']=='ddcwtd')
+		{
+			$modelName  = $app->input->get('models', 'default');
+			$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+			$model = new $modelName();
+			$emaildata = array(
+					'ddctitle'=>$this->data['ddctitle'],
+					'location' => $this->data['location'],
+					'description' => $this->data['description'],
+					'organiser' => $this->data['organiser'],
+					'email_to' => $this->data['email_to'],
+					'table' => $this->data['table']
+			);
+			if($row = $model->sendEmail('Email about new Event',$emaildata))
+			{
+				$return['success'] = true;
+				$return['msg'] = JText::_('COM_DDC_THANKS_FOR_INTEREST');
+		
+			}
+			else
+			{
+				$return['msg'] = JText::_('COM_DDC_SAVE_FAILURE');
+			}
+			echo json_encode($return);
+		}
+		if($this->data['table']=='ddcpostings')
+		{
+			$task = $jinput->get('task', "", 'STR' );
+			if($task=='review.add')
+			{
+				
+			}
+			if($task=='review.edit')
+			{
+				
+			}
+			if($task=="review.save")
+			{
+				$modelName  = $app->input->get('models', 'ddcpostings');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+				if( $row = $model->store() )
+				{
+					$model->sendEmail('New review posted',$this->data['message']);
+					$return['success'] = true;
+					$return['msg'] = JText::_('COM_DDC_REVIEW_SAVE_SUCCESS');
+				}else{
+					$return['msg'] = JText::_('COM_DDC_REVIEW_SAVE_FAILURE');
+				}
+			}
+			if($task=="review.cancel")
+			{
+		
+			}
+			echo json_encode($return);
+		}
 		else
 		{
 

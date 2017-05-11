@@ -82,6 +82,7 @@ $document->setDescription($this->item->introduction);
     	<?php if($this->item->allow_bookings == 1):?>
     		<li role="presentation"><a href="#ddcbookings" aria-controls="ddcbookings" role="tab" data-toggle="tab"><?php echo JText::_('COM_DDC_BOOKINGS'); ?></a></li>
     	<?php endif; ?>
+    	<li role="presentation"><a href="#ddcreviews" aria-controls="ddcreviews" role="tab" data-toggle="tab"><?php echo JText::_('COM_DDC_REVIEWS'); ?></a></li>
   	</ul>
 	<!-- Tab panes -->
   	<div class="tab-content" style="min-height:200px;">
@@ -189,5 +190,44 @@ $document->setDescription($this->item->introduction);
 			<div class="clearfix"></div>
 		</div>
 		<?php endif;?>
+		<div class="tab-pane" style="margin-bottomn:10px;" role="tabpanel" id="ddcreviews">
+			<div class="row">
+				<div class="col-xs-12 ddcreview_bar">
+					<div class="col-xs-10">
+						<p>description</p>
+					</div>
+					<div class="col-xs-2">
+						<p>Rating</p>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="row">
+				<h4><?php echo JText::_('COM_DDC_ADD_A_REVIEW'); ?></h4>
+				<?php 
+				if(JFactory::getUser()->id!=0):
+				?>
+				<div class="col-xs-10">
+				<form id="reviewPost">
+				<textarea name="jform[message]" rows="4" cols="30" class="form-control" placeholder="Place a review now :)"></textarea>
+				<input name="jform[ddc_posting_id]" type="hidden" value="" />
+				<input name="jform[vendor_id]" type="hidden" value="<?php echo $this->item->ddc_vendor_id; ?>" />
+				<input name="option" type="hidden" value="com_ddcshopbox" />
+				<input name="jform[table]" type="hidden" value="ddcpostings" />
+				<input name="controller" type="hidden" value="edit" />
+				<input name="format" type="hidden" value="raw" />
+				<input name="task" type="hidden" value="review.save" />
+				</form>
+				<div id="reviewPostStatus"></div>
+				</div>
+				<div class="col-xs-2">
+					<input class="btn btn-primary col-xs-12 btnReview" onclick="postReview()" type="button" value="Add Review" />
+				</div>
+				<?php else: ?>
+				<p><?php echo JText::_('COM_DDC_LOGIN_TO_POST_REVIEW');?></p>
+				<?php endif; ?>
+			</div>
+			<div class="clearfix"></div>
+		</div>
 	</div>
 </div>

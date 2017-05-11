@@ -22,7 +22,7 @@ $page = 1;
 <div id="printBox">
 <?php foreach ($this->schItems as $i => $schitem): ?>
 <div id="printable">
-<h1><?php if($schitem->title!=null): echo '<b>'.$schitem->title.'</b><br>'; endif; ?></h1>
+<h1><?php if($schitem->title!=null): echo '<b>'.$schitem->title.'</b>'; endif; ?></h1>
 <table class="table">
 	<tbody>
 		<tr>

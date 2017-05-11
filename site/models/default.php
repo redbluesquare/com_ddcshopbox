@@ -49,9 +49,11 @@ class DdcshopboxModelsDefault extends JModelBase
 	if($data['table']!="userprofiles")
 	{
 		$row->modified_on = $date;
+		$row->modified_by = JFactory::getUser()->id;
 		if ( !$row->created_on )
 		{
 			$row->created_on = $date;
+			$row->created_by = JFactory::getUser()->id;
 		}
 	}
   
@@ -228,42 +230,39 @@ class DdcshopboxModelsDefault extends JModelBase
    * @note    Calling getState in this method will result in recursion.
    * @since   12.2
    */
-  protected function populateState()
-  {
-  }
+	protected function populateState()
+	{
+		
+	}
   
-  public function setLocation($user_id = null,$pc = null)
-  {
-  	
-  	if($user_id!=null)
-  	{
-  		//Get postcode is user is logged in
-  		$this->db = JFactory::getDBO();
-  		 
-  		$query = $this->db->getQuery(TRUE);
-  		$query->select('cd.postcode')
-  		->from('#__contact_details as cd')
-  		->where('cd.user_id = "'.$user_id.'"');
-  		$this->db->setQuery($query);
-  		$item = $this->db->loadObject();
-  		$pc = $item->postcode;
-  	}
-  	
-  	//check if postcode is set
-  	if($pc!=null)
-  	{
-  		//set session with location
-  		$this->session->set('ddclocation', $pc);
-  		return true;
-  	}
-  	else 
-  	{
-  		return false;
-  	}
-  	
-  	
-  	
-  }
+	public function setLocation($postcode)
+	{
+		if($this->isValidPostCodeFormat($postcode)):
+			//Get postcode is user is logged in
+			$this->db = JFactory::getDBO();
+			$query = $this->db->getQuery(TRUE);
+			$query->select('o.town, o.postcode')
+				->from('#__ddc_outcodes as o')
+				->where('(o.postcode LIKE "%'.$this->getDistrict($postcode).'%")');
+			$this->db->setQuery($query);
+			$item = $this->db->loadObject();
+			$pc = $item;
+	  		$this->session->set('ddclocation',$postcode);
+			$this->session->set('ddccity', $pc);
+			
+			$ip = $_SERVER['REMOTE_ADDR'];
+			$now = new Datetime();
+			$now = $now->getTimestamp();
+			//write log file
+			$file = JPATH_BASE.DS.'media'.DS.'com_ddcshopbox'.DS.'postcodelogger.txt';
+			$txt = (string)$now."; ".$postcode."; ".$ip;
+			$myfile = file_put_contents($file, $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
+			
+		else:
+			$this->session->clear('ddclocation');
+			$this->session->clear('ddccity');
+		endif;
+	}
   
   public function getShopCart_contents()
   {
@@ -398,8 +397,7 @@ class DdcshopboxModelsDefault extends JModelBase
   	$latDelta = $latTo - $latFrom;
   	$lonDelta = $lonTo - $lonFrom;
   
-  	$angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
-  			cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+  	$angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
   	return $angle * $earthRadius;
   }
   
@@ -508,4 +506,31 @@ class DdcshopboxModelsDefault extends JModelBase
   	if($a->distance == $b->distance){ return 0 ; }
   	return ($a->distance < $b->distance) ? -1 : 1;
   }
+  
+	public function sendEmail($subject,$data)
+	{
+		//Send details of the new shop
+		$params = JComponentHelper::getParams('com_ddcshopbox');
+		$mail = JFactory::getMailer();
+  
+		$app = JFactory::getApplication();
+		$mailfrom	= $app->getCfg('mailfrom');
+		$fromname	= $app->getCfg('fromname');
+		$sitename	= $app->getCfg('sitename');
+  
+		$name		= 'Admin Ushbub';
+		$email		= (string)'admin@ushbub.co.uk';
+		$body		= (string)json_encode($data);
+  
+		$mail->addRecipient($email,$name);
+		$mail->addCC($mailfrom, $fromname);
+		$mail->setSender(array($mailfrom, $fromname));
+		$mail->setSubject($sitename.': '.$subject);
+		$mail->isHTML(true);
+		$mail->Encoding = 'base64';
+		$mail->setBody($body);
+		$sent = $mail->Send();
+		
+		return $sent;
+	}
 }

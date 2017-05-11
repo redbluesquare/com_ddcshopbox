@@ -2,6 +2,9 @@
 
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
+//logging cass in Joomla
+jimport('joomla.log.log');
+
 //load composer classes
 require JPATH_LIBRARIES.'/vendor/autoload.php';
 

@@ -22,6 +22,7 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     	//retrieve task list from model
     	$vproductsModel = new DdcshopboxModelsVendorproducts();
     	$vendorModel = new DdcshopboxModelsVendor();
+    	$profileModel = new DdcshopboxModelsProfile();
     	if($jinput->get('vendor_id')!=null)
     	{
     		$layout = 'vendor';
@@ -33,20 +34,15 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     			$pathway = $app->getPathway();
     			$pathway->addItem(JText::_('COM_DDC_VENDOR_LIST'), '');
     			$this->items = $this->model->listItems();
-    			foreach($this->items as $item)
-    			{
-    				$item->distance = $this->model->getPostcodesDistance($this->session->get('ddclocation',null),$item->post_code);
-    			}
-    			usort($this->items,array(new DdcshopboxModelsDefault(),'sort_objects_by_distance'));
     			$this->session = JFactory::getSession();
     			$this->_vendorsListView = DdcshopboxHelpersView::load('vendors','_item','phtml');
+    			$this->form = $profileModel->getForm();
     		break;
     		case "vendor":
     			$pathway = $app->getPathway();
     			$pathway->addItem(JText::_('COM_DDC_VENDOR'), '');
     			$this->item = $this->model->getItem();
     			$this->session = JFactory::getSession();
-    			$this->item->distance = $this->model->getPostcodesDistance($this->session->get('ddclocation',null),$this->item->post_code);
     			$this->products = $vproductsModel->listItems();
     			$this->gmap($this->item->address1.", ".$this->item->post_code,'com_ddcshopbox');
     			$this->model->hit($this->item->ddc_vendor_id);

@@ -41,6 +41,7 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     $query->leftJoin('#__ddc_product_prices as vpr on vp.ddc_vendor_product_id = vpr.product_id');
     $query->leftJoin('#__ddc_currencies as vc on vc.ddc_currency_id = vpr.product_currency');
     $query->group("vp.ddc_vendor_product_id");
+    $query->order('v.title asc,p.pordering asc');
 
 
     return $query;
