@@ -200,7 +200,7 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 		
 				if( $row = $model->store() )
 				{
-					$this->data['ddc_vendor_product_id'] = $row->ddc_vendor_product_id;
+					$jinput->set('vendorproduct_id', $row->ddc_vendor_product_id);
 					$modelName  = $app->input->get('models', 'productprices');
 					$modelName  = 'DdcshopboxModels'.ucwords($modelName);
 					$model = new $modelName();

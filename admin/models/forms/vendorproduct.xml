@@ -51,6 +51,15 @@
 			query="SELECT ddc_product_id AS value, product_name as product_id FROM #__ddc_products">
 			<option value="0">-</option>
 		</field>
+		<field
+			name="category_id"
+			type="sql"
+			label="COM_DDC_CATEGORY_ID_LABEL"
+			description="COM_DDC_CATEGORY_ID_DESC"
+			query="SELECT id AS value, title as category_id FROM #__categories WHERE extension ='com_ddcshopbox'"
+		>
+			<option value="0">-</option>
+		</field>
 		<field name="product_type" 
 		    type="list" 
 		    label="COM_DDC_PRODUCT_TYPE_LABEL"
@@ -162,27 +171,18 @@
 		/>
 		<field
 			name="product_weight_uom"
-			type="text"
+			type="list"
 			label="COM_DDC_PRODUCT_WEIGHT_UOM_LABEL"
 			description="COM_DDC_PRODUCT_WEIGHT_UOM_DESC"
-		/>
-		<field
-			name="product_price"
-			type="text"
-			label="COM_DDC_PRODUCT_PRICE_LABEL"
-			description="COM_DDC_PRODUCT_PRICE_DESC"
-			default="0"
-		/>
-	    <field
-			name="ddc_product_price_id"
-			type="hidden"
-		/>
-	    <field
-			name="product_currency"
-			type="sql"
-			query="SELECT ddc_currency_id AS value, CONCAT(currency_name,', ',currency_symbol) as product_currency FROM #__ddc_currencies"
-			default="52"
-		/>
+			default="grams"
+		>
+			<option value="grams">
+				COM_DDC_GRAMS</option>
+			<option value="kg">
+				COM_DDC_KILOGRAMS</option>
+			<option value="ounces">
+				COM_DDC_OUNCES</option>
+		</field>
 	    <field
 			name="min_order_level"
 			type="text"
@@ -271,7 +271,6 @@
 			default="0"
 		/>
 	</fieldset>
-		
 	<fieldset name="product_description_bottom">
 	    <field
 		    name="product_description_small"
@@ -288,6 +287,51 @@
 			description="COM_DDC_PROD_DESCR_DESC"
 			rows="5"
 			cols="30"
+		/>
+	</fieldset>
+	<fieldset name="product_price_fields_left">
+	    <field
+			name="product_price"
+			type="text"
+			label="COM_DDC_PRODUCT_PRICE_LABEL"
+			description="COM_DDC_PRODUCT_PRICE_DESC"
+			default="0"
+		/>
+	    <field
+			name="ddc_product_price_id"
+			type="hidden"
+		/>
+	    <field
+			name="product_currency"
+			type="sql"
+			query="SELECT ddc_currency_id AS value, CONCAT(currency_name,', ',currency_symbol) as product_currency FROM #__ddc_currencies"
+			default="52"
+		/>
+	</fieldset>
+	<fieldset name="product_price_fields_right">
+	    <field
+			name="product_price_estimate"
+			type="list"
+			label="COM_DDC_PRICE_ESTIMATE_LABEL"
+			description="COM_DDC_PRICE_ESTIMATE_DESC"
+			default="0"
+		>
+			<option value="0">COM_DDC_ACTUAL</option>
+			<option value="1">COM_DDC_ESTIMATE</option>
+		</field>
+		<field
+			name="price_weight_based"
+			type="list"
+			label="COM_DDC_PRICE_WEIGHT_BASED_LABEL"
+			description="COM_DDC_PRICE_WEIGHT_BASED_DESC"
+			default="0"
+		>
+			<option value="0">COM_DDC_NO</option>
+			<option value="1">COM_DDC_YES</option>
+		</field>
+	    <field
+			name="ddc_product_price_id"
+			type="hidden"
 		/>
 	</fieldset>
 </form>

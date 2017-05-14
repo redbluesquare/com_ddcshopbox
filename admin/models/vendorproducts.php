@@ -72,7 +72,9 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   			'min_order_level' => $formdata['min_order_level'],
   			'max_order_level' => $formdata['max_order_level'],
   			'step_order_level' => $formdata['step_order_level'],
-  			'product_box' => $formdata['product_box']
+  			'product_box' => $formdata['product_box'],
+  			'product_price_estimate' => $formdata['product_price_estimate'],
+  			'price_weight_based' => $formdata['price_weight_based']
   	);
   	$data = array(
   	'ddc_vendor_product_id'=>$formdata['ddc_vendor_product_id'],
@@ -93,18 +95,18 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	'product_lwh_uom' => $formdata['product_lwh_uom'],
   	'product_weight' => $formdata['product_weight'],
   	'product_weight_uom' => $formdata['product_weight_uom'],
-  	'low_stock_notification' => $formdata['low_stock_notification'],
-  	'product_available_date' => $formdata['product_available_date'],
-  	'product_availability' => $formdata['product_availability'],
-  	'product_special' => $formdata['product_special'],
+  	'low_stock_notification' => '',
+  	'product_available_date' => '',
+  	'product_availability' => '',
+  	'product_special' => '',
   	'product_base_uom' => $formdata['product_base_uom'],
-  	'product_packaging' => $formdata['product_packaging'],
+  	'product_packaging' => '',
   	'product_params' => json_encode($prod_params),
-  	'intnotes' => $formdata['intnotes'],
+  	'intnotes' => '',
   	'published' => $formdata['published'],
   	'metarobot' => $formdata['metarobot'],
   	'metaauthor' => $formdata['metaauthor'],
-  	'layout' => $formdata['layout'],
+  	'layout' => '',
   	'pordering' => $formdata['pordering'],
   	'table' => $formdata['table']);
   	

@@ -4,7 +4,7 @@
 defined( '_JEXEC' ) or die( 'Restricted access' ); 
  
 //Display partial views
-class DevcloudViewsShopcartheadersPhtml extends JViewHTML
+class DdcshopboxViewsShopcartheadersPhtml extends JViewHTML
 {
   function render()
   {

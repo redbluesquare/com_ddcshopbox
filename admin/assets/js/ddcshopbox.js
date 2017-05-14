@@ -4,7 +4,6 @@ function saveContactAddress()
 	jQuery("#contactAddressForm :input").each(function(idx,ele){
 		caInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
 	});
-
 	jQuery.ajax({
 		url:'index.php?option=com_ddcshopbox&controller=edit&format=raw&tmpl=component',
 		type:'POST',
@@ -20,13 +19,29 @@ function saveContactAddress()
 			}
 		}
 	});
+}
+function getScDetail(id)
+{
+	jQuery.ajax({
+		url:'index.php?option=com_ddcshopbox&controller=get&format=raw&tmpl=component&jform[table]=shoppingcart_detail&jform[shoppingcart_detail_id]='+id,
+		type:'GET',
+		dataType:'JSON',
+		success:function(data)
+		{
+			console.log(data);
+			if ( data.success ){
+				console.log(data)
+			}else{
+				jQuery(".modal-header").append(data.msg);
+			}
+		}
+	});
 
 }
 
 function _(el){
     return document.getElementById(el);
 }
-
 function removePhoto(id){
 	var photoInfo = {};
 	jQuery("#upload_form :input").each(function(idx,ele){

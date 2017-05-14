@@ -330,6 +330,8 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   						'shoppingcart_header_id' => $row->ddc_shoppingcart_header_id,
   						'ddc_shoppingcart_detail_id' => $row->ddc_shoppingcart_detail_id,
   						'product_id' => $formdata['ddc_vendor_product_id'],
+  						'product_weight' => $formdata['product_weight'],
+  						'product_weight_uom' => $formdata['product_weight_uom'],
   						'product_quantity' => $row->product_quantity+$formdata['product_quantity'],
   						'price' => $formdata['product_price'],
   						'state' => 1,
@@ -413,7 +415,7 @@ class DdcshopboxModelsShopcart extends DdcshopboxModelsDefault
   	$db = JFactory::getDBO();
   	$query = $db->getQuery(TRUE);
   	// Fields to update.
-  	$fields = array($db->quoteName('state') . ' = 4',$db->quoteName('modified_on'). ' = '.$db->quote($date));
+  	$fields = array($db->quoteName('state') . ' = 3',$db->quoteName('modified_on'). ' = '.$db->quote($date));
   		
   	// Conditions for which records should be updated.
   	$conditions = array(

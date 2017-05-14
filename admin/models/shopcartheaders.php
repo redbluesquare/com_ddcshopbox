@@ -28,10 +28,10 @@ class DdcshopboxModelsShopcartheaders extends DdcshopboxModelsDefault
     $db = JFactory::getDBO();
     $query = $db->getQuery(TRUE);
 
-    $query->select('sh.ddc_shoppingcart_header_id,sh.first_name,sh.last_name, sh.state,sh.address_line_1 as del_address1,sh.address_line_2 as del_address2,sh.town as del_town,sh.county as del_county,sh.post_code as del_post_code, sh.delivery_type, sh.delivery_date, sh.delivery_time');
+    $query->select('sh.ddc_shoppingcart_header_id,sh.first_name,sh.last_name, sh.state,sh.address_line_1 as del_address1,sh.address_line_2 as del_address2,sh.town as del_town,sh.county as del_county,sh.post_code as del_post_code, sh.delivery_type, sh.delivery_date, sh.delivery_time, sh.shipping_cost');
     $query->select('count(DISTINCT vp.vendor_id) as total_vendors,vp.vendor_id');
     $query->select('sum(sd.product_quantity*sd.price) as total_cost');
-    $query->select('v.title, v.address1, v.address2, v.city, v.county, v.post_code');
+    $query->select('v.title, v.address1, v.address2, v.city, v.county, v.post_code, v.ddc_vendor_id');
     $query->select('p.ddc_payment_id, p.ref, p.ref_id, p.token, p.state as payment_state');
     $query->from('#__ddc_shoppingcart_headers as sh');
     $query->leftJoin('#__ddc_shoppingcart_details as sd on sd.shoppingcart_header_id = sh.ddc_shoppingcart_header_id');

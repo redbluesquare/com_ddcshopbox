@@ -18,7 +18,11 @@ class DdcshopboxModelsShopcartdetails extends DdcshopboxModelsDefault
 
     $this->_vendor_id = $this->_app->input->get('vendor_id', null);
     $this->_session = JFactory::getSession();
-  	$this->_shoppingcart_header_id = $this->_app->input->get('shoppingcart_header_id',null);
+  	$this->_shoppingcart_header_id = $this->_session->get('shoppingcart_header_id',null);
+  	if($this->_shoppingcart_header_id == null)
+  	{
+  		$this->_shoppingcart_header_id = $this->_app->input->get('shoppingcart_header_id',null);
+  	}
 
     parent::__construct();       
   }

@@ -44,14 +44,19 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     $query->select('p.ddc_product_id,p.product_name,p.product_alias,p.product_parent_id');
     $query->select('vc.currency_name, vc.currency_code_3, vc.currency_symbol');
     $query->select('i.details, i.image_link');
+    $query->select('o.*');
+    $query->select('((ACOS(SIN(o2.latitude* PI() / 180) * SIN(o.latitude* PI() / 180) + COS(o2.latitude* PI() / 180) * COS(o.latitude* PI() / 180)
+    		* COS((o2.longitude-o.longitude) *PI() /180)) * 180 / PI()) * 60 * 1.1515*1.64) as distance');
     $query->select('cou.country_name');
     $query->select('c.title as category_title');
-    $query->select('v.title as vendor_name,v.address1, v.city, v.county, v.post_code as shop_post_code, v.country');
+    $query->select('v.title as vendor_name,v.address1,v.address2, v.city, v.county, v.post_code as shop_post_code, v.country');
     $query->select('vpr.product_price, vpr.product_currency, vpr.product_id, vpr.ddc_product_price_id');
     $query->from('#__ddc_vendor_products as vp');
+    $query->leftJoin('#__ddc_vendors as v on v.ddc_vendor_id = vp.vendor_id');
+    $query->leftJoin('#__ddc_outcodes as o2 on o2.postcode = "'.$this->getDistrict($this->_session->get('ddclocation',null)).'"');
+    $query->leftJoin('#__ddc_outcodes as o on o.postcode = LEFT(v.post_code,INSTR(v.post_code," ")-1)');
     $query->leftJoin('#__ddc_products as p on vp.product_id = p.ddc_product_id');
     $query->leftJoin('#__categories as c on c.id = p.category_id');
-    $query->leftJoin('#__ddc_vendors as v on v.ddc_vendor_id = vp.vendor_id');
     $query->leftJoin('#__ddc_countries as cou on v.country = cou.ddc_country_id');
     $query->leftJoin('#__ddc_product_prices as vpr on vp.ddc_vendor_product_id = vpr.product_id');
     $query->leftJoin('#__ddc_currencies as vc on vc.ddc_currency_id = vpr.product_currency');
@@ -100,7 +105,9 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   			'min_order_level' => $formdata['min_order_level'],
   			'max_order_level' => $formdata['max_order_level'],
   			'step_order_level' => $formdata['step_order_level'],
-  			'product_box' => $formdata['product_box']
+  			'product_box' => $formdata['product_box'],
+  			'product_price_estimate' => $formdata['product_price_estimate'],
+  			'price_weight_based' => $formdata['price_weight_based']
   	);
   	$data = array(
   	'ddc_vendor_product_id'=>$formdata['ddc_vendor_product_id'],
@@ -153,5 +160,33 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	}
   	return true;
   }
-
+	public function getProductPrice($id=null)
+	{
+		$model = new DdcshopboxModelsVendorproducts();
+		$item = $model->getItem($id);
+		
+		$unitPrice = $item->product_price;
+		$weight = $item->product_weight;
+		$priceWeightBased = $model->getpartjsonfield($item->product_params,'price_weight_based');
+		$weightUOM = $item->product_weight_uom;
+		if($priceWeightBased == 1)
+		{
+			if($weightUOM=='grams')
+			{
+				$factor = $weight/1000;
+				$unitPrice = $item->product_price*$factor;
+			}
+			if($weightUOM=='kg')
+			{
+				$factor = $weight/1;
+				$unitPrice = $item->product_price*$factor;
+			}
+			if($weightUOM=='ounce')
+			{
+				$factor = $weight/35.27396;
+				$unitPrice = $item->product_price*$factor;
+			}
+		}
+		return $unitPrice;
+	}
 }

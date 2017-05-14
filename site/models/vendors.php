@@ -43,12 +43,12 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     $query = $db->getQuery(TRUE);
 
     $query->select('v.*');
-    $query->select('o.*');
     $query->select('u.name as owner_name');
     $query->select('uv.user_id');
+    $query->select('cou.country_name');
+    $query->select('o.*');
     $query->select('((ACOS(SIN(o2.latitude* PI() / 180) * SIN(o.latitude* PI() / 180) + COS(o2.latitude* PI() / 180) * COS(o.latitude* PI() / 180) 
     		* COS((o2.longitude-o.longitude) *PI() /180)) * 180 / PI()) * 60 * 1.1515*1.64) as distance');
-    $query->select('cou.country_name');
     $query->from('#__ddc_vendors as v');
     $query->leftJoin('#__ddc_outcodes as o2 on o2.postcode = "'.$this->getDistrict($this->_session->get('ddclocation',null)).'"');
     $query->leftJoin('#__ddc_outcodes as o on o.postcode = LEFT(v.post_code,INSTR(v.post_code," ")-1)');

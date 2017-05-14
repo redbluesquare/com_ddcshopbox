@@ -55,12 +55,22 @@ class DdcshopboxModelsProductprices extends DdcshopboxModelsDefault
   
   public function store($formdata = null)
   {
-  	$formdata = $formdata ? $formdata : JRequest::getVar('jform', array(), 'post', 'array');
+  	$jinput = new JInput();
+  	$formdata = $formdata ? $formdata : $jinput->get('jform', array(),'array');
+  	if($formdata['ddc_vendor_product_id']==null)
+  	{
+  		$vp_id = $this->_product_id;
+  	}
+  	else 
+  	{
+  		$vp_id = $formdata['ddc_vendor_product_id'];
+  	}
+  	
   	$data = array(
   	'ddc_product_price_id'=>$formdata['ddc_product_price_id'],
   	'product_price' => $formdata['product_price'],
   	'product_currency' => $formdata['product_currency'],
-  	'product_id' => $formdata['ddc_vendor_product_id'],
+  	'product_id' => $vp_id,
   	'table' => 'productprices');
   	
   	return parent::store($data);

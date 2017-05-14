@@ -12,12 +12,12 @@ $app = JFactory::getApplication();
 $date = date('w');
 if($date == 3)
 {
-	$leadtime = 60*60*24*5;
+	$leadtime = 60*60*24*4;
 	$today = strtotime('today');
 }
 else 
 {
-	$leadtime = 60*60*24*4;
+	$leadtime = 60*60*24*3;
 	$today = strtotime('today');
 }
 $del_date = Date('D. d M. Y',$leadtime+$today);
@@ -61,13 +61,13 @@ else
     					
 		</td>
 		<td><?php echo $item->vendor_product_sku; ?></td>
-		<td style="text-align: center;" id="itemPrice<?php echo $item->ddc_shoppingcart_detail_id; ?>"><input type="hidden" name="jform[product_price]" value="<?php echo number_format($item->product_price,2); ?>" /><?php echo number_format($item->product_price,2); ?></td>
+		<td style="text-align: center;" id="itemPrice<?php echo $item->ddc_shoppingcart_detail_id; ?>"><input type="hidden" name="jform[product_price]" value="<?php echo number_format($this->model->getPriceItem($item->product_price,$this->model->getpartjsonfield($item->product_params,'price_weight_based'),$item->product_weight,$item->product_weight_uom),2); ?>" /><?php echo number_format($this->model->getPriceItem($item->product_price,$this->model->getpartjsonfield($item->product_params,'price_weight_based'),$item->product_weight,$item->product_weight_uom),2); ?></td>
 		<td style="text-align: center;"><input name="jform[product_quantity]" id="itemQty<?php echo $item->ddc_shoppingcart_detail_id; ?>" type="number" style="width:50px;" min="<?php echo $this->model->getpartjsonfield($item->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($item->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($item->product_params,'step_order_level'); ?>" value="<?php echo $item->product_quantity; ?>" onchange="updateCartItem(<?php echo $item->ddc_shoppingcart_detail_id; ?>)" /></td>
 		<td style="text-align: center;"><?php echo $item->discount; ?></td>
-		<td style="text-align: center;" id="itemTotal<?php echo $item->ddc_shoppingcart_detail_id; ?>"><?php echo number_format($item->product_price*$item->product_quantity,2); ?></td>
+		<td style="text-align: center;" id="itemTotal<?php echo $item->ddc_shoppingcart_detail_id; ?>"><?php echo number_format(($this->model->getPriceItem($item->product_price,$this->model->getpartjsonfield($item->product_params,'price_weight_based'),$item->product_weight,$item->product_weight_uom)*$item->product_quantity),2); ?></td>
 		<td><i style="color:#880000" class="glyphicon glyphicon-remove removeCartItem" onclick="removeCartItem(<?php echo $item->ddc_shoppingcart_detail_id; ?>)"></i></td>
 	</tr>
-	<?php $products_total += $item->product_price*$item->product_quantity; ?>
+	<?php $products_total += $this->model->getPriceItem($item->product_price,$this->model->getpartjsonfield($item->product_params,'price_weight_based'),$item->product_weight,$item->product_weight_uom)*$item->product_quantity; ?>
 	<?php endforeach; ?>
 	<tr style="font-weight: bold">
 		<td colspan="4" style="text-align: right;"><?php echo JText::_('COM_DDC_PRODUCT_TOTALS')?></td>

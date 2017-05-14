@@ -4,7 +4,7 @@ $component = new JComponentHelper();
 $params = $component->getParams('com_ddcshopbox');
 $dim_result = $this->item->product_length*$this->item->product_width*$this->item->product_height;
 
-$document =& JFactory::getDocument();
+$document =JFactory::getDocument();
 $document->setTitle($this->item->vendor_product_name);
 $document->setMetaData("image",$this->item->image_link);
 $document->setMetaData("geo.placename",$this->item->address1.", ".$this->item->address2." ".$this->item->city.", ".$this->item->county.", ".$this->item->shop_post_code.", ".$this->item->country_name);
@@ -34,10 +34,15 @@ $document->setDescription($this->item->vp_desc);
 			<ul style="text-decoration:none; list-style:none;padding:0;">
     		<?php 
     			if($this->item->product_state == 2):?>
-    			<li><i><?php echo JText::_('COM_DDC_FROM')." "?></i><span class="ddcPriceOK"><?php echo $this->item->currency_symbol." ".number_format($this->item->product_price,2); ?></span></li>
+    			<li><i><?php echo JText::_('COM_DDC_FROM')." "?></i><span class="ddcPriceOK"><?php echo $this->item->currency_symbol." ".number_format(($this->model->getpartjsonfield($this->item->product_params,'min_order_level')*$this->model->getPriceItem($this->item->product_price,$this->model->getpartjsonfield($this->item->product_params,'price_weight_based'),$this->item->product_weight,$this->item->product_weight_uom)),2); ?></span></li>
     		<?php else: ?>
-    			<li class="ddcPriceOK"><?php echo $this->item->currency_symbol." ".number_format($this->item->product_price,2); ?></li>
-	    		<?php
+    			<li><span class="ddcPriceOK"><?php echo $this->item->currency_symbol." <span id=\"productPrice".$this->item->ddc_vendor_product_id."\">".number_format(($this->model->getpartjsonfield($this->item->product_params,'min_order_level')*$this->model->getPriceItem($this->item->product_price,$this->model->getpartjsonfield($this->item->product_params,'price_weight_based'),$this->item->product_weight,$this->item->product_weight_uom)),2); ?></span></span>
+    			<?php if($this->model->getpartjsonfield($this->item->product_params,'product_price_estimate')==1):
+				echo '<i class="priceEstimate" data-trigger="hover" title="Estimated Price" data-content="The final price may vary due to the actual weight of the product. We will inform you if it is more than 3% in difference" data-toggle="popover" data-placement="bottom" >est.</i>';
+				endif;?>
+    			</li>
+	    		<?php if($this->item->product_weight>0): ?><li><small><?php echo "(".$this->item->currency_symbol." ".number_format($this->model->getPricePerKg($this->item->product_price,$this->model->getpartjsonfield($this->item->product_params,'price_weight_based'),$this->item->product_weight,$this->item->product_weight_uom),2); ?> / kg)</small></li><?php endif; ?>
+    		<?php
 	    		$val = 0;
 	    		if($this->session->get('ddclocation',null)==null): 
 	    			$val = 1;
@@ -49,12 +54,14 @@ $document->setDescription($this->item->vp_desc);
 				<li class="clearfix">
 	    		<button id="ddcCartBtn<?php echo $this->item->ddc_vendor_product_id; ?>" data-trigger="hover" title="Add to Cart" data-content="Click to add this product to your shopping cart on the left" data-toggle="popover" data-placement="bottom" class="btn btnCart pull-right btn-primary col-md-4" onclick="ddcUpdateCart(<?php echo $this->item->ddc_vendor_product_id; ?>)"><i class="glyphicon glyphicon-plus"></i> <i class="glyphicon glyphicon-shopping-cart"></i></button>
 	    		<form id="ddcCart<?php echo $this->item->ddc_vendor_product_id; ?>" class="pull-right col-md-8 clearfix">
-					<input type="number" class="col-xs-12" min="<?php echo $this->model->getpartjsonfield($this->item->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($this->item->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>" name="jform[product_quantity]" value="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>"/>
+					<input type="number" id="product_qty<?php echo $this->item->ddc_vendor_product_id; ?>" onchange="getProdPrice(<?php echo $this->item->ddc_vendor_product_id; ?>)" class="col-xs-12" min="<?php echo $this->model->getpartjsonfield($this->item->product_params,'min_order_level'); ?>" max="<?php echo $this->model->getpartjsonfield($this->item->product_params,'max_order_level'); ?>" step="<?php echo $this->model->getpartjsonfield($this->item->product_params,'step_order_level'); ?>" name="jform[product_quantity]" value="<?php echo $this->model->getpartjsonfield($this->item->product_params,'min_order_level'); ?>"/>
 					<input type="hidden" name="jform[product_price]" value="<?php echo number_format($this->item->product_price,2); ?>" />
 					<input type="hidden" name="option" value="com_ddcshopbox" />
 					<input type="hidden" name="controller" value="update" />
 					<input type="hidden" name="jform[table]" value="ddcshoppingcart" />
 					<input type="hidden" name="jform[task]" value="shoppingcart.update" />
+					<input type="hidden" name="jform[product_weight]" value="<?php echo $this->item->product_weight; ?>" />
+					<input type="hidden" name="jform[product_weight_uom]" value="<?php echo $this->item->product_weight_uom; ?>" />
 					<input type="hidden" name="format" value="raw" />
 					<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->session->get('shoppingcart_header_id',null); ?>" />
 					<input type="hidden" name="jform[shop_post_code]" value="<?php echo $this->item->shop_post_code?>" />
@@ -77,7 +84,8 @@ $document->setDescription($this->item->vp_desc);
 		<table class="ddctable">
 			<tbody>
 				<tr><td><?php echo JText::_('COM_DDC_STORE')?></td><td><a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendors&layout=vendor&vendor_id='.$this->item->vendor_id); ?>"><?php echo $this->item->vendor_name; ?></a>, <i><?php echo $this->item->city; ?></i></td></tr>
-				<tr><td><?php echo JText::_('COM_DDC_PRODUCT_BOX')?></td><td><?php echo $this->model->getpartjsonfield($this->item->product_params,'product_box'); ?></td></tr>
+				<?php if($this->model->getpartjsonfield($this->item->product_params,'product_box')!=null): ?><tr><td><?php echo JText::_('COM_DDC_PRODUCT_BOX')?></td><td><?php echo $this->model->getpartjsonfield($this->item->product_params,'product_box'); ?></td></tr><?php endif; ?>
+				<tr><td><?php echo JText::_('COM_DDC_MIN_ORDER_LEVEL')?></td><td><?php echo $this->model->getpartjsonfield($this->item->product_params,'min_order_level'); ?></td></tr>
 				<tr><td><?php echo JText::_('COM_DDC_WEIGHT');?></td><td><?php echo $this->model->ddcnumber(number_format($this->item->product_weight,2))." ".$this->item->product_weight_uom; ?></td></tr>
 				<?php if($dim_result>0):?><tr><td><?php echo JText::_('COM_DDC_DIMENSIONS');?></td><td><?php echo $this->model->ddcnumber($this->item->product_length)." x ".$this->model->ddcnumber($this->item->product_width)." x ".$this->model->ddcnumber($this->item->product_height); ?></td></tr><?php endif; ?>
 			</tbody>

@@ -284,9 +284,9 @@ class DdcshopboxModelsDefault extends JModelBase
   			$result[0] .='<tr>';
   			$result[0] .='<td>'.$cart_item->product_quantity.' x </td>';
   			$result[0] .='<td>'.$cart_item->vendor_product_name.'</td>';
-  			$result[0] .='<td id="#cartItem'.$cart_item->ddc_shoppingcart_id.'">'.$cart_item->currency_symbol." ".number_format(($cart_item->product_quantity*$cart_item->product_price),2).'</td>';
+  			$result[0] .='<td id="#cartItem'.$cart_item->ddc_shoppingcart_id.'">'.$cart_item->currency_symbol." ".number_format(($cart_item->product_quantity*$this->getPriceItem($cart_item->product_price,$this->getpartjsonfield($cart_item->product_params, 'price_weight_based'),$cart_item->product_weight,$cart_item->product_weight_uom)),2).'</td>';
   			$result[0] .='</tr>';
-  			$result[1] +=($cart_item->product_quantity*$cart_item->product_price);
+  			$result[1] +=($cart_item->product_quantity*$this->getPriceItem($cart_item->product_price,$this->getpartjsonfield($cart_item->product_params, 'price_weight_based'),$cart_item->product_weight,$cart_item->product_weight_uom));
   			$result[2] +=($cart_item->product_quantity);
   		}
   		
@@ -309,6 +309,62 @@ class DdcshopboxModelsDefault extends JModelBase
 	$item = $prod_params[$part];  	
   	return $item;
   }
+  
+  public function getPriceItem($price,$priceWeightBased = 0, $weight = 0, $weightUOM = null)
+  {
+  	$unitPrice = $price;
+  	if($priceWeightBased == 1)
+  	{
+  		if($weightUOM=='grams')
+  		{
+  			$factor = $weight/1000;
+  			$unitPrice = $price*$factor;
+  		}
+  		if($weightUOM=='kg')
+  		{
+  			$factor = $weight/1;
+  			$unitPrice = $price*$factor;
+  		}
+  		if($weightUOM=='ounce')
+  		{
+  			$factor = $weight/35.27396;
+  			$unitPrice = $price*$factor;
+  		}
+  	}
+  	return $unitPrice;
+  }
+  
+	public function getPricePerKg($price,$priceWeightBased = 0, $weight = 0, $weightUOM = null)
+	{
+		$unitPrice = $price;
+	  	if($priceWeightBased == 0)
+	  	{
+	  		if($weight > 0)
+	  		{
+	  			if($weightUOM=='grams')
+	  			{
+	  				$factor = 1000/$weight;
+	  				$unitPrice = $price*$factor;
+	  			}
+	  			if($weightUOM=='kg')
+	  			{
+	  				$factor = 1/$weight;
+	  				$unitPrice = $price*$factor;
+	  			}
+	  			if($weightUOM=='ounce')
+	  			{
+	  				$factor = 35.27396/$weight;
+	  				$unitPrice = $price*$factor;
+	  			}
+	  		}
+	  		else 
+	  		{
+	  			$unitPrice = false;
+	  		}
+	  		
+	  	}
+		return $unitPrice;
+	}
   
   // Function for resizing jpg, gif, or png image files
   public function profile_img_resize($target, $newcopy, $w, $h, $ext) {

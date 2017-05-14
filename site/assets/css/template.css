@@ -64,7 +64,7 @@ table{max-width: 100%;background-color: transparent;border-collapse: collapse;bo
 .ddcPriceOK{font-size: 1.5em;color: #44aaee;text-align:right;}
 .ddcPrice{font-size: 1.5em;color: #267f29;text-align:right;}
 .stripeCard{padding:5px;background:#efefef;border-radius:10px;color:#3d3d3d;font-size:0.8em;}
-.ddcShopData{font-size:0.8em;text-align:right;line-height:5px;padding:0px;margin:0px;}
+.ddcShopData{font-size:0.8em;text-align:right;}
 .alert .close {position: relative;top: -2px;line-height: 20px;}
 .alert-success {color: #468847;background-color: #dff0d8;border-color: #d6e9c6;}
 .alert-success h4 {color: #468847;}
@@ -75,6 +75,7 @@ table{max-width: 100%;background-color: transparent;border-collapse: collapse;bo
 .alert-block {padding-top: 14px;padding-bottom: 14px;}
 .alert-block > p, .alert-block > ul {margin-bottom: 0;}
 .alert-block p + p {margin-top: 5px;}
+.priceEstimate{margin-left:3px;color:#fff;padding:3px;border:2px solid #EB018B;background:#EB018B;border-radius:3px;font-size:0.8em;}
 /* Start by setting display:none to make this hidden.
    Then we position it in relation to the viewport window
    with position:fixed. Width, height, top and left speak

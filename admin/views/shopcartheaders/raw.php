@@ -1,6 +1,6 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); 
  
-class DdcshopboxViewVendorsRaw extends JViewHtml
+class DdcshopboxViewsShopcartheadersRaw extends JViewHtml
 {
   function render()
   {
@@ -10,7 +10,7 @@ class DdcshopboxViewVendorsRaw extends JViewHtml
     $view = $app->input->get('view');
  
     //retrieve task list from model
-    $model = new DdcshopboxModelsVendors();
+    $model = new DdcshopboxModelsShopcartheaders();
  
     $this->item = $model->getItem($id,$view,FALSE);
     

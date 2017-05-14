@@ -72,6 +72,8 @@ class DdcshopboxModelsVendorproduct extends JModelForm
 				$data->max_order_level = $prod_params['max_order_level'];
 				$data->step_order_level = $prod_params['step_order_level'];
 				$data->product_box = $prod_params['product_box'];
+				$data->product_price_estimate = $prod_params['product_price_estimate'];
+				$data->price_weight_based = $prod_params['price_weight_based'];
 				return $data;
 			}
 		}

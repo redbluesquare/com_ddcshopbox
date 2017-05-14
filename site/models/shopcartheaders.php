@@ -20,7 +20,11 @@ class DdcshopboxModelsShopcartheaders extends DdcshopboxModelsDefault
 
     $this->_vendor_id = $this->_app->input->get('vendor_id', null);
     $this->_session = JFactory::getSession();
-  	$this->_shoppingcart_header_id = $this->_app->input->get('shoppingcart_header_id',null);
+  	$this->_shoppingcart_header_id = $this->_session->get('shoppingcart_header_id',null);
+  	if($this->_shoppingcart_header_id == null)
+  	{
+  		$this->_shoppingcart_header_id = $this->_app->input->get('shoppingcart_header_id',null);
+  	}
 
     parent::__construct();       
   }
@@ -151,7 +155,7 @@ EOT;
   			$shop_postcode = (string)strtoupper($item->shop_postcode);
   			$totalprice = number_format($totalprice+($item->product_quantity*$item->price),2);
 			$message_body .='<tr class="row'.$i.'" style="border-top:1px solid #cfcfcf;padding:5px;">';
-			$message_body .='<td style="width:350px;"><img src="'.$image_link.'" style="float:left;max-height:48px;width:64px;object-fit:contain;padding:3px 5px 5px 2px"><b>'.$vendor_product_name.'</b><br>'.$shop_name.', '.$shop_postcode.'</td>';
+			$message_body .='<td style="width:350px;"><img src="'.JUri::base().$image_link.'" style="float:left;max-height:48px;width:64px;object-fit:contain;padding:3px 5px 5px 2px"><b>'.$vendor_product_name.'</b><br>'.$shop_name.', '.$shop_postcode.'</td>';
 			$message_body .='<td style="width:100px;">';
 			$message_body .='<i style="margin-top:3px;font-size:0.9em;">Pack quantity: '.$product_box.'<br>';
 			$message_body .='Weight: '.$product_weight.' '.$product_weight_uom.'</i>';

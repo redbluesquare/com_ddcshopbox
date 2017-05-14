@@ -1,6 +1,6 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); 
  
-class DdcshopboxViewVendorsRaw extends JViewHtml
+class DdcshopboxViewsVendorsRaw extends JViewHtml
 {
   function render()
   {
@@ -13,8 +13,6 @@ class DdcshopboxViewVendorsRaw extends JViewHtml
     $model = new DdcshopboxModelsVendors();
  
     $this->item = $model->getItem($id,$view,FALSE);
-    
-    //display
-    echo $this->item;
+
   } 
 }

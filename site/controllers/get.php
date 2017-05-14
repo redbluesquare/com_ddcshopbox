@@ -69,6 +69,26 @@ class DdcshopboxControllersGet extends DdcshopboxControllersDefault {
 			
 			echo json_encode($return);
 		}
+		elseif($this->data['table']=='vendorproducts')
+		{
+			$task = $jinput->get('task',null,'string');
+			$model = new DdcshopboxModelsVendorproducts();
+			if($task=='get.price')
+			{
+				$result = $model->getProductPrice($this->data['vendorproduct_id']);
+				if($result)
+				{
+					$return['success'] = true;
+					$return['msg'] = JText::_('COM_DDC_SAVE_SUCCESS');
+					$return['price'] = $result;
+				}
+				else
+				{
+					$return['msg'] = JText::_('COM_DDC_CART_EMPTY');
+				}
+			}
+			echo json_encode($return);
+		}
 		else
 		{
 

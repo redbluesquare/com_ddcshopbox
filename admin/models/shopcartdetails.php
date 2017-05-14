@@ -18,6 +18,7 @@ class DdcshopboxModelsShopcartdetails extends DdcshopboxModelsDefault
 
     $this->_vendor_id = $app->input->get('vendor_id', null);
     $this->_shoppingcart_header_id = $app->input->get('shoppingcart_header_id', null);
+    $this->_shoppingcart_detail_id = $app->input->get('shoppingcart_detail_id', null);
 
     parent::__construct();       
   }
@@ -43,6 +44,10 @@ class DdcshopboxModelsShopcartdetails extends DdcshopboxModelsDefault
     if($this->_shoppingcart_header_id!=null)
     {
     	$query->where('sd.shoppingcart_header_id = "'. (int)$this->_shoppingcart_header_id .'"');
+    }
+    if($this->_shoppingcart_detail_id!=null)
+    {
+    	$query->where('sd.shoppingcart_detail_id = "'. (int)$this->_shoppingcart_detail_id .'"');
     }
     if($id!=null)
     {

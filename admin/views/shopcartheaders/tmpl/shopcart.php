@@ -31,6 +31,7 @@ JHtml::_('behavior.tooltip');
 <?php foreach ($this->schItems as $i => $schitem): ?>
 <div id="printable">
 <h1><?php if($schitem->title!=null): echo '<b>'.$schitem->title.'</b><br>'; endif; ?></h1>
+<form>
 <table class="table">
 	<tbody>
 		<tr>
@@ -87,7 +88,7 @@ JHtml::_('behavior.tooltip');
 			<th></th>
 			<th></th>
 			<th><?php echo JText::_('COM_DDC_QUANTITY'); ?></th>
-			<th><?php echo JText::_('COM_DDC_TOTAL'); ?></th>
+			<th style="text-align:right"><?php echo JText::_('COM_DDC_PRICE'); ?></th>
 		</tr>
 	</thead>
 	<?php 
@@ -106,7 +107,7 @@ JHtml::_('behavior.tooltip');
     			</td>
                 <td></td>
                 <td><?php echo $item->product_quantity; ?></td>
-                <td><?php echo "&pound;" . number_format($item->product_quantity*$item->price,2); ?></td>
+                <td style="text-align:right"><button type="button" role="button" data-toggle="modal" onclick="getScDetail(<?php echo $item->ddc_shoppingcart_detail_id; ?>)" class="btn pull-left" data-target="#schDetailModal"><i class="icon icon-tag"></i> <?php echo JText::_('COM_DDC_UPDATE_ITEM'); ?></button><?php echo "&pound;" . number_format($item->product_quantity*$item->price,2); ?></td>
         	</tr>
         	<?php $totalprice = $totalprice+($item->product_quantity*$item->price); ?>
 		<?php endforeach; ?>
@@ -117,27 +118,27 @@ JHtml::_('behavior.tooltip');
 			<td></td>
 			<td></td>
             <td><b><?php echo JText::_('COM_DDC_SUB_TOTAL'); ?></b></td>
-            <td><b><?php echo "&pound;" . number_format($totalprice,2); ?></b></td>
+            <td style="text-align:right"><b><?php echo "&pound;" . number_format($totalprice,2); ?></b></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
 			<td></td>
-            <td></td>
-            <td></td>
+            <td><b><?php echo JText::_('COM_DDC_DELIVERY'); ?></b></td>
+            <td style="text-align:right"><?php echo number_format($this->schItems[0]->shipping_cost,2); ?></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td></td>
 			<td></td>
             <td><b><?php echo JText::_('COM_DDC_TOTAL'); ?></b></td>
-            <td><b><?php echo "&pound;" . number_format($totalprice-($totalprice*3.4/100),2); ?></b></td>
+            <td style="text-align:right"><b><?php echo "&pound;" . number_format($totalprice+$this->schItems[0]->shipping_cost,2); ?></b></td>
 		</tr>
 	</tfoot>
 </table>
+</form>
 </div>
 <?php 
-$page++;
 endforeach; 
 ?>
 </div>
@@ -157,4 +158,11 @@ function trigPrint()
     <?php echo JHtml::_('form.token'); ?>
 </div>
 </form>
-
+<hr>
+<?php
+echo $this->schItems[0]->state;
+if($this->schItems[0]->state==4):?>
+<button>Take payment</button>
+<?php endif; ?>
+<?php $this->_shopcartDetailView->form = $this->form; ?>
+<?php echo $this->_shopcartDetailView->render(); ?>

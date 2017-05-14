@@ -10,6 +10,7 @@ class DdcshopboxViewsShopcartheadersHtml extends JViewHtml
     
     //retrieve task list from model
     $shopcartDetailsModel = new DdcshopboxModelsShopcartdetails();
+    $shopcartDetailFormModel = new DdcshopboxModelsShopcartdetail();
     $paymentsModel = new DdcshopboxModelsPayments();
  
     switch($layout) {
@@ -26,6 +27,8 @@ class DdcshopboxViewsShopcartheadersHtml extends JViewHtml
       case "shopcart":
       	DdcshopboxHelpersDdcshopbox::addSubmenu('shopcartheaders');
       	$this->schItems = $this->model->listItems();
+      	$this->form = $shopcartDetailFormModel->getForm();
+    	$this->_shopcartDetailView = DdcshopboxHelpersView::load('shopcartheaders','_scdform','phtml');
       	$this->addUpdToolbar();
       	$this->sidebar = JHtmlSidebar::render();
       

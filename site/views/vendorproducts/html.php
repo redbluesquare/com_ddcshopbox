@@ -28,16 +28,10 @@ class DdcshopboxViewsVendorproductsHtml extends JViewHtml
     		case "default":
     			default:
     			$this->items = $this->model->listItems();
-    			foreach($this->items as $item)
-    			{
-    				$item->distance = $this->model->getPostcodesDistance($this->session->get('ddclocation',null),$item->shop_post_code);
-    			}
-    			usort($this->items,array(new DdcshopboxModelsDefault(),'sort_objects_by_distance'));
     			$this->_productsListView = DdcshopboxHelpersView::load('vendorproducts','_item','phtml');
     		break;
     		case "product":
     			$this->item = $this->model->getItem();
-    			$this->item->distance = $this->model->getPostcodesDistance($this->session->get('ddclocation',null),$this->item->shop_post_code);
     			$this->model->hit($this->item->ddc_vendor_product_id);
     			$this->cart_items = $shopcartdetailModel->listItems($this->item->vendor_id);
     			break;

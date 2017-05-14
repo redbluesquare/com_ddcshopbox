@@ -16,7 +16,6 @@ function addFavshop(id)
 	  	}
 	});
 }
-
 function addCoupon()
 {
 	var coupInfo = {};
@@ -134,9 +133,9 @@ function updateCartItem(id)
 				}
 				else
 				{
-					jQuery("#ship_price").text('3.00');
-					jQuery("#jform_delivery_price").val('3.00');
-					jQuery("#jform_delivery_price2").val('3.00');
+					jQuery("#ship_price").text('4.00');
+					jQuery("#jform_delivery_price").val('4.00');
+					jQuery("#jform_delivery_price2").val('4.00');
 				}
 				if(couponValue > (myval2+Number(jQuery("#ship_price").text())))
 				{
@@ -860,4 +859,21 @@ function changeTown()
 function showCardDetails()
 {
 	jQuery("#cardDetails").removeClass("hide");
+}
+function getProdPrice(id)
+{
+	jQuery.ajax({
+		url:'index.php?',
+		type:'POST',
+		data:{"jform[table]":"vendorproducts","option":"com_ddcshopbox","controller":"get","format":"raw","jform[vendorproduct_id]":id,"task":"get.price"},
+		dataType:'JSON',
+		success:function(data)
+	  	{
+			if ( data.success ) {
+				jQuery("#productPrice"+id).text((Number(data.price)*Number(jQuery("#product_qty"+id).val())).toFixed(2));
+	  		}else{
+	  			//jQuery(".ddccartarea").html(data.result);
+	  		}
+	  	}
+	});
 }
