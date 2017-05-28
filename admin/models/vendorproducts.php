@@ -33,10 +33,12 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     $query->select('v.title as vendor_name');
     $query->select('vpr.product_price, vpr.product_currency, vpr.product_id, vpr.ddc_product_price_id');
     $query->select('c.title as category_title');
+    $query->select('c2.title as cat_title, c2.id as category_id');
     $query->select('vp.*');
     $query->from('#__ddc_vendor_products as vp');
     $query->leftJoin('#__ddc_products as p on vp.product_id = p.ddc_product_id');
     $query->leftJoin('#__categories as c on c.id = p.category_id');
+    $query->leftJoin('#__categories as c2 on c2.id = vp.category_id');
     $query->leftJoin('#__ddc_vendors as v on v.ddc_vendor_id = vp.vendor_id');
     $query->leftJoin('#__ddc_product_prices as vpr on vp.ddc_vendor_product_id = vpr.product_id');
     $query->leftJoin('#__ddc_currencies as vc on vc.ddc_currency_id = vpr.product_currency');
@@ -88,7 +90,8 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	'product_gtin' => $formdata['product_gtin'],
   	'product_mpn' => $formdata['product_mpn'],
   	'product_description_small' => $formdata['product_description_small'],
-	'product_description' => $formdata['product_description'],  	
+	'product_description' => $formdata['product_description'],
+  	'category_id' => $formdata['category_id'],
   	'product_length' => $formdata['product_length'],
   	'product_width' => $formdata['product_width'],
   	'product_height' => $formdata['product_height'],

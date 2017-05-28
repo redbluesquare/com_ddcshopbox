@@ -2,6 +2,10 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 $component = new JComponentHelper();
 $params = $component->getParams('com_ddcshopbox');
+if($this->item->image_link==null)
+{
+	$this->item->image_link = 'images/ddcshopbox/picna_ushbub.png';
+}
 ?>
 <?php if($this->item->product_type<=2):?>
 <div id="productRow<?php echo $this->item->ddc_vendor_product_id; ?>" class="col-xs-6 col-sm-12 col-md-12 col-lg-12">

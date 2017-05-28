@@ -55,20 +55,20 @@ class DdcshopboxControllersDefault extends JControllerBase
   	}
   	if($session->get('ddclocation',null)!=null)
   	{
-  		if($app->input->getWord('view', 'vendorproducts')=='home'):
-  			$app->input->set('view', 'vendors');
+  		if($app->input->getWord('view', 'profiles')=='home'):
+  			$app->input->set('view', 'profiles');
   		endif;
-  		$viewName = $app->input->getWord('view', 'vendorproducts');
+  		$viewName = $app->input->getWord('view', 'profiles');
   		$viewFormat = $document->getType();
   		$layoutName = $app->input->getWord('layout', 'default');
   	}
   	if($app->input->get('ddccity',null)!=null)
   	{
-  		if($app->input->getWord('view', 'cities')=='home'):
-  		$app->input->set('view', 'cities');
+  		if($app->input->getWord('view', 'towns')=='home'):
+  		$app->input->set('view', 'towns');
   		endif;
   	} 	
-	$viewName = $app->input->getWord('view', 'vendorproducts');
+	$viewName = $app->input->getWord('view', 'towns');
 	$viewFormat = $document->getType();
 	$layoutName = $app->input->getWord('layout', 'default');
 

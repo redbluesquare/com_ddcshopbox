@@ -88,9 +88,9 @@ class DdcshopboxModelsVendor extends JModelForm
 				$data->day_6_open = $shop_details['day_6_open'];
 				$data->day_6_open_time = $shop_details['day_6_open_time'];
 				$data->day_6_close_time = $shop_details['day_6_close_time'];
-				$data->day_7_open = $shop_details['day_7_open'];
-				$data->day_7_open_time = $shop_details['day_7_open_time'];
-				$data->day_7_close_time = $shop_details['day_7_close_time'];
+				$data->day_0_open = $shop_details['day_0_open'];
+				$data->day_0_open_time = $shop_details['day_0_open_time'];
+				$data->day_0_close_time = $shop_details['day_0_close_time'];
 				$data->social_site_1 = $shop_details['social_site_1'];
 				$data->social_url_1 = $shop_details['social_url_1'];
 				

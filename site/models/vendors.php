@@ -69,7 +69,7 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
     }
     if($this->_localonly == true)
     {
-    	$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
+    	//$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
     }
     if($this->_vendor_auth==1)
     {
@@ -119,6 +119,51 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
   		echo number_format($dist/1000,3);
   	}
   }
+	public function checkTimes($vendor_id, $shopDate,$product_id=null)
+	{
+		$times = array('08','09','10','11','12','13','14','15','16','17');
+		$vModel = new DdcshopboxModelsVendors();
+		$vpModel = new DdcshopboxModelsVendorproducts();
+		$vendor = $vModel->getItem($vendor_id);
+		$product = $vpModel->getItem($product_id);
+		$shopDay = Date('w',strtotime($shopDate));
+		$result = array();
+		for($i = 0; $i<count($times);$i++)
+		{
+			$start_time = date('H:i:s',strtotime($times[$i].':00'));
+			if($product->product_base_uom==6)
+			{
+				$end_time = strtotime('+'.$this->getpartjsonfield($product->product_params, 'product_box').' hours',strtotime($start_time))-1;
+				$end_time = date('H:i:s',$end_time);
+			}
+			elseif($product->product_base_uom==5)
+			{
+				$end_time = strtotime('+'.$this->getpartjsonfield($product->product_params, 'product_box').' minutes',strtotime($start_time))-1;
+				$end_time = date('H:i:s',$end_time);
+			}
+			$shModel = new DdcshopboxModelsServiceheaders();
+			$sh = $shModel->listItems($shopDate,array($start_time,$end_time));
+			$startTime = date('H:i:s',strtotime($this->getpartjsonfield($vendor->vendor_details, 'day_'.$shopDay.'_open_time')));
+			$finishTime = date('H:i:s',strtotime($this->getpartjsonfield($vendor->vendor_details, 'day_'.$shopDay.'_close_time')));
+			if((strtotime($start_time) >= strtotime($startTime)) AND (strtotime($end_time) <= strtotime($finishTime)))
+			{
+				if(count($sh) == null)
+				{
+					array_push($result,array($times[$i],0));
+				}
+				else
+				{
+					array_push($result,array($times[$i],1));
+				}
+			}
+			else 
+			{
+				array_push($result,array($times[$i],1));
+			}
+		}
+			
+		return $result;
+	}
   
   public function store($formdata = null)
   {

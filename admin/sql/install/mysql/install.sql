@@ -422,6 +422,55 @@ CREATE TABLE IF NOT EXISTS `#__ddc_product_prices` (
   KEY `price_quantity_end` (`price_quantity_end`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Holds price records for a product' AUTO_INCREMENT=1 ;
 
+CREATE TABLE IF NOT EXISTS `#__ddc_service_headers` (
+  `ddc_service_header_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL default 0,
+  `session_id` varchar(100),
+  `vendor_id` INT(11) NOT NULL default '0',
+  `first_name` varchar(50),
+  `last_name` varchar(50),
+  `payment_method` int(11) NULL,
+  `email_to` varchar(150) default NULL,
+  `mobile_no` varchar(150) default NULL,
+  `book_date` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `planned_start_time` TIME default '0:00:00',
+  `planned_end_time` TIME default '0:00:00',
+  `actual_start_time` TIME default '0:00:00',
+  `actual_end_time` TIME default '0:00:00',
+  `catid` int(11) NOT NULL default '0',
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(11) NOT NULL default '0',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_by` int(11) NOT NULL default '0',
+  `state` tinyint(3) NOT NULL default '0',
+  PRIMARY KEY (`ddc_service_header_id`),
+  KEY `user_id` (`user_id`),
+  KEY `book_date` (`book_date`),
+  KEY `planned_start_time` (`planned_start_time`),
+  KEY `planned_end_time` (`planned_end_time`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `#__ddc_service_details` (
+  `ddc_service_detail_id` int(11) NOT NULL AUTO_INCREMENT,
+  `service_header_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_quantity` double default '0.00',
+  `product_pack` double default '0.00',
+  `product_base_uom` int(11) default '0',
+  `product_price` double default '0.00',
+  `currency` int(11) default '0',
+  `discount` double default '0.00',
+  `discount_end_date` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `state` tinyint(3) NOT NULL,
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(11) NOT NULL default '0',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_by` int(11) NOT NULL default '0',
+  `hits` int(10) NOT NULL,
+  PRIMARY KEY (`ddc_service_detail_id`),
+  KEY `service_header_id` (`service_header_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 CREATE TABLE IF NOT EXISTS `#__ddc_shoppingcart_headers` (
   `ddc_shoppingcart_header_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL default 0,

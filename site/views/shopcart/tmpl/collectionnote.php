@@ -22,7 +22,7 @@ $page = 1;
 <div id="printBox">
 <?php foreach ($this->schItems as $i => $schitem): ?>
 <div id="printable">
-<h1><?php if($schitem->title!=null): echo '<b>'.$schitem->title.'</b>'; endif; ?></h1>
+<h3><?php if($schitem->title!=null): echo '<b>'.$schitem->title.'</b>'; endif; ?></h3>
 <table class="table">
 	<tbody>
 		<tr>
@@ -38,7 +38,7 @@ $page = 1;
 			</td>
 			<td></td>
 			<td width="25%">
-				<h3><?php echo JText::_('COM_DDC_CUSTOMER_DETAILS'); ?></h3>
+				<h3><?php echo JText::_('COM_DDC_CUSTOMER_COLLECTION_NOTE'); ?></h3>
 				<?php if($schitem->last_name!=null): echo '<b>'.$schitem->first_name." ".$schitem->last_name.'</b><br>'; endif; ?>
 				<?php if($schitem->del_address1!=null): echo $schitem->del_address1.'<br>'; endif; ?>
 				<?php if($schitem->del_address2!=null): echo $schitem->del_address2.'<br>'; endif; ?>

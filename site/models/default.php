@@ -254,7 +254,7 @@ class DdcshopboxModelsDefault extends JModelBase
 			$now = new Datetime();
 			$now = $now->getTimestamp();
 			//write log file
-			$file = JPATH_BASE.DS.'media'.DS.'com_ddcshopbox'.DS.'postcodelogger.txt';
+			$file = JPATH_BASE.'/media/com_ddcshopbox/postcodelogger.txt';
 			$txt = (string)$now."; ".$postcode."; ".$ip;
 			$myfile = file_put_contents($file, $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
 			
@@ -306,7 +306,7 @@ class DdcshopboxModelsDefault extends JModelBase
   public function getpartjsonfield($string,$part)
   {
   	$prod_params = json_decode($string, true);
-	$item = $prod_params[$part];  	
+	$item = (string)$prod_params[$part];  	
   	return $item;
   }
   
@@ -587,6 +587,28 @@ class DdcshopboxModelsDefault extends JModelBase
 		$mail->setBody($body);
 		$sent = $mail->Send();
 		
+		return $sent;
+	}
+	public function sendShopEmail($subject,$data,$emailto)
+	{
+		//Send details of the new shop
+		$params = JComponentHelper::getParams('com_ddcshopbox');
+		$mail = JFactory::getMailer();
+	
+		$app = JFactory::getApplication();
+		$sitename	= $app->getCfg('sitename');
+
+		$body		= (string)$data[0];
+	
+		$mail->addRecipient($emailto[0],$emailto[1]);
+		$mail->addCc($data[1], $data[2]);
+		$mail->setSender(array($data[1], $data[2]));
+		$mail->setSubject($sitename.': '.$subject);
+		$mail->isHTML(true);
+		$mail->Encoding = 'base64';
+		$mail->setBody($body);
+		$sent = $mail->Send();
+	
 		return $sent;
 	}
 }

@@ -705,9 +705,103 @@ jQuery(document).ready(function(){
 	        scrollTop: jQuery('#system-message-container').offset().top-150
 	    }, 800);
 	});
+	
+	
 });
 	
+function clickMe(id)
+{
+	var id2 = jQuery("#ddc_service_id").val();
+	if(id2!=""){
+		jQuery("#productItemBox"+id2).removeClass("active");
+	}
+	jQuery("#productItemBox"+id).addClass("active");
+	jQuery(".daysBox").removeClass("hide");
+	jQuery("#serviceName").text(jQuery("#serviceName"+id).text());
+	jQuery("#priceName").text(jQuery("#priceName"+id).text());
+	jQuery("#ddc_service_id").val(id);
+	jQuery("html, body").delay(200).animate({
+        scrollTop: jQuery('#system-message-container').offset().top+300
+    }, 800);
+}
+function Dayclick(day,open)
+{
+	var dt = jQuery("#"+day+"dateNm").text();
+	if(open != 0)
+	{
+		var id2 = jQuery("#ddc_day_id").val();
+		if(id2!=""){
+			jQuery("#"+id2+"Date").removeClass("active");
+		}
+		jQuery("#"+day+"Date").addClass("active");
+		jQuery("#dayName").text(jQuery("#"+day+"Date > p").text());
+		jQuery("#dateName").text(dt);
+		jQuery("#ddc_day_id").val(day);
+		jQuery(".earlyLateBox").removeClass("hide");
+		jQuery("html, body").delay(200).animate({
+	        scrollTop: jQuery('#system-message-container').offset().top+600
+	    }, 800);
+		var delInfo = {};
+		jQuery("#newBookingService :input").each(function(idx,ele){
+			delInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+		});
+		jQuery.ajax({
+			url:'?option=com_ddcshopbox&controller=get&format=raw&component=tmpl&jform[table]=vendors&task=get.times',
+			type:'GET',
+			data:delInfo,
+			dataType:'JSON',
+			success:function(data)
+			{
+				if ( data.success ){
+					console.log(data);
+					for(var i = 0; i < 9; i++){
+						if(data.result[i][1]==1){
+							jQuery("#"+data.result[i][0]+"time").addClass("timeBooked");
+							jQuery("#"+data.result[i][0]+"time").prop('onclick',null).off('click');
+						}
+					}
+					jQuery("#system-message-container").html(data.msg);
+				}else{
+					jQuery(".modal-header").append(data.msg);
+				}
+			}
+		});
+	}
 	
+}
+function elclick(el)
+{
+	var id2 = jQuery("#ddc_el_id").val();
+	if(id2!=""){
+		jQuery("#"+id2+"Check").removeClass("active");
+	}
+	jQuery("#"+el+"Check").addClass("active");
+	jQuery("#ddc_el_id").val(el);
+	//jQuery(".daysBox").addClass("hide");
+	jQuery("."+id2+"Box").addClass("hide");
+	jQuery("."+el+"Box").removeClass("hide");
+	jQuery("html, body").delay(200).animate({
+        scrollTop: jQuery('#system-message-container').offset().top+850
+    }, 800);
+}
+function addTime(el,booked)
+{
+	if(booked==0)
+	{
+		var id2 = jQuery("#ddc_el2_id").val();
+		if(id2!=""){
+			jQuery("#"+id2+"time").removeClass("active");
+		}
+		jQuery("#"+el+"time").addClass("active");
+		jQuery("#timeName").text(jQuery("#"+el+"time > p").text());
+		jQuery("#ddc_el2_id").val(el);
+		jQuery(".summaryBox").removeClass("hide");
+		jQuery("html, body").delay(200).animate({
+	        scrollTop: jQuery('#system-message-container').offset().top+1100
+	    }, 800);
+	}
+	
+}
 // Close Checkout on page navigation:
 //window.addEventListener('popstate', function() {
 //  handler.close();
@@ -820,6 +914,60 @@ function submitDel()
 		}
 	});
 }
+function bookAndPay()
+{
+	var email_to;
+	email_to = jQuery("#jform_email_to").val();
+	var id = jQuery("#jform_ddc_service_id").val();
+	if(jQuery("#jform_payment_method").val()==2){
+		if(jQuery("#jform_stripeCustToken").val()=="false")
+		{
+			// Open Checkout with further options:
+	  		handler.open({
+	    		name: 'Ushbub',
+	    		email: email_to,
+	    		description: jQuery("#serviceName").text(),
+	    		zipCode: false,
+	    		currency: 'gbp'
+	  		});
+		}
+	}
+	else
+	{
+		submitBooking();
+	}
+}
+
+function submitBooking()
+{
+	var delInfo = {};
+	jQuery("#newBookingService :input").each(function(idx,ele){
+		delInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+	});
+	jQuery.ajax({
+		url:'index.php?option=com_ddcshopbox&tmpl=component&jform[table]=serviceheaders&controller=edit&format=raw&task=serviceheader.save',
+		type:'POST',
+		data:delInfo,
+		dataType:'JSON',
+		ajaxStart: function() { jQuery("#submitBooking").val("processing..");    },
+	    ajaxStop: function() { jQuery("#submitBooking").val("Pay Now"); },
+		success:function(data)
+		{
+			if ( data.success ){
+				jQuery("#submitBooking").addClass('hide');
+				jQuery("#system-message-container").addClass('alert');
+				jQuery("#system-message-container").addClass('alert-success');
+				jQuery("#system-message-container").text(data.bookmsg);
+				jQuery("#newBookingService :input").prop('readonly', true);
+				jQuery("html, body").delay(200).animate({
+			        scrollTop: jQuery('.body').offset().top-30
+			    }, 1000);
+			}else{
+				jQuery(".modal-header").append(data.msg);
+			}
+		}
+	});
+}
 
 function postReview()
 {
@@ -843,6 +991,35 @@ function postReview()
 				jQuery("#reviewPostStatus").addClass('alert');
 				jQuery("#reviewPostStatus").addClass('alert-success');
 				jQuery("#reviewPostStatus").append("Thank you for your review.");
+			}else{
+				jQuery("#reviewPostStatus").addClass('alert');
+				jQuery("#reviewPostStatus").addClass('alert-error');
+				jQuery("#reviewPostStatus").append("Thank you of your review. Unfortunately, something went wrong. If it continues please e-mail admin@ushbub.co.uk");
+			}
+		}
+	});
+}
+function updateReview(state, id)
+{
+	var delInfo = {};
+	jQuery("#reviewPost"+id+" :input").each(function(idx,ele){
+		delInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+	});
+	jQuery.ajax({
+		url:'index.php?option=com_ddcshopbox&jform[state]='+state+'&jform[ddc_posting_id]='+id+'&jform[table]=ddcpostings&controller=edit&task=review.approval&format=raw',
+		type:'POST',
+		data:delInfo,
+		dataType:'JSON',
+		beforeSend: function() { jQuery(".btnReview").html("processing..");    },
+	    complete: function() { jQuery(".btnReview").html("Add Review"); },
+		success:function(data)
+		{
+			if ( data.success ){
+				jQuery(".btnReview").addClass('hide');
+				jQuery("#reviewPost"+id+" :input").prop('readonly', true);
+				jQuery("#reviewPost"+id).addClass('alert');
+				jQuery("#reviewPost"+id).addClass('alert-success');
+				jQuery("#reviewPost"+id).append("The post is now updated.");
 			}else{
 				jQuery("#reviewPostStatus").addClass('alert');
 				jQuery("#reviewPostStatus").addClass('alert-error');

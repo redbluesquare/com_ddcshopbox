@@ -89,6 +89,26 @@ class DdcshopboxControllersGet extends DdcshopboxControllersDefault {
 			}
 			echo json_encode($return);
 		}
+		elseif($this->data['table']=='vendors')
+		{
+			$task = $jinput->get('task',null,'string');
+			$model = new DdcshopboxModelsVendors();
+			if($task=='get.times')
+			{
+				$result = $model->checkTimes($this->data['vendor_id'],date('Y-m-d',strtotime($this->data['ddc_day_id'])),$this->data['ddc_service_id']);
+				if($result)
+				{
+					$return['success'] = true;
+					$return['msg'] = JText::_('COM_DDC_SAVE_SUCCESS');
+					$return['result'] = $result;
+				}
+				else
+				{
+					$return['msg'] = JText::_('COM_DDC_CART_EMPTY');
+				}
+			}
+			echo json_encode($return);
+		}
 		else
 		{
 

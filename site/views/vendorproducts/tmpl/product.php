@@ -9,7 +9,10 @@ $document->setTitle($this->item->vendor_product_name);
 $document->setMetaData("image",$this->item->image_link);
 $document->setMetaData("geo.placename",$this->item->address1.", ".$this->item->address2." ".$this->item->city.", ".$this->item->county.", ".$this->item->shop_post_code.", ".$this->item->country_name);
 $document->setDescription($this->item->vp_desc);
-
+if($this->item->image_link==null)
+{
+	$this->item->image_link = 'images/ddcshopbox/picna_ushbub.png';
+}
 ?>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -109,11 +112,13 @@ $document->setDescription($this->item->vp_desc);
 			<div class="col-md-3 col-sm-4 col-xs-6" style="padding:3px;">
 			<a href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendorproducts&layout=product&vendorproduct_id='.$item->ddc_vendor_product_id); ?>" style="text-decoration:none;">
 			<div style="height:250px;border:1px solid #efefef;border-radius:10px;overflow:hidden;padding:0px;margin:2px;">
-			<img src="<?php echo JRoute::_().$item->image_link; ?>" width="100%" /><br>
+			<img src="<?php echo JRoute::_($item->image_link); ?>" width="100%" /><br>
 			<h4 style="text-align:center;"><?php echo $item->vendor_product_name; ?></h4>
-			<p style="text-align:right;padding-right:10px;color:#333;"><span class="ddcPrice"><?php echo $item->currency_symbol." ".number_format($item->product_price,2); ?></span>
-			<small><?php if($item->product_base_uom==1): echo "/each"; elseif($item->product_base_uom==2): echo "/set"; elseif($item->product_base_uom==3): echo "/pack"; else: echo "/pair"; endif; ?></small>
-			</p>
+			<p style="text-align:right;padding-right:10px;color:#333;"><span class="ddcPrice"><?php echo $item->currency_symbol." <span id=\"productPrice".$item->ddc_vendor_product_id."\">".number_format(($this->model->getpartjsonfield($item->product_params,'min_order_level')*$this->model->getPriceItem($item->product_price,$this->model->getpartjsonfield($item->product_params,'price_weight_based'),$item->product_weight,$item->product_weight_uom)),2); ?></span></span>
+    			<?php if($this->model->getpartjsonfield($item->product_params,'product_price_estimate')==1):
+				echo '<i class="priceEstimate" data-trigger="hover" title="Estimated Price" data-content="The final price may vary due to the actual weight of the product. We will inform you if it is more than 3% in difference" data-toggle="popover" data-placement="bottom" >est.</i>';
+				endif;?><br>
+	    		<?php if($item->product_weight>0): ?><small><?php echo "(".$item->currency_symbol." ".number_format($this->model->getPricePerKg($item->product_price,$this->model->getpartjsonfield($item->product_params,'price_weight_based'),$item->product_weight,$item->product_weight_uom),2); ?> / kg)</small><?php endif; ?></p>
 			</div>
 			</a>
 			</div>

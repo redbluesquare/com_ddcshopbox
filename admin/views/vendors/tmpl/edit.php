@@ -82,7 +82,127 @@ JHtml::_('behavior.tooltip');
 					</div>
 					<div  id="shop_details" class="tab-pane fade in">
 					<div class="row-fluid">
-					<?php foreach($this->form->getFieldset('page2_shop_details') as $field): ?>
+					<?php foreach($this->form->getFieldset('page2_shop_details_1') as $field): ?>
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="control-group span4">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<?php endif;?>
+					<?php endforeach; ?>
+					<div class="clearfix"></div>
+					</div>
+					<div class="row-fluid">
+					<?php foreach($this->form->getFieldset('page2_shop_details_2') as $field): ?>
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="control-group span4">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<?php endif;?>
+					<?php endforeach; ?>
+					<div class="clearfix"></div>
+					</div>
+					<div class="row-fluid">
+					<?php foreach($this->form->getFieldset('page2_shop_details_3') as $field): ?>
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="control-group span4">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<?php endif;?>
+					<?php endforeach; ?>
+					<div class="clearfix"></div>
+					</div>
+					<div class="row-fluid">
+					<?php foreach($this->form->getFieldset('page2_shop_details_4') as $field): ?>
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="control-group span4">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<?php endif;?>
+					<?php endforeach; ?>
+					<div class="clearfix"></div>
+					</div>
+					<div class="row-fluid">
+					<?php foreach($this->form->getFieldset('page2_shop_details_5') as $field): ?>
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="control-group span4">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<?php endif;?>
+					<?php endforeach; ?>
+					<div class="clearfix"></div>
+					</div>
+					<div class="row-fluid">
+					<?php foreach($this->form->getFieldset('page2_shop_details_6') as $field): ?>
+						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
+							<?php echo $field->input;?>
+						<?php else:?>
+						<div class="control-group span4">
+							<div class="control-label">
+							<?php echo $field->label; ?>
+							<?php if (!$field->required && $field->type != 'Spacer') : ?>
+								<span class="optional"><?php //echo JText::_('COM_USERS_OPTIONAL');?></span>
+							<?php endif; ?>
+							</div>
+							<div class="controls">
+								<?php echo $field->input;?>
+							</div>
+						</div>
+						<?php endif;?>
+					<?php endforeach; ?>
+					<div class="clearfix"></div>
+					</div>
+					<div class="row-fluid">
+					<?php foreach($this->form->getFieldset('page2_shop_details_7') as $field): ?>
 						<?php if ($field->hidden):// If the field is hidden, just display the input.?>
 							<?php echo $field->input;?>
 						<?php else:?>

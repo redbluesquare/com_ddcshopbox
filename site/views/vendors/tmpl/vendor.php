@@ -55,7 +55,7 @@ $document->setDescription($this->item->introduction);
 				<div class="<?php echo $class;?> pull-left">Fri</div>
 				<?php if($this->model->getpartjsonfield($this->item->vendor_details,'day_6_open')==1){$class = 'vendor-available';}else{$class = 'vendor-unavailable';} ?>
 				<div class="<?php echo $class;?> pull-left">Sat</div>
-				<?php if($this->model->getpartjsonfield($this->item->vendor_details,'day_7_open')==1){$class = 'vendor-available';}else{$class = 'vendor-unavailable';} ?>
+				<?php if($this->model->getpartjsonfield($this->item->vendor_details,'day_0_open')==1){$class = 'vendor-available';}else{$class = 'vendor-unavailable';} ?>
 				<div class="<?php echo $class;?> pull-left">Sun</div>
 				<p class="vendor-address"><small><?php echo $this->item->address1.", ".$this->item->address2." ".$this->item->city.", ".$this->item->post_code; ?></small><br>
 					<?php echo $this->model->getpartjsonfield($this->item->contact_numbers,'contact_tel'); ?>
@@ -89,6 +89,12 @@ $document->setDescription($this->item->introduction);
 	<div class="tab-pane active" style="margin-bottom:10px;" role="tabpanel" id="ddcshop">
 		<?php foreach ($this->products as $product):?>
 			<?php if($product->product_type<=2):?>
+			<?php 
+			if($product->image_link==null)
+			{
+				$product->image_link = 'images/ddcshopbox/picna_ushbub.png';
+			}
+			?>
 			<div class="col-xs-9" style="position:relative;margin:10px 0px 0px 0px;">
 				<img class="pull-left col-xs-3 img-rounded" src="<?php echo JRoute::_($product->image_link); ?>" >
 				<h4 class="header" style="line-height:20px;margin-top: 2px;margin-bottom:4px"><a class="title" href="<?php echo JRoute::_('index.php?option=com_ddcshopbox&view=vendorproducts&layout=product&vendorproduct_id='.$product->ddc_vendor_product_id);?>"><?php echo $product->vendor_product_name; ?></a></h4>
@@ -173,23 +179,16 @@ $document->setDescription($this->item->introduction);
 		</div>
 		<?php if($this->item->allow_bookings == 1):?>
 		<div class="tab-pane" style="margin-bottom:10px;" role="tabpanel" id="ddcbookings">
+			<?php
+			$this->_vendorBookingView->form = $this->form;
+			$this->_vendorBookingView->type = 'form';
+			$this->_vendorBookingView->item = $this->item;
+			$this->_vendorBookingView->type = 'item';
+			echo $this->_vendorBookingView->render();
+			?>
+			
 			<div class="col-xs-4" style="padding-top:20px;">
 				
-				<form class="form-group">
-					<input name="first_name" type="text" class="form-control form-group" id="" placeholder="<?php echo JText::_('COM_DDC_FIRSTNAME_LABEL'); ?>" value="">
-					<input name="last_name" type="text" class="form-control form-group" id="" placeholder="<?php echo JText::_('COM_DDC_LASTNAME_LABEL'); ?>" value="">
-					<h3><?php echo JText::_('COM_DDC_SERVICE')?></h3>
-					<?php foreach ($this->products as $product):?>
-					<?php if($product->product_type==4):?>
-						<input name="vendor_product_name" type="radio" id="vendor_product_name<?php echo $product->vendor_product_id; ?>" value="<?php echo $product->vendor_product_id; ?>"> <label><?php echo $product->vendor_product_name;?></label><br>
-					<?php endif;?>
-					<?php endforeach; ?>
-					<h3><?php echo JText::_('COM_DDC_WHEN')?></h3>
-					<input name="appointment_start" type="radio" value="today"> <label><?php echo JText::_('COM_DDC_TODAY'); ?></label><br>
-					<input name="appointment_start" type="radio" value="tomorrow"> <label><?php echo JText::_('COM_DDC_TOMORROW'); ?></label><br>
-					<input name="" type="number" id="" value="17" min="00" max="24">
-					<input name="" type="number" id="" value="00" min="00" max="59">
-				</form>
 				
 				<div class="clearfix"></div>
 			</div>
@@ -201,15 +200,36 @@ $document->setDescription($this->item->introduction);
 		<?php endif;?>
 		<div class="tab-pane" style="margin-bottomn:10px;" role="tabpanel" id="ddcreviews">
 			<div class="row">
+				<?php 
+				foreach($this->postings as $posting):
+				?>
 				<div class="col-xs-12 ddcreview_bar">
 					<div class="col-xs-10">
-						<p>Your reviews will show here. :)</p>
+						<p><?php echo $posting->message;?></p>
 					</div>
+					<?php 
+					if($posting->state==0):
+					?>
 					<div class="col-xs-2">
-						<p>Rating</p>
+						<button class="btn" style="margin-bottom:5px;" onclick="updateReview(1,<?php echo $posting->ddc_posting_id?>)"><?php echo JText::_('COM_DDC_APPROVE'); ?></button>
+						<button class="btn" onclick="updateReview(-2,<?php echo $posting->ddc_posting_id?>)"><?php echo JText::_('COM_DDC_REJECT'); ?></button>
 					</div>
+					<?php 
+					endif;
+					?>
 				</div>
+				<form id="reviewPost<?php echo $posting->ddc_posting_id?>">
+				<input name="jform[ddc_posting_id]" type="hidden" value="<?php echo $posting->ddc_posting_id?>" />
+				<input name="option" type="hidden" value="com_ddcshopbox" />
+				<input name="jform[table]" type="hidden" value="ddcpostings" />
+				<input name="controller" type="hidden" value="edit" />
+				<input name="format" type="hidden" value="raw" />
+				<input name="task" type="hidden" value="review.approval" />
+				</form>
 				<div class="clearfix"></div>
+				<?php 
+				endforeach;
+				?>
 			</div>
 			<div class="row">
 				<h4><?php echo JText::_('COM_DDC_ADD_A_REVIEW'); ?></h4>
@@ -230,7 +250,7 @@ $document->setDescription($this->item->introduction);
 				<div id="reviewPostStatus"></div>
 				</div>
 				<div class="col-xs-2">
-					<input class="btn btn-primary col-xs-12 btnReview" onclick="postReview()" type="button" value="Add Review" />
+					<input class="btn btn-primary col-xs-12 btnReview" onclick="postReview(0)" type="button" value="Add Review" />
 				</div>
 				<?php else: ?>
 				<p><?php echo JText::_('COM_DDC_LOGIN_TO_POST_REVIEW');?></p>

@@ -23,6 +23,7 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     	$vproductsModel = new DdcshopboxModelsVendorproducts();
     	$vendorModel = new DdcshopboxModelsVendor();
     	$profileModel = new DdcshopboxModelsProfile();
+    	$postModel = new DdcshopboxModelsDdcpostings();
     	if($jinput->get('vendor_id')!=null)
     	{
     		$layout = 'vendor';
@@ -44,8 +45,10 @@ class DdcshopboxViewsVendorsHtml extends JViewHtml
     			$this->item = $this->model->getItem();
     			$this->session = JFactory::getSession();
     			$this->products = $vproductsModel->listItems();
+    			$this->postings = $postModel->listItems();
     			$this->gmap($this->item->address1.", ".$this->item->post_code,'com_ddcshopbox');
     			$this->model->hit($this->item->ddc_vendor_id);
+    			$this->_vendorBookingView = DdcshopboxHelpersView::load('vendors','_bookings','phtml');
     		break;
 
     	}

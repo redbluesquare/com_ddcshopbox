@@ -77,9 +77,9 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
   				'day_6_open' => $formdata['day_6_open'],
   				'day_6_open_time' => $formdata['day_6_open_time'],
   				'day_6_close_time' => $formdata['day_6_close_time'],
-  				'day_7_open' => $formdata['day_7_open'],
-  				'day_7_open_time' => $formdata['day_7_open_time'],
-  				'day_7_close_time' => $formdata['day_7_close_time'],
+  				'day_0_open' => $formdata['day_0_open'],
+  				'day_0_open_time' => $formdata['day_0_open_time'],
+  				'day_0_close_time' => $formdata['day_0_close_time'],
   				'social_site_1' => $formdata['social_site_1'],
   				'social_url_1' => $formdata['social_url_1']
   		);

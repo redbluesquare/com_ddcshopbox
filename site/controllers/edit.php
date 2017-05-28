@@ -329,6 +329,69 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 			{
 		
 			}
+			if($task=="review.approval")
+			{
+				$modelName  = $app->input->get('models', 'ddcpostings');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+				if( $row = $model->store($this->data) )
+				{
+					$return['success'] = true;
+					$return['msg'] = JText::_('COM_DDC_REVIEW_SAVE_SUCCESS');
+				}else{
+					$return['msg'] = JText::_('COM_DDC_REVIEW_SAVE_FAILURE');
+				}
+			}
+			echo json_encode($return);
+		}
+		if($this->data['table']=='serviceheaders')
+		{
+			$task = $jinput->get('task', "", 'STR' );
+			if($task=='serviceheader.add')
+			{
+		
+			}
+			if($task=='serviceheader.edit')
+			{
+		
+			}
+			if($task=="serviceheader.save")
+			{
+				$return['emailsent'] = false;
+				$return['payment'] = false;
+				$return['bookmsg'] = JText::_('COM_DDC_BOOKING_SAVE_FAILURE');
+				$modelName  = $app->input->get('models', 'serviceheaders');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+				if( $row = $model->store() )
+				{
+					$jinput->set('service_header_id',$row->ddc_service_header_id);
+					$sdmodelName  = $app->input->get('models', 'servicedetails');
+					$sdmodelName  = 'DdcshopboxModels'.ucwords($sdmodelName);
+					$sdmodel = new $sdmodelName();
+					if($sdmodel->store())
+					{
+						if($model->sendShopEmail('Booking Confirmation',$model->getService($row->ddc_service_header_id),array($this->data['email_to'],$this->data['first_name'].' '.$this->data['last_name'])))
+						{
+							$return['emailsent'] = true;
+						}
+						if($model->storePayment('vendor'.$this->data['vendorid'],$row->ddc_service_header_id))
+						{
+							$return['payment'] = true;
+						}
+						$return['success'] = true;
+						$return['bookmsg'] = JText::_('COM_DDC_BOOKING_SAVE_SUCCESS');
+					}
+				}
+			}
+			if($task=="serviceheader.cancel")
+			{
+		
+			}
+			if($task=="serviceheader.approval")
+			{
+				
+			}
 			echo json_encode($return);
 		}
 		else

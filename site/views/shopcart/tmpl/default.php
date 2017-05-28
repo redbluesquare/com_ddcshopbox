@@ -10,7 +10,7 @@ $products_total = null;
 $params = JComponentHelper::getParams('com_ddcshopbox');
 $app = JFactory::getApplication();
 $date = date('w');
-if($date == 3)
+if($date == 4)
 {
 	$leadtime = 60*60*24*4;
 	$today = strtotime('today');
