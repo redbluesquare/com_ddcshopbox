@@ -16,6 +16,7 @@ function DdcshopboxBuildRoute(&$query)
 	}
 	if (isset($query['layout']))
 	{
+		$segments[] = $query['layout'];
 		unset($query['layout']);
 	}
 	if (isset($query['vendor_id']))
@@ -56,6 +57,25 @@ function DdcshopboxBuildRoute(&$query)
 		}
 	
 	}
+	if (isset($query['recipeid']))
+	{
+		// Make sure we have the id and the alias
+		if (strpos($query['recipeid'], ':') === false)
+		{
+			$db = JFactory::getDbo();
+			$dbQuery = $db->getQuery(true)
+			->select('ddc_recipe_header_id, alias')
+			->from('#__ddc_recipe_headers')
+			->where('ddc_recipe_header_id = ' . (int) $query['recipeid']);
+			$db->setQuery($dbQuery);
+			$alias = $db->loadObject();
+			$query['recipeid'] = $alias->ddc_recipe_header_id.":".$alias->alias;
+	
+			$segments[] = $query['recipeid'];
+			unset($query['recipeid']);
+		}
+	
+	}
 	return $segments;
 }
 
@@ -66,10 +86,12 @@ function DdcshopboxParseRoute($segments)
 	{
 		case 'products':
 			$vars['view'] = 'vendorproducts';
-				if(count($segments)==2) 
+				if(count($segments)>1) 
 				{
-					$vars['layout'] = 'product';
-					$vars['vendorproduct_id'] = $segments[1];
+					$vars['layout'] = $segments[1];
+					if(count($segments)>2):
+						$vars['vendorproduct_id'] = $segments[2];
+					endif;
 				}
 			break;
 		case 'category':
@@ -84,30 +106,44 @@ function DdcshopboxParseRoute($segments)
 				break;
 		case 'vendors':
 			$vars['view'] = 'vendors';
-			if(count($segments)==2)
+			if(count($segments)>1)
 			{
-				$vars['layout'] = 'vendor';
-				$vars['vendor_id'] = $segments[1];
+				$vars['layout'] = $segments[1];
+				if(count($segments)>2):
+					$vars['vendor_id'] = $segments[2];
+				endif;
 			}
 			
 			break;
 		case 'cities':
 			$vars['view'] = 'cities';
-			if(count($segments)==2)
+			if(count($segments)>1)
 			{
-				$vars['layout'] = 'city';
-				$vars['vendor_id'] = $segments[1];
-			}
-				
+				$vars['layout'] = $segments[1];
+				if(count($segments)>2):
+					$vars['vendor_id'] = $segments[2];
+				endif;
+			}	
 		break;
 		case 'shipping':
 			$vars['view'] = 'shipping';
-			if(count($segments)==2)
+			if(count($segments)>1)
 			{
-				$vars['layout'] = 'default';
-				$vars['vendor_id'] = $segments[1];
+				$vars['layout'] = $segments[1];
+				if(count($segments)>2):
+					$vars['vendor_id'] = $segments[2];
+				endif;
 			}
-		
+		break;
+		case 'recipes':
+			$vars['view'] = $segments[0];
+			if(count($segments)>1)
+			{
+				$vars['layout'] = $segments[1];
+				if(count($segments)>2):
+					$vars['recipeid'] = $segments[2];
+				endif;
+			}
 			break;
 	}
 	return $vars;

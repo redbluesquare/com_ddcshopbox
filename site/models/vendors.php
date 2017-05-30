@@ -168,7 +168,6 @@ class DdcshopboxModelsVendors extends DdcshopboxModelsDefault
   public function store($formdata = null)
   {
   	$formdata = $formdata ? $formdata : JRequest::getVar('jform', array(), 'post', 'array');
-  	var_dump( $formdata['alias'] );
   	if($formdata['alias'] == null)
   	{
   		$formdata['alias'] = JFilterOutput::stringURLSafe($formdata['title']);

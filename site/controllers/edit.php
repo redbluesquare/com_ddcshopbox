@@ -394,6 +394,41 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 			}
 			echo json_encode($return);
 		}
+		if($this->data['table']=='recipeheaders')
+		{
+			$task = $jinput->get('task', "", 'STR' );
+			if($task=='recipeheader.add')
+			{
+		
+			}
+			if($task=='recipeheader.edit')
+			{
+		
+			}
+			if($task=="recipeheader.save")
+			{
+				$return['msg'] = JText::_('COM_DDC_BOOKING_SAVE_FAILURE');
+				$return['id'] = null;
+				$modelName  = $app->input->get('models', 'recipeheaders');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+				if( $row = $model->store() )
+				{
+					$return['id'] = $row->ddc_recipe_header_id;
+					$return['success'] = true;
+					$return['msg'] = JText::_('COM_DDC_RH_SAVE_SUCCESS');
+				}
+			}
+			if($task=="recipeheader.cancel")
+			{
+		
+			}
+			if($task=="recipeheader.approval")
+			{
+		
+			}
+			echo json_encode($return);
+		}
 		else
 		{
 

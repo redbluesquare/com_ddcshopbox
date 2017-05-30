@@ -611,4 +611,33 @@ class DdcshopboxModelsDefault extends JModelBase
 	
 		return $sent;
 	}
+	public function getProductPrice($id=null)
+	{
+		$model = new DdcshopboxModelsVendorproducts();
+		$item = $model->getItem((int)$id);
+	
+		$unitPrice = $item->product_price;
+		$weight = $item->product_weight;
+		$priceWeightBased = $model->getpartjsonfield($item->product_params,'price_weight_based');
+		$weightUOM = $item->product_weight_uom;
+		if($priceWeightBased == 1)
+		{
+			if($weightUOM=='grams')
+			{
+				$factor = $weight/1000;
+				$unitPrice = $item->product_price*$factor;
+			}
+			if($weightUOM=='kg')
+			{
+				$factor = $weight/1;
+				$unitPrice = $item->product_price*$factor;
+			}
+			if($weightUOM=='ounce')
+			{
+				$factor = $weight/35.27396;
+				$unitPrice = $item->product_price*$factor;
+			}
+		}
+		return $unitPrice;
+	}
 }

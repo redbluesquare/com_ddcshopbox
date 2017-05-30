@@ -81,7 +81,6 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
   	'product_base_uom' => $formdata['product_base_uom'],
   	'pordering' => $formdata['pordering'],
   	'published' => $formdata['published'],
-  	'product_params' => json_encode($prod_params),
   	'metarobot' => $formdata['metarobot'],
   	'metaauthor' => $formdata['metaauthor'],
   	'table' => $formdata['table']);

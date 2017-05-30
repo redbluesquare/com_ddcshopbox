@@ -32,6 +32,7 @@ class DdcshopboxViewsVendorproductsHtml extends JViewHtml
     		break;
     		case "product":
     			$this->item = $this->model->getItem();
+    			$this->vendor = $vendorModel->getItem($this->item->vendor_id);
     			$this->model->hit($this->item->ddc_vendor_product_id);
     			$this->cart_items = $shopcartdetailModel->listItems($this->item->vendor_id);
     			break;

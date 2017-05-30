@@ -7,7 +7,7 @@ $dim_result = $this->item->product_length*$this->item->product_width*$this->item
 $document =JFactory::getDocument();
 $document->setTitle($this->item->vendor_product_name);
 $document->setMetaData("image",$this->item->image_link);
-$document->setMetaData("geo.placename",$this->item->address1.", ".$this->item->address2." ".$this->item->city.", ".$this->item->county.", ".$this->item->shop_post_code.", ".$this->item->country_name);
+$document->setMetaData("geo.placename",$this->vendor->address1.", ".$this->vendor->address2." ".$this->vendor->city.", ".$this->vendor->county.", ".$this->vendor->post_code.", ".$this->vendor->country_name);
 $document->setDescription($this->item->vp_desc);
 if($this->item->image_link==null)
 {

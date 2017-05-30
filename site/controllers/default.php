@@ -18,6 +18,14 @@ class DdcshopboxControllersDefault extends JControllerBase
   	$document = JFactory::getDocument();
   	$session = JFactory::getSession();
   	$user = JFactory::getUser();
+  	$params = JComponentHelper::getParams('com_ddcshopbox');
+//   	if ($params->get('required_account') == 1)
+//   	{
+//   		if ($user->get('guest'))
+//   		{
+//   			$app->redirect('index.php',JText::_('COM_LENDR_ACCOUNT_REQUIRED_MSG'));
+//   		}
+//   	}
   	$model = new DdcshopboxModelsDefault();
   	$return = array();
   	$return['success'] = false;
@@ -53,21 +61,21 @@ class DdcshopboxControllersDefault extends JControllerBase
   		}
   		
   	}
-  	if($session->get('ddclocation',null)!=null)
-  	{
-  		if($app->input->getWord('view', 'profiles')=='home'):
-  			$app->input->set('view', 'profiles');
-  		endif;
-  		$viewName = $app->input->getWord('view', 'profiles');
-  		$viewFormat = $document->getType();
-  		$layoutName = $app->input->getWord('layout', 'default');
-  	}
-  	if($app->input->get('ddccity',null)!=null)
-  	{
-  		if($app->input->getWord('view', 'towns')=='home'):
-  		$app->input->set('view', 'towns');
-  		endif;
-  	} 	
+//   	if($session->get('ddclocation',null)!=null)
+//   	{
+//   		if($app->input->getWord('view', 'profiles')=='home'):
+//   			$app->input->set('view', 'profiles');
+//   		endif;
+//   		$viewName = $app->input->getWord('view', 'profiles');
+//   		$viewFormat = $document->getType();
+//   		$layoutName = $app->input->getWord('layout', 'default');
+//   	}
+//   	if($app->input->get('ddccity',null)!=null)
+//   	{
+//   		if($app->input->getWord('view', 'towns')=='home'):
+//   		$app->input->set('view', 'towns');
+//   		endif;
+//   	} 	
 	$viewName = $app->input->getWord('view', 'towns');
 	$viewFormat = $document->getType();
 	$layoutName = $app->input->getWord('layout', 'default');

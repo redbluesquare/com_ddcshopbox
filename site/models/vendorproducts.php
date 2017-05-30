@@ -58,7 +58,7 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
 
   protected function _buildWhere(&$query,$id=null)
   {
-  	if($this->_product_id!=null)
+  	if((int)$this->_product_id > 0)
   	{
   		$query->where('vp.ddc_vendor_product_id = "'. (int)$this->_product_id .'"');
   	}
@@ -66,7 +66,7 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	{
   		$query->where('vp.vendor_id = "'. (int)$this->_vendor_id .'"');
   	}
-  	if($id!=null)
+  	if((int)$id > 0)
   	{
   		$query->where('vp.ddc_vendor_product_id = "'. (int)$id .'"');
   	} 
@@ -140,33 +140,4 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	}
   	return true;
   }
-	public function getProductPrice($id=null)
-	{
-		$model = new DdcshopboxModelsVendorproducts();
-		$item = $this->getItem($id);
-		
-		$unitPrice = $item->product_price;
-		$weight = $item->product_weight;
-		$priceWeightBased = $model->getpartjsonfield($item->product_params,'price_weight_based');
-		$weightUOM = $item->product_weight_uom;
-		if($priceWeightBased == 1)
-		{
-			if($weightUOM=='grams')
-			{
-				$factor = $weight/1000;
-				$unitPrice = $item->product_price*$factor;
-			}
-			if($weightUOM=='kg')
-			{
-				$factor = $weight/1;
-				$unitPrice = $item->product_price*$factor;
-			}
-			if($weightUOM=='ounce')
-			{
-				$factor = $weight/35.27396;
-				$unitPrice = $item->product_price*$factor;
-			}
-		}
-		return $unitPrice;
-	}
 }

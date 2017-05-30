@@ -215,7 +215,7 @@ function ddcUpdateCart(id)
 				setTimeout(function(){ 
 					jQuery("#product_status"+id).removeClass('alert', 'alert-success');
 					jQuery("#product_status"+id).text("");
-				},1500);
+				},2000);
 				jQuery("#product_status"+id).text(data.msg);
 			}else{
 				if ( data.locationset == 1 ){
@@ -1052,5 +1052,33 @@ function getProdPrice(id)
 	  			//jQuery(".ddccartarea").html(data.result);
 	  		}
 	  	}
+	});
+}
+
+function addRecipe()
+{
+	var delInfo = {};
+	jQuery("#ddcrecipeheader :input").each(function(idx,ele){
+		delInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+	});
+	jQuery.ajax({
+		url:'index.php',
+		type:'POST',
+		data:delInfo,
+		dataType:'JSON',
+		success:function(data)
+		{
+			if ( data.success ){
+				jQuery("#jform_ddc_recipe_header_id").val(data.id);
+				jQuery("#recipeingredients").removeClass('hide');
+				jQuery("#recipemethod").removeClass('hide');
+				jQuery("#recipeimages").removeClass('hide');
+				jQuery("#saveRecipeHeader").addClass('hide');
+			}else{
+				jQuery("#reviewPostStatus").addClass('alert');
+				jQuery("#reviewPostStatus").addClass('alert-error');
+				jQuery("#reviewPostStatus").append("Thank you of your review. Unfortunately, something went wrong. If it continues please e-mail admin@ushbub.co.uk");
+			}
+		}
 	});
 }

@@ -20,14 +20,14 @@ class DdcshopboxViewsDashboardHtml extends JViewHtml
     
     	//retrieve task list from model
     	$productsModel = new DdcshopboxModelsProducts();
-    	$vendorModel = new DdcshopboxModelsVendor();
+    	$vendorModel = new DdcshopboxModelsVendors();
     	
     	switch($layout) {
     		case "default":
     			default:
     			$pathway = $app->getPathway();
     			$pathway->addItem('Dashboard', '');
-    			$this->items = $this->model->listItems();
+    			$this->items = $vendorModel->listItems();
     			$this->_vendorsListView = DdcshopboxHelpersView::load('vendors','_item','phtml');
     		break;
     		case "storemanager":
