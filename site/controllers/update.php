@@ -115,6 +115,34 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 					return parent::execute();
 				}
 		}
+		elseif($this->data['table']=='categories')
+		{
+			if($jinput->get('task',null,'string')=="add.filter")
+			{
+				$model = new DdcshopboxModelsCategories();
+				if($this->data['parentfilter']!=null)
+				{
+					$sc = $model->getRelCats($this->data['parentfilter']);
+					$sc_array = array($this->data['parentfilter']);
+					foreach($sc as $s):
+						array_push($sc_array,$s);
+					endforeach;
+					$jinput->set('parentfilter',$sc_array);
+				}
+				else 
+				{
+					$jinput->clear('parentfilter');
+				}
+				$return['success'] = true;
+				$return['msg'] = JText::_('COM_DDC_FILTER_SAVE_SUCCESS');
+			}
+			else
+			{
+				$return['msg'] = JText::_('COM_DDC_FILTER_SAVE_FAILURE');
+			}
+			echo json_encode($return);
+		
+		}
 		elseif($app->input->getMethod()=='DELETE')
 		{
 			if($this->data['table']=='shopcartdetails')
@@ -148,6 +176,7 @@ class DdcshopboxControllersUpdate extends DdcshopboxControllersDefault {
 				echo json_encode($return);
 			}
 		}
+		
 		else
 		{
 			$viewName = $app->input->getWord('view', 'home');

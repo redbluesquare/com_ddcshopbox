@@ -109,6 +109,26 @@ class DdcshopboxControllersGet extends DdcshopboxControllersDefault {
 			}
 			echo json_encode($return);
 		}
+		elseif($this->data['table']=='recipedetails')
+		{
+			$task = $jinput->get('task',null,'string');
+			$model = new DdcshopboxModelsRecipedetails();
+			if($task=='get.ingredient')
+			{
+				$result = $model->getItem(null,$jinput->get('recipe_detail_id'));
+				if($result)
+				{
+					$return['success'] = true;
+					$return['msg'] = JText::_('COM_DDC_SUCCESS');
+					$return['result'] = $result;
+				}
+				else
+				{
+					$return['msg'] = JText::_('COM_DDC_FAILURE');
+				}
+			}
+			echo json_encode($return);
+		}
 		else
 		{
 

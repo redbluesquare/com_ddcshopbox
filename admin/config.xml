@@ -50,6 +50,14 @@
 			query="SELECT id AS value, title as distrib_cat_id FROM #__categories WHERE extension ='com_ddcshopbox' And parent_id ='1'">
 			<option value="0">-</option>
 		</field>
+		<field
+			name="base_cat_id"
+			type="sql"
+			label="COM_DDC_CATEGORY_ID_LABEL"
+			description="COM_DDC_CATEGORY_ID_DESC"
+			query="SELECT id AS value, title as base_cat_id FROM #__categories WHERE extension ='com_ddcshopbox' And parent_id ='1'">
+			<option value="0">-</option>
+		</field>
 		<field name="url_terms"
 		    type="url"
 			default=""

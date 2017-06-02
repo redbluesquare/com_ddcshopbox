@@ -11,7 +11,7 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	var $_app		  	= null;
   	var $_published   	= 0;
   	var $_ddclocation	= null;
-  	var $_ddcpostCode	= null;
+  	var $_parentfilter	= null;
   	var $_session	  	= null;
 
   function __construct()
@@ -23,8 +23,30 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     //If no User ID is set to current logged in user
     $this->_user_id = $this->_app->input->get('profile_id', JFactory::getUser()->id);
     $this->_product_id = $this->_app->input->get('vendorproduct_id', null);
+    $model = new DdcshopboxModelsCategories();
+    $sc_array = null;
+    if($this->_app->input->get('parentfilter',null)!=null)
+    {
+    	$sc = $model->getRelCats($this->_app->input->get('parentfilter',null));
+    	$sc_array = array($this->_app->input->get('parentfilter',null));
+    	foreach($sc as $s):
+    	array_push($sc_array,$s);
+    	endforeach;
+    }
+    $this->_parentfilter = $sc_array;
     $this->_vendor_id = $this->_app->input->get('vendor_id', null);
-
+	$iC = count($this->_parentfilter);
+	$c_array = null;
+	if($iC > 0)
+	{
+		$c_array = "(";
+		for($i=0;$i<$iC-1;$i++)
+		{
+			$c_array .= $this->_parentfilter[$i].',';
+		}
+		$c_array .= $this->_parentfilter[$iC-1].")";
+	}
+	$this->_parentfilter = $c_array;
     parent::__construct();       
   }
  
@@ -34,7 +56,7 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
     $db = JFactory::getDBO();
     $query = $db->getQuery(TRUE);
 
-    $query->select('vp.ddc_vendor_product_id, vp.vendor_product_name, vp.vendor_product_sku, vp.vendor_product_alias, vp.product_weight, vp.product_weight_uom, vp.product_length, vp.product_width, vp.product_height, vp.product_lwh_uom, vp.product_base_uom, vp.product_params, vp.published as product_state, vp.vendor_id, vp.hits');
+    $query->select('vp.ddc_vendor_product_id, vp.vendor_product_name, vp.vendor_product_sku, vp.vendor_product_alias, vp.product_weight, vp.product_weight_uom, vp.product_length, vp.product_width, vp.product_height, vp.product_lwh_uom, vp.product_base_uom, vp.product_params, vp.published as product_state, vp.vendor_id, vp.hits,vp.category_id');
     $query->select('vp.product_description_small as vp_desc_s,vp.product_description as vp_desc, vp.product_type');
     $query->select('p.ddc_product_id,p.product_name,p.product_alias,p.product_parent_id');
     $query->select('vc.currency_name, vc.currency_code_3, vc.currency_symbol, vc.ddc_currency_id');
@@ -65,6 +87,10 @@ class DdcshopboxModelsVendorproducts extends DdcshopboxModelsDefault
   	if((int)$this->_vendor_id > 0)
   	{
   		$query->where('vp.vendor_id = "'. (int)$this->_vendor_id .'"');
+  	}
+  	if($this->_parentfilter != null)
+  	{
+  		$query->where('vp.category_id IN '. $this->_parentfilter );
   	}
   	if((int)$id > 0)
   	{

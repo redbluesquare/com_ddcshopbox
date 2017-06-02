@@ -415,6 +415,12 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 				if( $row = $model->store() )
 				{
 					$return['id'] = $row->ddc_recipe_header_id;
+					$imodelName  = $app->input->get('models', 'images');
+					$imodelName  = 'DdcshopboxModels'.ucwords($imodelName);
+					$iModel = new $imodelName();
+					if($irow = $iModel->store()){
+						$return['image'] = $irow->ddc_image_id;
+					}
 					$return['success'] = true;
 					$return['msg'] = JText::_('COM_DDC_RH_SAVE_SUCCESS');
 				}
@@ -426,6 +432,40 @@ class DdcshopboxControllersEdit extends DdcshopboxControllersDefault {
 			if($task=="recipeheader.approval")
 			{
 		
+			}
+			echo json_encode($return);
+		}
+		if($this->data['table']=='recipedetails')
+		{
+			$return['msg'] = JText::_('COM_DDC_BOOKING_SAVE_FAILURE');
+			$task = $jinput->get('task', "", 'STR' );
+			if($task=='recipedetail.add')
+			{
+		
+			}
+			if($task=='recipedetail.edit')
+			{
+		
+			}
+			if($task=="recipedetail.save")
+			{
+				$return['result'] = null;
+				$modelName  = $app->input->get('models', 'recipedetails');
+				$modelName  = 'DdcshopboxModels'.ucwords($modelName);
+				$model = new $modelName();
+				if( $row = $model->store() )
+				{
+					$result = $model->getItem(null,$row->ddc_recipe_detail_id);
+					$return['result'] = '<p><span id="ingredientName">'.$result->item_detail.'</span><span class="pull-right btn btn-success" onclick="getIngredient('.$result->ddc_recipe_detail_id.')"><i class="glyphicon glyphicon-pencil"></i></span></p>';
+					$return['success'] = true;
+					$return['msg'] = JText::_('COM_DDC_RH_SAVE_SUCCESS');
+				}
+			}
+			if($task=="recipedetail.cancel")
+			{
+			}
+			if($task=="recipedetail.approval")
+			{
 			}
 			echo json_encode($return);
 		}

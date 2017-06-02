@@ -70,7 +70,7 @@ class DdcshopboxModelsProducts extends DdcshopboxModelsDefault
   	}
   	if($this->_ddclocation!=null)
   	{
-  		$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.town LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
+  		$query->where('v.post_code LIKE "%'.$this->_ddclocation.'%" OR v.city LIKE "%'.$this->_ddclocation.'%"');
   	}
         
     return $query;

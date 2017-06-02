@@ -6,6 +6,7 @@ if($this->item->image_link==null)
 {
 	$this->item->image_link = 'images/ddcshopbox/picna_ushbub.png';
 }
+$this->vendor = $this->vendorModel->getItem($this->item->vendor_id);
 ?>
 <?php if($this->item->product_type<=2):?>
 <div id="productRow<?php echo $this->item->ddc_vendor_product_id; ?>" class="col-xs-6 col-sm-12 col-md-12 col-lg-12">
@@ -39,7 +40,7 @@ if($this->item->image_link==null)
     		$val = 0;
     		if($this->session->get('ddclocation',null)==null): 
     			$val = 1;
-			elseif($this->item->distance/1000 < $params->get('distance_limit')):
+			elseif($this->vendor->distance/1000 < $params->get('distance_limit')):
 				$val = 1;
 			endif;
 			if($val == 1):
@@ -57,7 +58,7 @@ if($this->item->image_link==null)
 				<input type="hidden" name="jform[product_weight_uom]" value="<?php echo $this->item->product_weight_uom; ?>" />
 				<input type="hidden" name="format" value="raw" />
 				<input type="hidden" name="jform[ddc_shoppingcart_header_id]" value="<?php echo $this->session->get('shoppingcart_header_id',null); ?>" />
-				<input type="hidden" name="jform[shop_post_code]" value="<?php echo $this->item->shop_post_code?>" />
+				<input type="hidden" name="jform[shop_post_code]" value="<?php echo $this->vendor->post_code?>" />
 				<input type="hidden" name="tmpl" value="component" />
 				<input type="hidden" name="jform[ddc_vendor_product_id]" value="<?php echo $this->item->ddc_vendor_product_id?>" />
 			</form>
@@ -68,8 +69,8 @@ if($this->item->image_link==null)
 			<?php endif; ?>
 			<?php endif; ?>
     	</ul>
-    		<div style="width:100%;line-height:9px;"><i class="ddcShopData pull-right" style="width:100%;"><?php echo $this->item->vendor_name; ?></i></div>
-    		<div style="width:100%;"><i class="ddcShopData pull-right" style="width:100%;"><?php echo $this->item->city; ?></i></div>
+    		<div style="width:100%;line-height:9px;"><i class="ddcShopData pull-right" style="width:100%;"><?php echo $this->vendor->title; ?></i></div>
+    		<div style="width:100%;"><i class="ddcShopData pull-right" style="width:100%;"><?php echo $this->vendor->city; ?></i></div>
 	</div> 
 	</div>
 </div>

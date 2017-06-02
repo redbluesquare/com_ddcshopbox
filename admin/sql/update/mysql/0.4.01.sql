@@ -1,0 +1,40 @@
+CREATE TABLE IF NOT EXISTS `#__ddc_recipe_headers` (
+  `ddc_recipe_header_id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100),
+  `description` varchar(1000),
+  `prep_time` INT(4) NOT NULL default '0',
+  `cook_time` INT(4) NOT NULL default '0',
+  `serving_qty` int(11) NULL,
+  `method` varchar(2000) default NULL,
+  `author` varchar(50) default NULL,
+  `author_id` INT(11) NOT NULL default '0',
+  `published_up` varchar(150) default NULL,
+  `catid` int(11) NOT NULL default '0',
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(11) NOT NULL default '0',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_by` int(11) NOT NULL default '0',
+  `state` tinyint(3) NOT NULL default '0',
+  PRIMARY KEY (`ddc_recipe_header_id`),
+  KEY `catid` (`catid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `#__ddc_recipe_details` (
+  `ddc_recipe_detail_id` int(11) NOT NULL AUTO_INCREMENT,
+  `recipe_header_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_quantity` double default '0.00',
+  `weight` double default '0.00',
+  `weight_uom` int(11) default '0',
+  `volume` double default '0.00',
+  `volume_uom` int(11) default '0',
+  `item_detail` varchar(100) default NULL,
+  `created_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `created_by` int(11) NOT NULL default '0',
+  `modified_on` DATETIME NOT NULL default '0000-00-00 00:00:00',
+  `modified_by` int(11) NOT NULL default '0',
+  `state` tinyint(3) NOT NULL default '0',
+  PRIMARY KEY (`ddc_recipe_detail_id`),
+  KEY `recipe_header_id` (`recipe_header_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

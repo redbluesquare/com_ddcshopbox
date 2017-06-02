@@ -705,7 +705,13 @@ jQuery(document).ready(function(){
 	        scrollTop: jQuery('#system-message-container').offset().top-150
 	    }, 800);
 	});
-	
+	jQuery("#jform_parentfilter").on('change',function(){
+		var catInfo = {};
+		jQuery("#catFilterForm :input").each(function(idx,ele){
+			catInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+		});
+		window.setTimeout(window.location = catInfo.url+'?parentfilter='+jQuery("#jform_parentfilter").val(), 500);
+	});
 	
 });
 	
@@ -1055,10 +1061,59 @@ function getProdPrice(id)
 	});
 }
 
-function addRecipe()
+function saveRecipe()
+{
+	var Info = {};
+	jQuery("#recipemethodForm :input").each(function(idx,ele){
+		Info[jQuery(ele).attr('name')] = jQuery(ele).val();
+	});
+	addRecipe(Info);
+	jQuery("#system-message-container").addClass('alert');
+	jQuery("#system-message-container").addClass('alert-success');
+	jQuery("#system-message-container").text("Your recipe has been saved");
+	jQuery("html, body").delay(200).animate({
+        scrollTop: jQuery('.body').offset().top-30
+    }, 1000);
+}
+
+function addRecipe(method = {})
 {
 	var delInfo = {};
 	jQuery("#ddcrecipeheader :input").each(function(idx,ele){
+		delInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
+	});
+	delInfo['jform[method]'] = method['jform[method]'];
+	delInfo['jform[ddc_image_id]'] = method['jform[ddc_image_id]'];
+	delInfo['jform[image_link]'] = method['jform[image_link]'];
+	delInfo['jform[link_id]'] = method['jform[link_id]'];
+	delInfo['jform[link_table]'] = method['jform[link_table]'];
+	jQuery.ajax({
+		url:'index.php',
+		type:'POST',
+		data:delInfo,
+		dataType:'JSON',
+		success:function(data)
+		{
+			if ( data.success ){
+				jQuery("#jform_ddc_recipe_header_id").val(data.id);
+				jQuery("#jform_recipe_header_id").val(data.id);
+				jQuery("#jform_link_id").val(data.id);
+				jQuery("#jform_ddc_image_id").val(data.image);
+				jQuery("#recipeingredients").removeClass('hide');
+				jQuery("#recipemethod").removeClass('hide');
+				jQuery("#saveRecipeHeader").addClass('hide');
+			}else{
+				jQuery("#system-message-container").addClass('alert');
+				jQuery("#system-message-container").addClass('alert-error');
+				jQuery("#system-message-container").append("Thank you of your recipe. Unfortunately, something went wrong and it has not saved. If it continues please e-mail admin@ushbub.co.uk");
+			}
+		}
+	});
+}
+function addIngredient()
+{
+	var delInfo = {};
+	jQuery("#ingredientForm :input").each(function(idx,ele){
 		delInfo[jQuery(ele).attr('name')] = jQuery(ele).val();
 	});
 	jQuery.ajax({
@@ -1069,15 +1124,46 @@ function addRecipe()
 		success:function(data)
 		{
 			if ( data.success ){
-				jQuery("#jform_ddc_recipe_header_id").val(data.id);
-				jQuery("#recipeingredients").removeClass('hide');
-				jQuery("#recipemethod").removeClass('hide');
-				jQuery("#recipeimages").removeClass('hide');
-				jQuery("#saveRecipeHeader").addClass('hide');
+		jQuery("#jform_ddc_recipe_detail_id").attr('value', '');
+		jQuery("#jform_item_detail").attr('value', '');
+		jQuery("#jform_product_id").attr('value', '');
+		jQuery("#jform_product_quantity").attr('value', '');
+		jQuery("#jform_volume").attr('value', '');
+		jQuery("#jform_volume_uom").attr('value', '');
+		jQuery("#jform_weight").attr('value', '');
+		jQuery("#jform_weight_uom").attr('value', '');
+		jQuery(".ingredientDetails").append(data.result);
 			}else{
-				jQuery("#reviewPostStatus").addClass('alert');
-				jQuery("#reviewPostStatus").addClass('alert-error');
-				jQuery("#reviewPostStatus").append("Thank you of your review. Unfortunately, something went wrong. If it continues please e-mail admin@ushbub.co.uk");
+				jQuery("#system-message-container").addClass('alert');
+				jQuery("#system-message-container").addClass('alert-error');
+				jQuery("#system-message-container").append("Thank you of your recipe. Unfortunately, something went wrong and it has not saved. If it continues please e-mail admin@ushbub.co.uk");
+			}
+		}
+	});
+}
+function getIngredient(id)
+{
+	jQuery.ajax({
+		url:'index.php',
+		type:'GET',
+		data:{"jform[table]":"recipedetails","option":"com_ddcshopbox","controller":"get","format":"raw","recipe_detail_id":id,"task":"get.ingredient"},
+		dataType:'JSON',
+		success:function(data)
+		{
+			if ( data.success ){
+				jQuery("#ingredient"+id).addClass('hide');
+				jQuery("#jform_ddc_recipe_detail_id").val(data.result.ddc_recipe_detail_id);
+				jQuery("#jform_item_detail").val(data.result.item_detail);
+				jQuery("#jform_product_id").val(data.result.product_id);
+				jQuery("#jform_ddc_product_quantity").val(data.result.product_quantity);
+				jQuery("#jform_volume").val(data.result.volume);
+				jQuery("#jform_volume_uom").val(data.result.volume_uom);
+				jQuery("#jform_weight").val(data.result.weight);
+				jQuery("#jform_weight_uom").val(data.result.weight_uom);
+			}else{
+				jQuery("#system-message-container").addClass('alert');
+				jQuery("#system-message-container").addClass('alert-error');
+				jQuery("#system-message-container").text("Thank you. Unfortunately, something went wrong and it has not saved. If it continues please e-mail admin@ushbub.co.uk");
 			}
 		}
 	});

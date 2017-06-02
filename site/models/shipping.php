@@ -107,39 +107,38 @@ class DdcshopboxModelsShipping extends DdcshopboxModelsDefault
   	'delivery_time_to' => $formdata['delivery_time_to'],
   	'table' => $formdata['table']);
   	
-  	$this->sendEmail($data);
+  	$this->sendEmail('New delivery quote',$data);
   	
   	return $data;
   }
-  public function sendEmail($data)
-  {
-  	//save the new booking and send to customer
-  	$params = JComponentHelper::getParams('com_ddcshopbox');
-  	$mail = JFactory::getMailer();
+//   public function sendEmail($subject, $data)
+//   {
+//   	//save the new booking and send to customer
+//   	$params = JComponentHelper::getParams('com_ddcshopbox');
+//   	$mail = JFactory::getMailer();
   
-  	$app = JFactory::getApplication();
-  	$mailfrom	= $app->getCfg('mailfrom');
-  	$fromname	= $app->getCfg('fromname');
-  	$sitename	= $app->getCfg('sitename');
+//   	$app = JFactory::getApplication();
+//   	$mailfrom	= $app->getCfg('mailfrom');
+//   	$fromname	= $app->getCfg('fromname');
+//   	$sitename	= $app->getCfg('sitename');
   	 
-  	$name		= 'Ushbub Delivery';
-  	$email		= 'sales@ushbub.co.uk';
-  	$subject	= 'New delivery quote';
-  	$body		= (string)json_encode($data);
+//   	$name		= 'Ushbub Delivery';
+//   	$email		= 'sales@ushbub.co.uk';
+//   	$body		= (string)json_encode($data);
   
-  	$mail->addRecipient(array($email,$mailfrom));
-  	$mail->addReplyTo(array($mailfrom, $fromname));
-  	$mail->setSender(array($mailfrom, $fromname));
-  	$mail->setSubject($sitename.': '.$subject);
-  	$mail->isHTML(true);
-  	$mail->Encoding = 'base64';
-  	$mail->setBody($body);
-  	$sent = $mail->Send();
-  	if ( $sent !== true ) {
-  		echo 'Error sending email: ';
-  	} else {
-  		return $sent;
-  	}
-  }
+//   	$mail->addRecipient(array($email,$mailfrom));
+//   	$mail->addReplyTo(array($mailfrom, $fromname));
+//   	$mail->setSender(array($mailfrom, $fromname));
+//   	$mail->setSubject($sitename.': '.$subject);
+//   	$mail->isHTML(true);
+//   	$mail->Encoding = 'base64';
+//   	$mail->setBody($body);
+//   	$sent = $mail->Send();
+//   	if ( $sent !== true ) {
+//   		echo 'Error sending email: ';
+//   	} else {
+//   		return $sent;
+//   	}
+//   }
 
 }

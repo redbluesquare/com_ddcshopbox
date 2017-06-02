@@ -10,7 +10,7 @@ class DdcshopboxViewsVendorproductsRaw extends JViewHtml
     $view = $app->input->get('view');
  
     //retrieve task list from model
-    $model = new DdcshopboxModelsProducts();
+    $model = new DdcshopboxModelsVendorproducts();
  
     $this->product = $model->getItem($id,$view,FALSE);
     

@@ -28,7 +28,9 @@ class DdcshopboxViewsVendorproductsHtml extends JViewHtml
     		case "default":
     			default:
     			$this->items = $this->model->listItems();
+    			$this->vendorModel = $vendorModel;
     			$this->_productsListView = DdcshopboxHelpersView::load('vendorproducts','_item','phtml');
+    			$this->_catsListView = DdcshopboxHelpersView::load('vendorproducts','_search','phtml');
     		break;
     		case "product":
     			$this->item = $this->model->getItem();

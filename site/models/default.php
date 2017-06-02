@@ -284,9 +284,9 @@ class DdcshopboxModelsDefault extends JModelBase
   			$result[0] .='<tr>';
   			$result[0] .='<td>'.$cart_item->product_quantity.' x </td>';
   			$result[0] .='<td>'.$cart_item->vendor_product_name.'</td>';
-  			$result[0] .='<td id="#cartItem'.$cart_item->ddc_shoppingcart_id.'">'.$cart_item->currency_symbol." ".number_format(($cart_item->product_quantity*$this->getPriceItem($cart_item->product_price,$this->getpartjsonfield($cart_item->product_params, 'price_weight_based'),$cart_item->product_weight,$cart_item->product_weight_uom)),2).'</td>';
+  			$result[0] .='<td id="#cartItem'.$cart_item->ddc_shoppingcart_id.'">'.$cart_item->currency_symbol." ".number_format(($cart_item->product_quantity*$this->getProductPrice($cart_item->ddc_vendor_product_id)),2).'</td>';
   			$result[0] .='</tr>';
-  			$result[1] +=($cart_item->product_quantity*$this->getPriceItem($cart_item->product_price,$this->getpartjsonfield($cart_item->product_params, 'price_weight_based'),$cart_item->product_weight,$cart_item->product_weight_uom));
+  			$result[1] +=($cart_item->product_quantity*$this->getProductPrice($cart_item->ddc_vendor_product_id));
   			$result[2] +=($cart_item->product_quantity);
   		}
   		
